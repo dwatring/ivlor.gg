@@ -1,4 +1,16 @@
-.container {
+#root {
+  all: unset;
+}
+
+.backgroundContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: #31313c;
+  width: 332px;
+  height: flex;
+}
+
+.foregroundContainer {
   height: flex;
   width: 322px;
   display: flex;

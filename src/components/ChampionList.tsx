@@ -353,7 +353,7 @@ export default class ChampionList extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="backgroundContainer">
         <div className="championSearch">
           <div className="championSearchInputContainer">
             <img className="searchIcon" src={"https://s-lol-web.op.gg/images/icon/icon-search-dark.svg"}></img>
@@ -372,7 +372,7 @@ export default class ChampionList extends React.Component {
         </div>
 
         <div>
-          <div className="container">
+          <div className="foregroundContainer">
             {this.searchQuery.length > 0 || this.roleSelected !== "All" ? this.searchQueryPopulateList() : null}
             {this.searchQuery.length === 0 && this.roleSelected === "All" ? this.intialPopulateList() : null}
           </div>
