@@ -1,0 +1,19 @@
+.backgroundContainer {
+  height: flex;
+  width: 332px;
+  display: flex;
+  flex-direction: row;
+  background-color: #31313c;
+  flex-wrap: wrap;
+}
+
+.nameContainer {
+  background-color: #31313c;
+  width: 50px;
+  height: 10px;
+  padding-right: 20px;
+}
+
+.titleContainer {
+  background-color: #31313c;
+}

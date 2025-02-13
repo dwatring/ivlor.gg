@@ -353,28 +353,30 @@ export default class ChampionList extends React.Component {
 
   render() {
     return (
-      <div className="backgroundContainer">
-        <div className="championSearch">
-          <div className="championSearchInputContainer">
-            <img className="searchIcon" src={"https://s-lol-web.op.gg/images/icon/icon-search-dark.svg"}></img>
-            <input type="text" className="championSearchInput" placeholder="Search a champion" value={this.searchQuery} onChange={(e) => this.setInput(e.target.value)}></input>
+      <div>
+        <div className="backgroundContainer">
+          <div className="championSearch">
+            <div className="championSearchInputContainer">
+              <img className="searchIcon" src={"https://s-lol-web.op.gg/images/icon/icon-search-dark.svg"}></img>
+              <input type="text" className="championSearchInput" placeholder="Search a champion" value={this.searchQuery} onChange={(e) => this.setInput(e.target.value)}></input>
+            </div>
           </div>
-        </div>
 
-        <div className="roleContainer">
-          <button type="button" className={this.roleSelected === 'All' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("All")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-all-dark.svg" alt="All" /></button>
-          <button type="button" className={this.roleSelected === 'Top' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Top")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-top-dark.svg" alt="Top" /></button>
-          <button type="button" className={this.roleSelected === 'Jng' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Jng")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-jng-dark.svg" alt="Jungle" /></button>
-          <button type="button" className={this.roleSelected === 'Mid' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Mid")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-mid-dark.svg" alt="Mid" /></button>
-          <button type="button" className={this.roleSelected === 'Bot' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Bot")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-bot-dark.svg" alt="Bot" /></button>
-          <button type="button" className={this.roleSelected === 'Sup' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Sup")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-sup-dark.svg" alt="Support" /></button>
-          <button type="button" className={this.roleSelected === 'Free' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Free")}><img src="https://s-lol-web.op.gg/images/icon/icon-rotation-dark.svg" alt="Free" /></button>
-        </div>
+          <div className="roleContainer">
+            <button type="button" className={this.roleSelected === 'All' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("All")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-all-dark.svg" alt="All" /></button>
+            <button type="button" className={this.roleSelected === 'Top' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Top")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-top-dark.svg" alt="Top" /></button>
+            <button type="button" className={this.roleSelected === 'Jng' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Jng")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-jng-dark.svg" alt="Jungle" /></button>
+            <button type="button" className={this.roleSelected === 'Mid' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Mid")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-mid-dark.svg" alt="Mid" /></button>
+            <button type="button" className={this.roleSelected === 'Bot' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Bot")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-bot-dark.svg" alt="Bot" /></button>
+            <button type="button" className={this.roleSelected === 'Sup' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Sup")}><img src="https://s-lol-web.op.gg/images/icon/icon-position-sup-dark.svg" alt="Support" /></button>
+            <button type="button" className={this.roleSelected === 'Free' ? "button buttonActive" : "button buttonInactive"} onClick={() => this.assignRoles("Free")}><img src="https://s-lol-web.op.gg/images/icon/icon-rotation-dark.svg" alt="Free" /></button>
+          </div>
 
-        <div>
-          <div className="foregroundContainer">
-            {this.searchQuery.length > 0 || this.roleSelected !== "All" ? this.searchQueryPopulateList() : null}
-            {this.searchQuery.length === 0 && this.roleSelected === "All" ? this.intialPopulateList() : null}
+          <div>
+            <div className="foregroundContainer">
+              {this.searchQuery.length > 0 || this.roleSelected !== "All" ? this.searchQueryPopulateList() : null}
+              {this.searchQuery.length === 0 && this.roleSelected === "All" ? this.intialPopulateList() : null}
+            </div>
           </div>
         </div>
       </div>

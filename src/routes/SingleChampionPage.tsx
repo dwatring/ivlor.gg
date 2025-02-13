@@ -12,8 +12,15 @@ export default class SingleChampionPage extends React.Component {
 
   @observable
   championID = window.location.href.split('champions/')[1]
+
   @observable
-  champion = { name: "" }
+  champion = {
+    name: "",
+    title: "",
+    tags: [],
+    image: { full: "" },
+    blurb: ""
+  };
 
   async getChampionsFromAPI() {
     try {
@@ -32,13 +39,29 @@ export default class SingleChampionPage extends React.Component {
 
 
   render() {
-    return (
+    const { name, title, tags, image, blurb } = this.champion;
+    const blurImageUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${image.full.replace('.png', '_0.jpg')}`;
 
+    return (
       <div>
-        <p>{this.champion.name}</p>
-        <Link to={`/champions`}>CHANGE PAGE</Link>
+        <div className="backgroundContainer">
+          <div className="nameContainer">{name}
+            <div className="titleContainer">{title}
+              <img src={blurImageUrl} alt={`${name} blur`} />
+              <div>
+                <strong>Tags:</strong>
+                <ul>
+                  {tags.map((tag, index) => (
+                    <li key={index}>{tag}</li>
+                  ))}
+                </ul>
+              </div>
+              <p>{blurb}</p>
+              <Link to="/champions">CHANGE PAGE</Link>
+            </div>
+          </div>
+        </div>
       </div>
-      //
-    )
+    );
   }
 }

@@ -1,13 +1,19 @@
-#root {
-  all: unset;
+#root,
+body,
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .backgroundContainer {
-  display: flex;
-  flex-direction: column;
-  background-color: #31313c;
-  width: 332px;
   height: flex;
+  width: 332px;
+  display: flex;
+  flex-direction: row;
+  background-color: #31313c;
+  flex-wrap: wrap;
 }
 
 .foregroundContainer {
