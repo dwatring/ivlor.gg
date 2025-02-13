@@ -1,19 +1,129 @@
-.backgroundContainer {
-  height: flex;
-  width: 332px;
+/* Flex container to align champion card & skins horizontally */
+.championWrapper {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+}
+
+/* Champion Card */
+.backgroundContainer {
+  width: 332px;
+  display: flex;
+  font-size: 100;
   background-color: #31313c;
-  flex-wrap: wrap;
+  padding: 8px;
+}
+
+.foregroundContainer {
+  width: 332px;
+  padding: 0;
+  display: flex;
+  background-color: #31313c;
 }
 
 .nameContainer {
-  background-color: #31313c;
-  width: 50px;
-  height: 10px;
-  padding-right: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
 }
 
 .titleContainer {
+  font-size: 16px;
+  color: #a0a0a0;
+  margin-bottom: 16px; /* Spacing below the title */
+}
+
+.imgContainer {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.tagsContainer {
+}
+
+.tagsList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tagItem {
+  display: inline-block;
+  background-color: #444;
+  color: #fff;
+  padding: 4px 8px;
+  margin-right: 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.blurbText {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.changePageLink {
+  color: #fff;
+  text-decoration: none;
+  background-color: #555;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.changePageLink:hover {
+  background-color: #666;
+}
+
+/* Skin Card */
+.skinContainer {
+  width: 1851px;
+  height: 900.63px;
   background-color: #31313c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.skinTitleDisplay {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.skins {
+  display: grid;
+  display: flex; /* Enable flexbox */
+  flex-direction: row; /* Align children horizontally */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.skinCard {
+  background-color: #3a3a4f;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.skinImage {
+  width: 100%;
+  height: auto;
+  border-bottom: 2px solid #555;
+}
+
+.skinName {
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px;
+  margin: 0;
+}
+
+.chromaIndicator {
+  display: block;
+  font-size: 12px;
+  color: #ffcc00;
+  margin-top: 5px;
 }
