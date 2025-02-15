@@ -34,7 +34,9 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
+          <p>Welcome to Ivlor.gg</p>
           <Link to={`champions`}>GO TO CHAMPION LIST</Link>
+          <Link to={`Summoner`}>GO TO SUMMONER SEARCH</Link>
         </header>
       </div>
     )

@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import ChampionPage from './routes/ChampionPage'
 import Root from './routes/Root'
-import SingleChampionPage from './routes/SingleChampionPage'
+import ChampionPage from './routes/ChampionPage'
+import SingleChampionPage from './components/SingleChampionPage'
+import SummonerPage from './components/SummonerPage'
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,11 @@ const router = createBrowserRouter([
   {
     path: '/champions/:name',
     element: <SingleChampionPage />,
+  },
+
+  {
+    path: '/Summoner/',
+    element: <SummonerPage />,
   },
 ])
 
