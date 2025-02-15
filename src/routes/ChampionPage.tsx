@@ -7,9 +7,9 @@ export default class ChampionPage extends React.Component {
     return (
       <div>
         <ChampionList />
-        <Link to={`/`}>CHANGE PAGE</Link>
+        <Link to={`/`}>GO TO HOME</Link>
       </div>
-      
+
     )
   }
 }

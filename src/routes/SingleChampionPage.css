@@ -30,15 +30,12 @@
 .titleContainer {
   font-size: 16px;
   color: #a0a0a0;
-  margin-bottom: 16px; /* Spacing below the title */
+  margin-bottom: 16px;
 }
 
 .imgContainer {
   width: 100%;
   border-radius: 8px;
-}
-
-.tagsContainer {
 }
 
 .tagsList {
@@ -94,8 +91,8 @@
 
 .skins {
   display: grid;
-  display: flex; /* Enable flexbox */
-  flex-direction: row; /* Align children horizontally */
+  display: flex;
+  flex-direction: row;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;
 }
@@ -126,4 +123,114 @@
   font-size: 12px;
   color: #ffcc00;
   margin-top: 5px;
+}
+
+/* Spells Card (Includes Passive) */
+.spellsContainer {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #31313c;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.spellsTitleDisplay {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.spells {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.spellCard {
+  background-color: #3a3a4f;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.spellImage {
+  width: 100%;
+  height: auto;
+  border-bottom: 2px solid #555;
+}
+
+.spellName {
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px;
+  margin: 0;
+}
+
+.spellDescription {
+  font-size: 12px;
+  color: #ccc;
+  padding: 8px;
+  margin: 0;
+}
+
+/* Info container */
+.infoContainer {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #31313c;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.infoTitleDisplay {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.infoItem {
+  background-color: #3a3a4f;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Stats container */
+.statsContainer {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #31313c;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.statsTitleDisplay {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.statsItem {
+  background-color: #3a3a4f;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  color: #ffffff;
 }
