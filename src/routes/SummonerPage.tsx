@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import SummonerSearch from '../components/SummonerSearch'
+import { Link } from 'react-router-dom'
 
 export default class SummonerPage extends React.Component {
     render() {
