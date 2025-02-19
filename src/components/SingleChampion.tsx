@@ -2,14 +2,21 @@ import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './SingleChampionPage.css';
+import './SingleChampion.css';
+interface Skin {
+  num: number;
+  id: string;
+  name: string;
+  chromas?: boolean;
+}
 
 @observer
-export default class SingleChampionPage extends React.Component {
+export default class SingleChampion extends React.Component {
   constructor(props: {}) {
     super(props);
     makeObservable(this);
   }
+
 
   @observable
   championID = window.location.href.split('champions/')[1];
@@ -21,8 +28,9 @@ export default class SingleChampionPage extends React.Component {
     tags: [],
     image: { full: "" },
     blurb: "",
-    skins: [], // Skins are stored as an array
+    skins: [] as Skin[], // Skins are stored as an array
     spells: [] as { id: string; name: string }[], // Spells are stored as an array
+    passive: { name: "", image: { full: "" } },
     info: {
       attack: 0,
       defense: 0,
@@ -69,13 +77,22 @@ export default class SingleChampionPage extends React.Component {
         tags: championData.tags,
         image: championData.image,
         blurb: championData.blurb,
-        skins: championData.skins, // Skins array
-        spells: championData.spells.map((spell: any) => ({ // Extract spells
+        passive: {
+          name: championData.passive.name,
+          image: championData.passive.image,
+        },
+        skins: championData.skins.map((skin: any) => ({ // Correct the variable name and ensure the correct properties
+          num: skin.num,
+          id: skin.id,
+          name: skin.name,
+          chromas: skin.chromas,
+        })),
+        spells: championData.spells.map((spell: any) => ({
           id: spell.id,
           name: spell.name,
         })),
-        info: championData.info, // Info object
-        stats: championData.stats, // Stats object
+        info: championData.info,
+        stats: championData.stats,
       };
 
       console.log("Champion Data:", championData);
@@ -89,7 +106,7 @@ export default class SingleChampionPage extends React.Component {
   }
 
   render() {
-    const { name, title, tags, image, blurb, skins, spells, info, stats } = this.champion;
+    const { name, title, tags, image, blurb, skins, spells, passive, info, stats } = this.champion;
     const blurImageUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${image.full.replace('.png', '_0.jpg')}`;
 
     return (
@@ -138,15 +155,25 @@ export default class SingleChampionPage extends React.Component {
             </div>
           </div>
 
-          {/* Spells Section */}
+          {/* Abilities Section (Passive + Spells) */}
           <div className="spellsContainer">
             <h3 className="spellsTitleDisplay">Abilities</h3>
             <div className="spells">
+              {/* Passive Ability */}
+              <div className="spellCard passiveCard">
+                <img
+                  src={`https://ddragon.leagueoflegends.com/cdn/15.3.1/img/passive/${passive.image.full}`}
+                  alt={passive.name}
+                  className="spellImage"
+                />
+                <p className="spellName">{passive.name} (Passive)</p>
+              </div>
+              {/* Spells */}
               {spells.map((spell) => (
                 <div key={spell.id} className="spellCard">
                   <img
                     src={`https://ddragon.leagueoflegends.com/cdn/15.3.1/img/spell/${spell.id}.png`}
-                    alt={`${spell.name}`}
+                    alt={spell.name}
                     className="spellImage"
                   />
                   <p className="spellName">{spell.name}</p>
@@ -218,3 +245,4 @@ export default class SingleChampionPage extends React.Component {
     );
   }
 }
+

@@ -1,12 +1,11 @@
 import React from 'react'
-import ChampionList from './ChampionList'
 import { Link } from 'react-router-dom'
+import './SummonerSearch.css';
 
-export default class ChampionPage extends React.Component {
+export default class SummonerSearch extends React.Component {
     render() {
         return (
             <div>
-                <ChampionList />
                 <Link to={`/`}>GO TO HOME</Link>
             </div>
 

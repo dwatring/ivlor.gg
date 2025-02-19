@@ -36,7 +36,7 @@ export default class App extends React.Component {
         <header className="App-header">
           <p>Welcome to Ivlor.gg</p>
           <Link to={`champions`}>GO TO CHAMPION LIST</Link>
-          <Link to={`Summoner`}>GO TO SUMMONER SEARCH</Link>
+          <Link to={`summoner`}>GO TO SUMMONER SEARCH</Link>
         </header>
       </div>
     )

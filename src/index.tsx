@@ -5,8 +5,8 @@ import reportWebVitals from './reportWebVitals'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Root from './routes/Root'
 import ChampionPage from './routes/ChampionPage'
-import SingleChampionPage from './components/SingleChampionPage'
-import SummonerPage from './components/SummonerPage'
+import SingleChampion from './components/SingleChampion'
+import SummonerPage from './components/SummonerSearch'
 
 const router = createBrowserRouter([
   {
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/champions/:name',
-    element: <SingleChampionPage />,
+    element: <SingleChampion />,
   },
 
   {
