@@ -1,0 +1,26 @@
+.matchHistory {
+  margin-top: 20px;
+}
+
+.matchCard {
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.participantsContainer {
+  display: flex; /* Use Flexbox to align columns side by side */
+  gap: 20px; /* Add space between the two columns */
+}
+
+.participantsColumn {
+  list-style: none; /* Remove bullet points */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+.participantsColumn li {
+  margin-bottom: 8px; /* Add space between list items */
+}
