@@ -10,6 +10,26 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.searchedParticipantCard {
+  width: 694px;
+  height: 96 px;
+}
+
+.gameInfo {
+  width: 108px;
+  height: 91px;
+}
+
+.championInfo {
+  width: 388px;
+  height: 88px;
+}
+
+.lobbyInfo {
+  width: 164px;
+  height: 88px;
+}
+
 .participantsContainer {
   display: flex; /* Use Flexbox to align columns side by side */
   gap: 20px; /* Add space between the two columns */
