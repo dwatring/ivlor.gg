@@ -256,17 +256,9 @@ export default class SummonerSearch extends React.Component {
                         })
                     );
 
-                    // Move the searched summoner to the top
-                    const sortedParticipants = participantsWithRiotID.sort((a, b) => {
-                        if (a.puuid === this.summonerData?.puuid) return -1;
-                        if (b.puuid === this.summonerData?.puuid) return 1;
-                        return 0;
-                    });
-
                     // Create a copy of matchData and update participants
                     const matchDataCopy = structuredClone(matchData); // Modern deep copy
                     matchDataCopy.info = { ...matchData.info }; // Shallow copy of matchData.info
-                    matchDataCopy.info.participants = sortedParticipants; // Update participants with the sorted array
 
                     return matchDataCopy; // Return the modified copy
                 })
