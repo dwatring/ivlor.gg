@@ -13,16 +13,89 @@
 .searchedParticipantCard {
   width: 694px;
   height: 96 px;
+  flex-direction: row;
+  align-items: center;
+  color: var(--lol-gray-500);
+  display: flex;
+  border-radius: 5px; /* Rounds the corners by 10px */
+  padding: 4px, 12px;
 }
 
 .gameInfo {
   width: 108px;
   height: 91px;
+  flex-direction: column;
+}
+
+.gameInfoType {
+  align-items: baseline;
+  flex-direction: column;
+  display: flex;
+  gap: 5px;
+}
+.gameInfoWinLoss {
+  align-items: baseline;
+  flex-direction: column;
+  display: flex;
+}
+
+.searchedParticipantCard.win {
+  background-color: #244180;
+}
+
+.searchedParticipantCard.loss {
+  background-color: #852b3c;
+}
+
+.blueRedSpan.win {
+  color: #5383e8;
+}
+
+.blueRedSpan.loss {
+  color: #e84057;
+}
+
+.graySpan {
+  display: block;
+  font-family: Roboto, 'Roboto Fallback', sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  color: #9e9eb1;
 }
 
 .championInfo {
   width: 388px;
   height: 88px;
+  display: column;
+  align-items: center;
+}
+
+.spriteContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.championSprite {
+  display: block;
+  width: 48px;
+  height: 48px;
+  size: 10px;
+  aspect-ratio: 48px / 48px;
+  color: transparent;
+  border-radius: 50%; /* This makes the image round */
+  object-fit: cover; /* Ensures the image scales correctly to fill the circle */
+}
+
+.championSpriteLevel {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  color: white;
+  font-size: 12px;
+  background-color: rgb(32, 45, 55);
+  padding: 2px 5px;
+  border-radius: 3px;
+  border-radius: 50%; /* This makes the image round */
+  object-fit: cover; /* Ensures the image scales correctly to fill the circle */
 }
 
 .lobbyInfo {

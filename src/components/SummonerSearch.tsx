@@ -7,7 +7,7 @@ import Bottleneck from 'bottleneck';
 
 
 const limiter = new Bottleneck({
-    reservoir: 100, // Allow 100 requests per cycle
+    reservoir: 90, // Allow 100 requests per cycle
     reservoirRefreshAmount: 100,
     reservoirRefreshInterval: 2 * 60 * 1000, // Every 2 minutes
     maxConcurrent: 5, // 🔽 Reduce concurrent requests
@@ -36,9 +36,8 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = 3, de
             return response;
         } catch (error: any) {
             if (error.message.includes('429')) {
-                const waitTime = delay * Math.pow(2, i); // Exponential Backoff (1s, 2s, 4s...)
-                console.warn(`Rate limit hit. Retrying in ${waitTime / 1000} seconds...`);
-                await new Promise(resolve => setTimeout(resolve, waitTime));
+                console.warn(`Rate limit hit. Retrying in ${delay / 1000} seconds...`);
+                await new Promise(resolve => setTimeout(resolve, delay)); // Fixed delay instead of exponential
             } else if (i === retries - 1) {
                 throw error; // Throw error if all retries fail
             }
@@ -125,7 +124,7 @@ interface MatchData {
             item5: number; // Items
             item6: number; // Items
             championName: string; // Champion Name
-            championLevel: number; // Champion Level
+            champLevel: number; // Champion Level
             totalMinionsKilled: number; // CS
             win: boolean; // Win or Loss
         }[];
@@ -145,6 +144,18 @@ export default class SummonerSearch extends React.Component {
     }
 
     @action
+    setErrorMessage(message: string) {
+        this.errorMessage = message;
+    }
+
+    @action
+    setSummonerData(data: SummonerData) {
+        this.summonerData = data;
+        this.errorMessage = '';
+    }
+
+
+    @action
     handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.summonerName = event.target.value;
         this.errorMessage = '';
@@ -155,26 +166,23 @@ export default class SummonerSearch extends React.Component {
         const apiKey = process.env.REACT_APP_RIOT_API_KEY;
 
         if (!apiKey) {
-            this.errorMessage = 'API key is missing. Check your .env file.';
+            this.setErrorMessage('API key is missing. Check your .env file.');
             return;
         }
 
         const [gameName, tagLine] = this.summonerName.replace(/\s/g, '').split('#');
         if (!gameName || !tagLine) {
-            this.errorMessage = 'Invalid Riot ID format. Use Name#Tag (e.g., Player#NA1).';
+            this.setErrorMessage('Invalid Riot ID format. Use Name#Tag (e.g., Player#NA1).');
             return;
         }
 
         try {
-            // Check cache first for PUUID
             const cachedAccountData = playerCache[`${gameName}#${tagLine}`];
             let puuid;
 
             if (cachedAccountData) {
-                // If the data is cached, use it
                 puuid = cachedAccountData.puuid;
             } else {
-                // If not cached, fetch from API
                 const accountResponse = await fetch(
                     `https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}`,
                     { headers: { 'X-Riot-Token': apiKey } }
@@ -184,34 +192,27 @@ export default class SummonerSearch extends React.Component {
                 const accountData = await accountResponse.json();
                 puuid = accountData.puuid;
 
-                // Cache the result
                 playerCache[`${gameName}#${tagLine}`] = accountData;
             }
 
-            // Check cache for Summoner Data
             if (playerCache[puuid]) {
-                // If the summoner data is cached, use it
-                this.summonerData = playerCache[puuid];
-                this.errorMessage = '';
+                this.setSummonerData(playerCache[puuid]);
             } else {
-                // If not cached, fetch from API
                 const summonerResponse = await fetch(
                     `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}`,
                     { headers: { 'X-Riot-Token': apiKey } }
                 );
+
                 if (!summonerResponse.ok) throw new Error('Failed to retrieve summoner data.');
 
-                this.summonerData = await summonerResponse.json();
-                this.errorMessage = '';
-
-                // Cache the summoner data
-                playerCache[puuid] = this.summonerData;
+                const summonerData = await summonerResponse.json();
+                this.setSummonerData(summonerData);
+                playerCache[puuid] = summonerData;
             }
 
-            // Fetch Match History (not cached here, assume it's a separate fetch)
             await this.fetchMatchHistory(puuid, apiKey);
         } catch (error) {
-            this.errorMessage = 'Error fetching summoner data. Try again later.';
+            this.setErrorMessage('Error fetching summoner data. Try again later.');
             console.error(error);
         }
     };
@@ -319,93 +320,116 @@ export default class SummonerSearch extends React.Component {
 
                             return (
                                 <div key={index} className="matchCard">
-
-                                    {/* Display searched participant data */}
-                                    <div className="searchedParticipantCard">
+                                    {/* Apply conditional background color to searchedParticipantCard */}
+                                    <div className={`searchedParticipantCard ${searchedParticipant?.win ? 'win' : 'loss'}`}>
                                         <div className="gameInfo">
-                                            <p>{match.info.gameMode}</p>
-                                            <p>{timeAgo(match.info.gameStartTimestamp)}</p>
-
-                                            {/* Conditional rendering for the Victory/Defeat */}
-                                            <p>
-                                                {(() => {
-                                                    if (!searchedParticipant) {
-                                                        return <span>Loading...</span>;  // or any loading state
-                                                    }
-
-                                                    return searchedParticipant.win ? (
-                                                        <span style={{ color: 'green' }}>Victory</span>
-                                                    ) : (
-                                                        <span style={{ color: 'red' }}>Defeat</span>
-                                                    );
-                                                })()}
-                                            </p>
-
-                                            <p>{Math.floor(match.info.gameDuration / 60)} mins</p>
+                                            <div className="gameInfoType">
+                                                {/* Apply conditional text color to blueRedSpan */}
+                                                <div className={`blueRedSpan ${searchedParticipant?.win ? 'win' : 'loss'}`}>
+                                                    {match.info.gameMode}
+                                                </div>
+                                                <div className="graySpan">{timeAgo(match.info.gameStartTimestamp)}</div>
+                                            </div>
+                                            <div>--</div>
+                                            <div className="gameInfoWinLoss">
+                                                {/* Victory/Defeat text remains inside but no extra div */}
+                                                {!searchedParticipant ? (
+                                                    <span>Loading...</span>
+                                                ) : (
+                                                    <div className="graySpan">
+                                                        {searchedParticipant.win ? 'Victory' : 'Defeat'}
+                                                    </div>
+                                                )}
+                                                <div className="graySpan">
+                                                    {Math.floor(match.info.gameDuration / 60)}m {match.info.gameDuration % 60}s
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="championInfo"></div>
-                                        <div className="lobbyInfo"></div>
+                                        <div className="championInfo">
+                                            {/* Only render if searchedParticipant exists */}
+                                            {searchedParticipant ? (
+                                                <>
+                                                    {/* Dynamically set the champion sprite image */}
+                                                    <div className="spriteContainer">
+                                                        <img
+                                                            className="championSprite"
+                                                            src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${searchedParticipant.championName}.png`}
+                                                            alt={`${searchedParticipant.championName} Sprite`}
+                                                            width="48"
+                                                            height="48"
+                                                        />
+                                                        <div className="championSpriteLevel">
+                                                            {/* Display the champion level */}
+                                                            {searchedParticipant.champLevel}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div>Loading...</div> // or any other fallback when searchedParticipant is undefined
+                                            )}
+                                        </div>
+
                                     </div>
 
-
-
-
                                     {/* Display Participants with riotIdGameName */}
-                                    {match.info.participants.length > 0 && (
-                                        <>
-                                            <h4>Participants:</h4>
-                                            <div className="participantsContainer">
-                                                <ul className="participantsColumn">
-                                                    {firstFiveParticipants.map((player, idx) => (
-                                                        <li key={idx}>
-                                                            {player.riotIdGameName}
+                                    {
+                                        match.info.participants.length > 0 && (
+                                            <>
+                                                <h4>Participants:</h4>
+                                                <div className="participantsContainer">
+                                                    <ul className="participantsColumn">
+                                                        {firstFiveParticipants.map((player, idx) => (
+                                                            <li key={idx}>
+                                                                {player.riotIdGameName}
 
-                                                            {/* Display item images */}
-                                                            <div className="items">
-                                                                {[player.item0, player.item1, player.item2, player.item3, player.item4, player.item5, player.item6].map((itemId, itemIndex) => {
-                                                                    if (itemId !== 0) { // Only display item if itemId is not 0
-                                                                        const itemImageUrl = getItemImageUrl(itemId);
-                                                                        return <img key={itemIndex} src={itemImageUrl} alt={`Item ${itemId}`} width="30" height="30" />;
-                                                                    }
-                                                                    return null;
-                                                                })}
-                                                            </div>
+                                                                {/* Display item images */}
+                                                                <div className="items">
+                                                                    {[player.item0, player.item1, player.item2, player.item3, player.item4, player.item5, player.item6].map((itemId, itemIndex) => {
+                                                                        if (itemId !== 0) { // Only display item if itemId is not 0
+                                                                            const itemImageUrl = getItemImageUrl(itemId);
+                                                                            return <img key={itemIndex} src={itemImageUrl} alt={`Item ${itemId}`} width="30" height="30" />;
+                                                                        }
+                                                                        return null;
+                                                                    })}
+                                                                </div>
 
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                                <ul className="participantsColumn">
-                                                    {secondFiveParticipants.map((player, idx) => (
-                                                        <li key={idx + 5}> {/* Use idx + 5 to avoid key conflicts */}
-                                                            {player.riotIdGameName}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                    <ul className="participantsColumn">
+                                                        {secondFiveParticipants.map((player, idx) => (
+                                                            <li key={idx + 5}> {/* Use idx + 5 to avoid key conflicts */}
+                                                                {player.riotIdGameName}
 
-                                                            {/* Display item images */}
-                                                            <div className="items">
-                                                                {[player.item0, player.item1, player.item2, player.item3, player.item4, player.item5, player.item6].map((itemId, itemIndex) => {
-                                                                    if (itemId !== 0) { // Only display item if itemId is not 0
-                                                                        const itemImageUrl = getItemImageUrl(itemId);
-                                                                        return <img key={itemIndex} src={itemImageUrl} alt={`Item ${itemId}`} width="30" height="30" />;
-                                                                    }
-                                                                    return null;
-                                                                })}
-                                                            </div>
+                                                                {/* Display item images */}
+                                                                <div className="items">
+                                                                    {[player.item0, player.item1, player.item2, player.item3, player.item4, player.item5, player.item6].map((itemId, itemIndex) => {
+                                                                        if (itemId !== 0) { // Only display item if itemId is not 0
+                                                                            const itemImageUrl = getItemImageUrl(itemId);
+                                                                            return <img key={itemIndex} src={itemImageUrl} alt={`Item ${itemId}`} width="30" height="30" />;
+                                                                        }
+                                                                        return null;
+                                                                    })}
+                                                                </div>
 
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </>
-                                    )}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </>
+                                        )
+                                    }
                                     <hr />
                                 </div>
                             );
                         })}
                     </div>
-                )}
+                )
+                }
 
 
                 <Link to={`/`}>GO TO HOME</Link>
-            </div>
+            </div >
         );
     }
 }
