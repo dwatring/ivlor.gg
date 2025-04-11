@@ -25,6 +25,8 @@
   width: 108px;
   height: 91px;
   flex-direction: column;
+  margin-left: 2px;
+  margin-top: 2px;
 }
 
 .gameInfoType {
@@ -49,10 +51,12 @@
 
 .blueRedSpan.win {
   color: #5383e8;
+  font-size: 12px;
 }
 
 .blueRedSpan.loss {
   color: #e84057;
+  font-size: 12px;
 }
 
 .graySpan {
@@ -63,10 +67,17 @@
 }
 
 .championInfo {
-  width: 388px;
-  height: 88px;
-  display: column;
-  align-items: center;
+  width: 382px;
+  height: 82px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.championInfoContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
 }
 
 .spriteContainer {
@@ -96,6 +107,59 @@
   border-radius: 3px;
   border-radius: 50%; /* This makes the image round */
   object-fit: cover; /* Ensures the image scales correctly to fill the circle */
+}
+
+.SummonerSpellAndRunesContainer {
+  width: 46px;
+  height: 46px;
+  flex-direction: row;
+  gap: 2px;
+}
+
+.SummonerSpellContainer {
+  width: 22px;
+  height: 22px;
+  flex-direction: column;
+}
+
+.RunesContainer {
+  width: 22px;
+  height: 22px;
+  flex-direction: column;
+}
+
+.items {
+  flex-direction: column;
+  gap: 1.5px;
+}
+
+.itemPlaceholder.win {
+  width: 22px;
+  height: 22px;
+  background-color: #2b3d88;
+  border-radius: 0.25rem;
+}
+
+.itemPlaceholder.loss {
+  width: 22px;
+  height: 22px;
+  background-color: #883d4a;
+  border-radius: 0.25rem;
+}
+
+.matchParticipantsContainer {
+  width: 164px;
+  height: 88px;
+}
+
+.matchParticipantsGroupOne {
+  flex-direction: column;
+  gap: 0.5px;
+}
+
+.matchParticipantsGroupTwo {
+  flex-direction: column;
+  gap: 0.5px;
 }
 
 .lobbyInfo {

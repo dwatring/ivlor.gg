@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './SummonerSearch.css';
 import { makeObservable, observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Bottleneck from 'bottleneck';
+
 
 
 const limiter = new Bottleneck({
@@ -88,8 +89,45 @@ const timeAgo = (timestamp: number) => {
     }
 };
 
+const getQueueName = (queueId: number): string => {
+    switch (queueId) {
+        case 420: return "Ranked Solo/Duo";
+        case 430: return "Normal Blind";
+        case 440: return "Ranked Flex";
+        case 400: return "Normal Draft";
+        case 450: return "ARAM";
+        case 700: return "Clash";
+        case 900: return "URF";
+        default: return "Other";
+    }
+};
 
+// Rune icons
+const getRuneIconUrl = (perkId: number) =>
+    `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Perk/${perkId}.png`;
 
+const getRuneStyleIconUrl = (styleId: number) =>
+    `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${styleId}/${styleId}.png`;
+
+const summonerSpellIdMap: { [id: number]: string } = {
+    1: "SummonerBoost",         // Ghost
+    3: "SummonerExhaust",       // Exhaust
+    4: "SummonerFlash",         // Flash
+    6: "SummonerHaste",         // Haste
+    7: "SummonerHeal",          // Heal
+    11: "SummonerSmite",        // Smite
+    12: "SummonerTeleport",     // Teleport
+    13: "SummonerMana",         // Clarity
+    14: "SummonerDot",          // Ignite
+    21: "SummonerBarrier",      // Barrier
+    32: "SummonerSnowball",     // Snowball
+    39: "SummonerChillingSmite",// Chilling Smite
+    55: "SummonerPoroRecall",   // Poro Recall
+    56: "SummonerMark",         // Mark (used by Kindred)
+    57: "SummonerPoroThrow",    // Poro Throw
+    59: "SummonerPoroCoin",     // Poro Coin
+    61: "SummonerShurimaRecall",// Shurima Recall
+};
 
 interface SummonerData {
     id: string;
@@ -103,33 +141,55 @@ interface SummonerData {
 interface MatchData {
     metadata: { matchId: string };
     info: {
-        gameMode: string; // Game Mode
-        gameDuration: number; // Calculate gametime
-        gameStartTimestamp: number; // Game Start Time
+        gameDuration: number;
+        gameStartTimestamp: number;
+        queueId: number;
         participants: {
-            riotIdGameName: string; // Only include riotIdGameName
-            puuid: string; // PUUID to fetch summoners rank
-            doublekill: number; // Highest kill counter
-            triplekill: number; // Highest kill counter
-            quadrakill: number; // Highest kill counter
-            pentakill: number; // Highest kill counter
-            kills: number; // KDA
-            assists: number; // KDA
-            deaths: number; // KDA
-            item0: number; // Items
-            item1: number; // Items
-            item2: number; // Items
-            item3: number; // Items
-            item4: number; // Items
-            item5: number; // Items
-            item6: number; // Items
-            championName: string; // Champion Name
-            champLevel: number; // Champion Level
-            totalMinionsKilled: number; // CS
-            win: boolean; // Win or Loss
+            riotIdGameName: string;
+            puuid: string;
+            doublekill: number;
+            triplekill: number;
+            quadrakill: number;
+            pentakill: number;
+            kills: number;
+            assists: number;
+            deaths: number;
+            item0: number;
+            item1: number;
+            item2: number;
+            item3: number;
+            item4: number;
+            item5: number;
+            item6: number;
+            championName: string;
+            champLevel: number;
+            totalMinionsKilled: number;
+            win: boolean;
+            summoner1Id: number; //ADDED VARIABLE
+            summoner2Id: number; //ADDED VARIABLE
+
+            perks: {
+                statPerks: {
+                    defense: number;
+                    flex: number;
+                    offense: number;
+                };
+                styles: {
+                    description: string;
+                    style: number;
+                    selections: {
+                        perk: number;
+                        var1: number;
+                        var2: number;
+                        var3: number;
+                    }[];
+                }[];
+            };
         }[];
     };
 }
+
+
 
 @observer
 export default class SummonerSearch extends React.Component {
@@ -318,21 +378,20 @@ export default class SummonerSearch extends React.Component {
                             );
 
 
+
                             return (
                                 <div key={index} className="matchCard">
-                                    {/* Apply conditional background color to searchedParticipantCard */}
                                     <div className={`searchedParticipantCard ${searchedParticipant?.win ? 'win' : 'loss'}`}>
+                                        {/* Game Info */}
                                         <div className="gameInfo">
                                             <div className="gameInfoType">
-                                                {/* Apply conditional text color to blueRedSpan */}
                                                 <div className={`blueRedSpan ${searchedParticipant?.win ? 'win' : 'loss'}`}>
-                                                    {match.info.gameMode}
+                                                    {getQueueName(match.info.queueId)}
                                                 </div>
                                                 <div className="graySpan">{timeAgo(match.info.gameStartTimestamp)}</div>
                                             </div>
                                             <div>--</div>
                                             <div className="gameInfoWinLoss">
-                                                {/* Victory/Defeat text remains inside but no extra div */}
                                                 {!searchedParticipant ? (
                                                     <span>Loading...</span>
                                                 ) : (
@@ -345,31 +404,124 @@ export default class SummonerSearch extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {/* Champion Info */}
                                         <div className="championInfo">
-                                            {/* Only render if searchedParticipant exists */}
                                             {searchedParticipant ? (
                                                 <>
-                                                    {/* Dynamically set the champion sprite image */}
-                                                    <div className="spriteContainer">
-                                                        <img
-                                                            className="championSprite"
-                                                            src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${searchedParticipant.championName}.png`}
-                                                            alt={`${searchedParticipant.championName} Sprite`}
-                                                            width="48"
-                                                            height="48"
-                                                        />
-                                                        <div className="championSpriteLevel">
-                                                            {/* Display the champion level */}
-                                                            {searchedParticipant.champLevel}
+                                                    <div className="championInfoContainer">
+                                                        <div className="spriteContainer">
+                                                            <img
+                                                                className="championSprite"
+                                                                src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${searchedParticipant.championName}.png`}
+                                                                alt={`${searchedParticipant.championName} Sprite`}
+                                                                width="48"
+                                                                height="48"
+                                                            />
+                                                            <div className="championSpriteLevel">
+                                                                {searchedParticipant.champLevel}
+                                                            </div>
                                                         </div>
+                                                        <div className="SummonerSpellAndRunesContainer">
+                                                            <div className="SummonerSpellContainer">
+                                                                {/* Define spell1Name and spell2Name here */}
+                                                                {searchedParticipant && (
+                                                                    <>
+                                                                        {(() => {
+                                                                            const spell1Name = summonerSpellIdMap[searchedParticipant.summoner1Id];
+                                                                            const spell2Name = summonerSpellIdMap[searchedParticipant.summoner2Id];
+
+                                                                            // Define URLs for spell icons
+                                                                            const spell1Url = spell1Name
+                                                                                ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell1Name}.png`
+                                                                                : "/fallback-icon.png"; // Fallback if spell is missing
+                                                                            const spell2Url = spell2Name
+                                                                                ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell2Name}.png`
+                                                                                : "/fallback-icon.png"; // Fallback if spell is missing
+
+                                                                            return (
+                                                                                <>
+                                                                                    <img
+                                                                                        src={spell1Url}
+                                                                                        alt={`Summoner Spell 1 - ${spell1Name}`}
+                                                                                        width="22"
+                                                                                        height="22"
+                                                                                    />
+                                                                                    <img
+                                                                                        src={spell2Url}
+                                                                                        alt={`Summoner Spell 2 - ${spell2Name}`}
+                                                                                        width="22"
+                                                                                        height="22"
+                                                                                    />
+                                                                                </>
+                                                                            );
+                                                                        })()}
+                                                                    </>
+                                                                )}
+                                                                <div className="RunesContainer">
+                                                                    <img
+                                                                        src={getRuneIconUrl(searchedParticipant.perks.styles[0].selections[0].perk)}
+                                                                        alt="Keystone Rune"
+                                                                        width="22"
+                                                                        height="22"
+                                                                    />
+                                                                    <img
+                                                                        src={getRuneStyleIconUrl(searchedParticipant.perks.styles[1].style)}
+                                                                        alt="Secondary Rune Style"
+                                                                        width="22"
+                                                                        height="22"
+                                                                    />
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="items">
+                                                        {[searchedParticipant.item0, searchedParticipant.item1, searchedParticipant.item2, searchedParticipant.item3, searchedParticipant.item4, searchedParticipant.item5, searchedParticipant.item6].map(
+                                                            (itemId, itemIndex) => {
+                                                                if (itemId !== 0) {
+                                                                    const itemImageUrl = getItemImageUrl(itemId);
+                                                                    return (
+                                                                        <img
+                                                                            key={itemIndex}
+                                                                            src={itemImageUrl}
+                                                                            alt={`Item ${itemId}`}
+                                                                            width="22"
+                                                                            height="22"
+                                                                        />
+                                                                    );
+                                                                } else {
+                                                                    return (
+                                                                        <div
+                                                                            key={itemIndex}
+                                                                            className={`itemPlaceholder ${searchedParticipant.win ? 'win' : 'loss'}`}
+                                                                        />
+                                                                    );
+                                                                }
+                                                            }
+                                                        )}
                                                     </div>
                                                 </>
                                             ) : (
-                                                <div>Loading...</div> // or any other fallback when searchedParticipant is undefined
+                                                <div>Loading...</div>
                                             )}
                                         </div>
 
+                                        {/* Match Participants - Inside the card, outside championInfo */}
+                                        <div className="matchParticipantsContainer">
+                                            <div className="matchParticipantsGroupOne">
+                                                {/* Fill with team 100 participants */}
+                                            </div>
+                                            <div className="matchParticipantsGroupTwo">
+                                                {/* Fill with team 200 participants */}
+                                            </div>
+                                        </div>
+
                                     </div>
+
+
+
 
                                     {/* Display Participants with riotIdGameName */}
                                     {
