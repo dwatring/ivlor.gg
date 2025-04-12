@@ -112,31 +112,34 @@
 .SummonerSpellAndRunesContainer {
   width: 46px;
   height: 46px;
-  flex-direction: row;
+  display: flex;
   gap: 2px;
 }
 
 .SummonerSpellContainer {
   width: 22px;
   height: 22px;
+  display: flex;
   flex-direction: column;
 }
 
 .RunesContainer {
   width: 22px;
   height: 22px;
+  display: flex;
   flex-direction: column;
 }
 
 .items {
-  flex-direction: column;
+  display: flex;
+  flex-direction: row;
   gap: 1.5px;
 }
 
 .itemPlaceholder.win {
   width: 22px;
   height: 22px;
-  background-color: #2b3d88;
+  background-color: #3e4c83;
   border-radius: 0.25rem;
 }
 
@@ -153,11 +156,13 @@
 }
 
 .matchParticipantsGroupOne {
+  display: flex;
   flex-direction: column;
   gap: 0.5px;
 }
 
 .matchParticipantsGroupTwo {
+  display: flex;
   flex-direction: column;
   gap: 0.5px;
 }

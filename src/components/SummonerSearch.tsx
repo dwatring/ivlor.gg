@@ -48,18 +48,6 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = 3, de
 
 const playerCache: Record<string, any> = {}; // Store fetched Riot ID data
 
-const fetchRiotID = async (puuid: string, apiKey: string) => {
-    if (playerCache[puuid]) return playerCache[puuid]; // Return cached data
-
-    const accountData = await fetchWithRetry(
-        `https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`,
-        { headers: { 'X-Riot-Token': apiKey } }
-    );
-
-    playerCache[puuid] = accountData; // Cache the result
-    return accountData;
-};
-
 const getItemImageUrl = (itemId: number) => {
     // Use the item ID to generate the URL for the item's image
     return `https://ddragon.leagueoflegends.com/cdn/15.6.1/img/item/${itemId}.png`;
@@ -102,13 +90,6 @@ const getQueueName = (queueId: number): string => {
     }
 };
 
-// Rune icons
-const getRuneIconUrl = (perkId: number) =>
-    `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Perk/${perkId}.png`;
-
-const getRuneStyleIconUrl = (styleId: number) =>
-    `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${styleId}/${styleId}.png`;
-
 const summonerSpellIdMap: { [id: number]: string } = {
     1: "SummonerBoost",         // Ghost
     3: "SummonerExhaust",       // Exhaust
@@ -128,6 +109,7 @@ const summonerSpellIdMap: { [id: number]: string } = {
     59: "SummonerPoroCoin",     // Poro Coin
     61: "SummonerShurimaRecall",// Shurima Recall
 };
+
 
 interface SummonerData {
     id: string;
@@ -189,19 +171,72 @@ interface MatchData {
     };
 }
 
+interface runeSlot {
+    runes: runePerk[];
+}
 
+interface runeStyle {
+    id: number;
+    key: number;
+    icon: string;
+    name: string;
+    slots: runeSlot[];
+}
+
+interface runePerk {
+    id: number;
+    key: number;
+    icon: string;
+    name: string;
+    shortDesc: string;
+    longDesc: string;
+}
 
 @observer
 export default class SummonerSearch extends React.Component {
-    @observable summonerName: string = '';
+    @observable summonerName: string = 'FrankTheTank27#NA1';
+    // @observable summonerName: string = '';
     @observable summonerData: SummonerData | null = null;
     @observable errorMessage: string = '';
     @observable matchHistory: MatchData[] = [];
+    @observable runesReforged: runeStyle[] = [];
 
     constructor(props: {}) {
         super(props);
         makeObservable(this);
     }
+
+    componentDidMount(): void {
+        this.loadRunesReforged();
+    }
+
+    //10.16.1
+    @action
+    getRuneStyleIconURL = (styleId: number) => {
+        const runeStyle = this.runesReforged.find((style) => style.id === styleId);
+        if (runeStyle) {
+            return `https://ddragon.leagueoflegends.com/cdn/img/${runeStyle.icon}`;
+        }
+        console.error(`StyleId ${styleId} not found in runeStyleMap`);  // Debugging line
+        return '/fallback-icon.png'; // Fallback if no matching rune style is found
+    };
+
+    //10.16.1
+    @action
+    getRunePerkIconURL = (styleId: number, perkId: number) => {
+        let url = '/fallback-icon.png';
+        const runeStyle = this.runesReforged.find((style) => style.id === styleId);
+        runeStyle?.slots.forEach((slot) => {
+            const foundPerk = slot.runes.find((perk) => perk.id === perkId);
+            if (foundPerk) {
+                url = `https://ddragon.leagueoflegends.com/cdn/img/${foundPerk.icon}`;
+            }
+        }
+        );
+        return url
+    };
+
+
 
     @action
     setErrorMessage(message: string) {
@@ -224,6 +259,7 @@ export default class SummonerSearch extends React.Component {
     @action
     handleSearch = async () => {
         const apiKey = process.env.REACT_APP_RIOT_API_KEY;
+        console.log(this.summonerName);
 
         if (!apiKey) {
             this.setErrorMessage('API key is missing. Check your .env file.');
@@ -237,7 +273,7 @@ export default class SummonerSearch extends React.Component {
         }
 
         try {
-            const cachedAccountData = playerCache[`${gameName}#${tagLine}`];
+            const cachedAccountData = playerCache[`${gameName} #${tagLine} `];
             let puuid;
 
             if (cachedAccountData) {
@@ -306,17 +342,6 @@ export default class SummonerSearch extends React.Component {
 
                     console.log(`Match Data for ${matchId}:`, matchData); // Log raw match data
 
-                    // Create a copy of participants and add riotIdGameName
-                    const participantsWithRiotID = await Promise.all(
-                        matchData.info.participants.map(async (player: any) => {
-                            const accountData = await fetchWithRetry(
-                                `https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/${player.puuid}`,
-                                { headers: { 'X-Riot-Token': apiKey } }
-                            );
-                            return { ...player, riotIdGameName: accountData.gameName };
-                        })
-                    );
-
                     // Create a copy of matchData and update participants
                     const matchDataCopy = structuredClone(matchData); // Modern deep copy
                     matchDataCopy.info = { ...matchData.info }; // Shallow copy of matchData.info
@@ -336,7 +361,12 @@ export default class SummonerSearch extends React.Component {
         }
     };
 
-
+    loadRunesReforged = async () => {
+        const response = await fetch(
+            `https://ddragon.leagueoflegends.com/cdn/14.3.1/data/en_US/runesReforged.json`
+        );
+        this.runesReforged = await response.json();
+    };
 
     render() {
         return (
@@ -458,22 +488,23 @@ export default class SummonerSearch extends React.Component {
                                                                         })()}
                                                                     </>
                                                                 )}
-                                                                <div className="RunesContainer">
-                                                                    <img
-                                                                        src={getRuneIconUrl(searchedParticipant.perks.styles[0].selections[0].perk)}
-                                                                        alt="Keystone Rune"
-                                                                        width="22"
-                                                                        height="22"
-                                                                    />
-                                                                    <img
-                                                                        src={getRuneStyleIconUrl(searchedParticipant.perks.styles[1].style)}
-                                                                        alt="Secondary Rune Style"
-                                                                        width="22"
-                                                                        height="22"
-                                                                    />
-                                                                </div>
                                                             </div>
+                                                            <div className="RunesContainer">
+                                                                <img
+                                                                    src={this.getRunePerkIconURL(searchedParticipant.perks.styles[0].style, searchedParticipant.perks.styles[0].selections[0].perk)}
+                                                                    alt="Keystone Rune"
+                                                                    width="22"
+                                                                    height="22"
+                                                                />
 
+                                                                <img
+                                                                    src={this.getRuneStyleIconURL(searchedParticipant.perks.styles[1].style)}
+                                                                    alt="Secondary Rune Style"
+                                                                    width="22"
+                                                                    height="22"
+                                                                />
+
+                                                            </div>
                                                         </div>
                                                     </div>
 
