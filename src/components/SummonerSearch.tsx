@@ -111,6 +111,8 @@ const summonerSpellIdMap: { [id: number]: string } = {
 };
 
 
+
+
 interface SummonerData {
     id: string;
     accountId: string;
@@ -259,7 +261,6 @@ export default class SummonerSearch extends React.Component {
     @action
     handleSearch = async () => {
         const apiKey = process.env.REACT_APP_RIOT_API_KEY;
-        console.log(this.summonerName);
 
         if (!apiKey) {
             this.setErrorMessage('API key is missing. Check your .env file.');
@@ -354,7 +355,6 @@ export default class SummonerSearch extends React.Component {
             this.matchHistory = matchDetails;
 
             // Log the entire match history for debugging
-            console.log('Full Match History:', this.matchHistory);
         } catch (error) {
             this.errorMessage = 'Failed to fetch match history.';
             console.error('Error in fetchMatchHistory:', error);
@@ -370,31 +370,18 @@ export default class SummonerSearch extends React.Component {
 
     render() {
         return (
-            <div>
-                <input
-                    type="text"
-                    value={this.summonerName}
-                    onChange={this.handleInputChange}
-                    placeholder="Enter Riot ID (e.g., Player#NA1)"
-                />
-                <button onClick={this.handleSearch}>Search</button>
+            <div className="contentContainer">
+                <div className="searchContainer">
+                    <input className="inputContainer"
+                        type="text"
+                        value={this.summonerName}
+                        onChange={this.handleInputChange}
+                        placeholder="Enter Riot ID (e.g., Player#NA1)"
+                    />
+                    <button className="buttonSearch" onClick={this.handleSearch}>Search</button>
 
-                {this.errorMessage && <p style={{ color: 'red' }}>{this.errorMessage}</p>}
-
-                {this.summonerData && (
-                    <div className="summonerData">
-                        <h3>Summoner Data</h3>
-                        <p>Name: {this.summonerData.name}</p>
-                        <p>Level: {this.summonerData.summonerLevel}</p>
-                        <img
-                            src={`http://ddragon.leagueoflegends.com/cdn/14.3.1/img/profileicon/${this.summonerData.profileIconId}.png`}
-                            alt="Profile Icon"
-                            width="100"
-                            height="100"
-                        />
-                    </div>
-                )}
-
+                    {this.errorMessage && <p style={{ color: 'red' }}>{this.errorMessage}</p>}
+                </div>
                 {this.matchHistory.length > 0 && (
                     <div className="matchHistory">
                         <h3>Recent Matches</h3>
@@ -503,6 +490,54 @@ export default class SummonerSearch extends React.Component {
                                                                     width="22"
                                                                     height="22"
                                                                 />
+
+                                                            </div>
+                                                        </div>
+                                                        <div className="KDAContainer">
+                                                            {/* KDA Display */}
+                                                            <div className="KDAScore">
+                                                                {searchedParticipant.kills} / <span className="death-text">{searchedParticipant.deaths}</span> / {searchedParticipant.assists}
+                                                            </div>
+                                                            <div className="KDAComparison">
+                                                                {(() => {
+                                                                    const { kills, assists, deaths } = searchedParticipant;
+                                                                    const kdaValue = deaths === 0 ? kills + assists : (kills + assists) / deaths;
+                                                                    return `${kdaValue.toFixed(2)} : 1 KDA`;
+                                                                })()}
+                                                            </div>
+
+                                                        </div>
+                                                        {/* Kill Participation Display */}
+                                                        <div className="KPCSRankContainer">
+                                                            <div className="KPScore">
+                                                                {(() => {
+                                                                    // Find participant index (used to infer team)
+                                                                    const participantIndex = match.info.participants.findIndex(
+                                                                        p => p.puuid === searchedParticipant.puuid
+                                                                    );
+
+                                                                    const isTeamOne = participantIndex < 5;
+
+                                                                    // Get team kills
+                                                                    const teamKills = match.info.participants
+                                                                        .filter((_, idx) => (isTeamOne ? idx < 5 : idx >= 5))
+                                                                        .reduce((sum, p) => sum + p.kills, 0);
+
+                                                                    // Calculate KP
+                                                                    const playerKP =
+                                                                        teamKills > 0
+                                                                            ? ((searchedParticipant.kills + searchedParticipant.assists) / teamKills) * 100
+                                                                            : 0;
+
+                                                                    return `${playerKP.toFixed(0)}% KP`;
+                                                                })()}
+                                                            </div>
+                                                            <div className="CScore">
+                                                                CS {searchedParticipant.totalMinionsKilled}
+                                                                &nbsp;({(searchedParticipant.totalMinionsKilled / (match.info.gameDuration / 60)).toFixed(1)} CS/min)
+                                                            </div>
+
+                                                            <div className="RankScore">
 
                                                             </div>
                                                         </div>
