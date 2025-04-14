@@ -227,10 +227,16 @@
 }
 
 .KPScore,
-.CScore,
-.RankScore {
+.CScore {
   display: flex;
   color: gray;
+  font-size: 12px;
+  justify-content: left; /* Optional: centers the content horizontally inside each flex container */
+}
+
+.RankedScore {
+  display: flex;
+  color: white;
   font-size: 12px;
   justify-content: left; /* Optional: centers the content horizontally inside each flex container */
 }
@@ -238,18 +244,28 @@
 .matchParticipantsContainer {
   width: 164px;
   height: 88px;
-}
-
-.matchParticipantsGroupOne {
+  flex-direction: row;
   display: flex;
-  flex-direction: column;
-  gap: 0.5px;
+  gap: 4px;
 }
 
+.matchParticipantsGroupOne,
 .matchParticipantsGroupTwo {
+  width: 80px;
+  height: 88px;
   display: flex;
   flex-direction: column;
-  gap: 0.5px;
+}
+
+.participantName,
+.participantItem {
+  width: 60px;
+  height: 16px;
+  font-size: 12px;
+  display: flex;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: gray;
 }
 
 .lobbyInfo {

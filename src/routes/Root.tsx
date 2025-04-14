@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import React from 'react'
-import logo from '../assets/logo.svg'
 import './Root.css'
 import { makeObservable, observable, computed, action } from 'mobx'
 import { observer } from 'mobx-react'

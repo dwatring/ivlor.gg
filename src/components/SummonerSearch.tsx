@@ -110,8 +110,35 @@ const summonerSpellIdMap: { [id: number]: string } = {
     61: "SummonerShurimaRecall",// Shurima Recall
 };
 
+// REVISIT
+const fetchRankedData = async (summonerId: string, apiKey: string): Promise<RankedData | null> => {
+    try {
+        const response = await fetch(
+            `https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`,
+            {
+                headers: {
+                    'X-Riot-Token': apiKey,
+                },
+            }
+        );
 
+        if (!response.ok) {
+            throw new Error('Failed to fetch ranked data');
+        }
 
+        const rankedEntries: RankedData[] = await response.json();
+        console.log('Ranked entries:', rankedEntries);
+
+        const soloDuo = rankedEntries.find(entry => entry.queueType === 'RANKED_SOLO_5x5');
+        const flex = rankedEntries.find(entry => entry.queueType === 'RANKED_FLEX_SR');
+
+        return soloDuo || flex || null;
+
+    } catch (error) {
+        console.error('Error fetching ranked data:', error);
+        return null;
+    }
+};
 
 interface SummonerData {
     id: string;
@@ -194,6 +221,16 @@ interface runePerk {
     longDesc: string;
 }
 
+interface RankedData {
+    tier: string;
+    rank: string;
+    leaguePoints: number;
+    wins: number;
+    losses: number;
+    queueType: string;
+}
+
+
 @observer
 export default class SummonerSearch extends React.Component {
     @observable summonerName: string = 'FrankTheTank27#NA1';
@@ -202,6 +239,9 @@ export default class SummonerSearch extends React.Component {
     @observable errorMessage: string = '';
     @observable matchHistory: MatchData[] = [];
     @observable runesReforged: runeStyle[] = [];
+    @observable rankedData: RankedData | null = null;
+
+
 
     constructor(props: {}) {
         super(props);
@@ -212,7 +252,6 @@ export default class SummonerSearch extends React.Component {
         this.loadRunesReforged();
     }
 
-    //10.16.1
     @action
     getRuneStyleIconURL = (styleId: number) => {
         const runeStyle = this.runesReforged.find((style) => style.id === styleId);
@@ -223,7 +262,6 @@ export default class SummonerSearch extends React.Component {
         return '/fallback-icon.png'; // Fallback if no matching rune style is found
     };
 
-    //10.16.1
     @action
     getRunePerkIconURL = (styleId: number, perkId: number) => {
         let url = '/fallback-icon.png';
@@ -238,6 +276,9 @@ export default class SummonerSearch extends React.Component {
         return url
     };
 
+    @action setRankedData = (data: RankedData | null) => {
+        this.rankedData = data;
+    };
 
 
     @action
@@ -258,6 +299,7 @@ export default class SummonerSearch extends React.Component {
         this.errorMessage = '';
     };
 
+    // REVISIT PUUID ACQUISITION
     @action
     handleSearch = async () => {
         const apiKey = process.env.REACT_APP_RIOT_API_KEY;
@@ -302,9 +344,14 @@ export default class SummonerSearch extends React.Component {
 
                 if (!summonerResponse.ok) throw new Error('Failed to retrieve summoner data.');
 
+                //Fetch Summoner Data
                 const summonerData = await summonerResponse.json();
                 this.setSummonerData(summonerData);
                 playerCache[puuid] = summonerData;
+
+                // Fetch Rank Data
+                const rankData = await fetchRankedData(summonerData.id, apiKey);
+                this.setRankedData(rankData);
             }
 
             await this.fetchMatchHistory(puuid, apiKey);
@@ -385,6 +432,15 @@ export default class SummonerSearch extends React.Component {
                 {this.matchHistory.length > 0 && (
                     <div className="matchHistory">
                         <h3>Recent Matches</h3>
+                        <div className="summonerProfile">
+                            {this.rankedData ? (
+                                <div className="RankedScore">
+                                    Current Rank: {this.rankedData.tier} {this.rankedData.rank} - {this.rankedData.leaguePoints} LP
+                                </div>
+                            ) : (
+                                <div className="RankedScore">Unranked</div>
+                            )}
+                        </div>
                         {this.matchHistory.map((match, index) => {
                             // Split participants into two groups
                             const firstFiveParticipants = match.info.participants.slice(0, 5);
@@ -397,6 +453,7 @@ export default class SummonerSearch extends React.Component {
 
 
                             return (
+
                                 <div key={index} className="matchCard">
                                     <div className={`searchedParticipantCard ${searchedParticipant?.win ? 'win' : 'loss'}`}>
                                         {/* Game Info */}
@@ -529,16 +586,12 @@ export default class SummonerSearch extends React.Component {
                                                                             ? ((searchedParticipant.kills + searchedParticipant.assists) / teamKills) * 100
                                                                             : 0;
 
-                                                                    return `${playerKP.toFixed(0)}% KP`;
+                                                                    return `P/Kill ${playerKP.toFixed(0)}%`;
                                                                 })()}
                                                             </div>
                                                             <div className="CScore">
                                                                 CS {searchedParticipant.totalMinionsKilled}
                                                                 &nbsp;({(searchedParticipant.totalMinionsKilled / (match.info.gameDuration / 60)).toFixed(1)} CS/min)
-                                                            </div>
-
-                                                            <div className="RankScore">
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -577,13 +630,33 @@ export default class SummonerSearch extends React.Component {
                                         {/* Match Participants - Inside the card, outside championInfo */}
                                         <div className="matchParticipantsContainer">
                                             <div className="matchParticipantsGroupOne">
-                                                {/* Fill with team 100 participants */}
+                                                {match.info.participants.slice(0, 5).map((player, idx) => (
+                                                    <div key={idx} className="participantItem">
+                                                        <img
+                                                            src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                            alt={player.championName}
+                                                            width="16"
+                                                            height="16"
+                                                        />
+                                                        <span className="participantName">{player.riotIdGameName}</span>
+                                                    </div>
+                                                ))}
                                             </div>
+
                                             <div className="matchParticipantsGroupTwo">
-                                                {/* Fill with team 200 participants */}
+                                                {match.info.participants.slice(5, 10).map((player, idx) => (
+                                                    <div key={idx + 5} className="participantItem">
+                                                        <img
+                                                            src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                            alt={player.championName}
+                                                            width="16"
+                                                            height="16"
+                                                        />
+                                                        <span className="participantName">{player.riotIdGameName}</span>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
-
                                     </div>
 
 
