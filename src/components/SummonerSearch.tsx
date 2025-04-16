@@ -123,6 +123,7 @@ const fetchRankedData = async (summonerId: string, apiKey: string): Promise<Rank
         );
 
         if (!response.ok) {
+            console.error('Response not OK:', response);
             throw new Error('Failed to fetch ranked data');
         }
 
@@ -140,6 +141,78 @@ const fetchRankedData = async (summonerId: string, apiKey: string): Promise<Rank
     }
 };
 
+
+const rankToScore: { [key: string]: number } = {
+    "IRON IV": 1, "IRON III": 2, "IRON II": 3, "IRON I": 4,
+    "BRONZE IV": 5, "BRONZE III": 6, "BRONZE II": 7, "BRONZE I": 8,
+    "SILVER IV": 9, "SILVER III": 10, "SILVER II": 11, "SILVER I": 12,
+    "GOLD IV": 13, "GOLD III": 14, "GOLD II": 15, "GOLD I": 16,
+    "PLATINUM IV": 17, "PLATINUM III": 18, "PLATINUM II": 19, "PLATINUM I": 20,
+    "DIAMOND IV": 21, "DIAMOND III": 22, "DIAMOND II": 23, "DIAMOND I": 24,
+    "MASTER": 25,
+    "GRANDMASTER": 26,
+    "CHALLENGER": 27
+};
+
+const rankedDataCache: { [puuid: string]: RankedData | null } = {};
+
+const getRankedDataArrayForMatch = async (
+    participantPuuids: string[],
+    apiKey: string
+): Promise<RankedData[]> => {
+    const data: RankedData[] = [];
+
+    // Fetch summoner data if not available in cache
+    const summonersToFetch = participantPuuids.filter((puuid) => !playerCache[puuid]);
+
+    // If there are summoners to fetch, do so concurrently
+    if (summonersToFetch.length > 0) {
+        const summonerPromises = summonersToFetch.map(async (puuid) => {
+            const res = await fetch(
+                `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}`,
+                { headers: { 'X-Riot-Token': apiKey } }
+            );
+            if (!res.ok) return null;
+            const summoner = await res.json();
+            playerCache[puuid] = summoner;
+            return summoner;
+        });
+
+        const fetchedSummoners = await Promise.all(summonerPromises);
+
+        // Filter out any failed fetches
+        const validSummoners = fetchedSummoners.filter((summoner) => summoner != null) as any[];
+
+        // Fetch ranked data for valid summoners
+        const rankedDataPromises = validSummoners.map(async (summoner) => {
+            const rankedData = await fetchRankedData(summoner.id, apiKey);
+            rankedDataCache[summoner.puuid] = rankedData;
+            return rankedData;
+        });
+
+        const rankedDataArray = await Promise.all(rankedDataPromises);
+
+        // Add ranked data to final result (filter out null values)
+        rankedDataArray.forEach((rankedData) => {
+            if (rankedData) {
+                data.push(rankedData);
+            }
+        });
+    }
+
+    // For participants that are already in cache, directly fetch the ranked data
+    const cachedRankedData = participantPuuids
+        .filter((puuid) => rankedDataCache[puuid])
+        .map((puuid) => rankedDataCache[puuid])
+        .filter((rankedData) => rankedData !== null); // Filter out null ranked data
+
+    data.push(...cachedRankedData.filter((rankedData) => rankedData !== null) as RankedData[]);
+
+    return data;
+};
+
+
+
 interface SummonerData {
     id: string;
     accountId: string;
@@ -150,7 +223,10 @@ interface SummonerData {
 }
 
 interface MatchData {
-    metadata: { matchId: string };
+    metadata: {
+        matchId: string
+        participants: string[]; // Array of PUUID strings
+    };
     info: {
         gameDuration: number;
         gameStartTimestamp: number;
@@ -222,6 +298,7 @@ interface runePerk {
 }
 
 interface RankedData {
+    puuid: string;      // Unique player identifier
     tier: string;
     rank: string;
     leaguePoints: number;
@@ -240,6 +317,7 @@ export default class SummonerSearch extends React.Component {
     @observable matchHistory: MatchData[] = [];
     @observable runesReforged: runeStyle[] = [];
     @observable rankedData: RankedData | null = null;
+    @observable averageRank = "Unranked";  // Make sure to mark it as observable
 
 
 
@@ -299,7 +377,6 @@ export default class SummonerSearch extends React.Component {
         this.errorMessage = '';
     };
 
-    // REVISIT PUUID ACQUISITION
     @action
     handleSearch = async () => {
         const apiKey = process.env.REACT_APP_RIOT_API_KEY;
@@ -316,7 +393,8 @@ export default class SummonerSearch extends React.Component {
         }
 
         try {
-            const cachedAccountData = playerCache[`${gameName} #${tagLine} `];
+            const cacheKey = `${gameName}#${tagLine}`;
+            const cachedAccountData = playerCache[cacheKey];
             let puuid;
 
             if (cachedAccountData) {
@@ -331,9 +409,10 @@ export default class SummonerSearch extends React.Component {
                 const accountData = await accountResponse.json();
                 puuid = accountData.puuid;
 
-                playerCache[`${gameName}#${tagLine}`] = accountData;
+                playerCache[cacheKey] = accountData;
             }
 
+            // If cached player data is available, use it
             if (playerCache[puuid]) {
                 this.setSummonerData(playerCache[puuid]);
             } else {
@@ -344,7 +423,7 @@ export default class SummonerSearch extends React.Component {
 
                 if (!summonerResponse.ok) throw new Error('Failed to retrieve summoner data.');
 
-                //Fetch Summoner Data
+                // Fetch Summoner Data
                 const summonerData = await summonerResponse.json();
                 this.setSummonerData(summonerData);
                 playerCache[puuid] = summonerData;
@@ -352,15 +431,21 @@ export default class SummonerSearch extends React.Component {
                 // Fetch Rank Data
                 const rankData = await fetchRankedData(summonerData.id, apiKey);
                 this.setRankedData(rankData);
+
+                rankedDataCache[puuid] = rankData;
             }
 
+            // Fetch match history
             await this.fetchMatchHistory(puuid, apiKey);
+
         } catch (error) {
             this.setErrorMessage('Error fetching summoner data. Try again later.');
             console.error(error);
         }
     };
 
+
+    @action
     fetchItemDetails = async (itemId: number) => {
         const response = await fetch(
             `https://ddragon.leagueoflegends.com/cdn/14.3.1/data/en_US/item.json`
@@ -376,7 +461,7 @@ export default class SummonerSearch extends React.Component {
         try {
             // Fetch match IDs
             const matchIds = await fetchWithRetry(
-                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=5`,
+                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=1`,
                 { headers: { 'X-Riot-Token': apiKey } }
             );
 
@@ -390,30 +475,95 @@ export default class SummonerSearch extends React.Component {
 
                     console.log(`Match Data for ${matchId}:`, matchData); // Log raw match data
 
-                    // Create a copy of matchData and update participants
+                    const participantPuuids = matchData.metadata.participants;
+
+                    // Fetch ranked data for participants
+                    const rankedDataArray = await getRankedDataArrayForMatch(participantPuuids, apiKey);
+
+                    // Create a copy of matchData and update participants with ranked data
                     const matchDataCopy = structuredClone(matchData); // Modern deep copy
                     matchDataCopy.info = { ...matchData.info }; // Shallow copy of matchData.info
 
-                    return matchDataCopy; // Return the modified copy
+                    // Add ranked data to each participant in matchDataCopy
+                    matchDataCopy.info.participants = matchDataCopy.info.participants.map((participant: any) => {
+                        const rankedData = rankedDataArray.find(
+                            (data) => data.puuid === participant.puuid
+                        );
+                        if (rankedData) {
+                            // Add ranked data (for example, rank, tier, and division) to the participant
+                            participant.rank = rankedData.rank;
+                            participant.tier = rankedData.tier;
+                            participant.leaguePoints = rankedData.leaguePoints;
+                        }
+                        return participant;
+                    });
+
+                    // Call fetchAverageRank here to calculate and set the average rank after match data is fetched
+                    await this.fetchAverageRank(matchDataCopy, apiKey);
+
+                    return matchDataCopy; // Return the modified copy with added ranked data
                 })
             );
 
-            // Assign match details to matchHistory
-            this.matchHistory = matchDetails;
-
-            // Log the entire match history for debugging
+            return matchDetails;
         } catch (error) {
-            this.errorMessage = 'Failed to fetch match history.';
-            console.error('Error in fetchMatchHistory:', error);
+            console.error('Error fetching match history:', error);
         }
     };
 
+
+    @action
     loadRunesReforged = async () => {
         const response = await fetch(
             `https://ddragon.leagueoflegends.com/cdn/14.3.1/data/en_US/runesReforged.json`
         );
         this.runesReforged = await response.json();
     };
+
+    @action
+    fetchAverageRank = async (match: MatchData, apiKey: string) => {
+        try {
+            const rankedDataArray = await getRankedDataArrayForMatch(
+                match.info.participants.map(p => p.puuid),
+                apiKey
+            );
+
+            const scores = rankedDataArray.map(entry => {
+                if (!entry || !entry.tier) return 0;
+
+                const tier = entry.tier.toUpperCase();
+                const division = entry.rank ? entry.rank.toUpperCase() : "";
+                const key = tier === "MASTER" || tier === "GRANDMASTER" || tier === "CHALLENGER"
+                    ? tier
+                    : `${tier} ${division}`;
+
+                return rankToScore[key] || 0;
+            });
+
+            const validScores = scores.filter(score => score > 0);
+            const averageRankScore = validScores.reduce((a, b) => a + b, 0) / validScores.length;
+
+            const scoreToRank = Object.entries(rankToScore).reduce((acc, [key, value]) => {
+                acc[value] = key;
+                return acc;
+            }, {} as { [key: number]: string });
+
+            const roundedAverage = Math.round(averageRankScore);
+            const averageRankLabel = scoreToRank[roundedAverage] || "Unranked";
+
+            this.averageRank = averageRankLabel;
+            console.log("Computed average rank:", this.averageRank);
+
+            // Optionally force re-render if needed
+            this.setState({});
+        } catch (error) {
+            console.error("Error fetching ranked data:", error);
+            this.averageRank = "Unranked";
+            this.setState({});
+        }
+    };
+
+
 
     render() {
         return (
@@ -592,6 +742,9 @@ export default class SummonerSearch extends React.Component {
                                                             <div className="CScore">
                                                                 CS {searchedParticipant.totalMinionsKilled}
                                                                 &nbsp;({(searchedParticipant.totalMinionsKilled / (match.info.gameDuration / 60)).toFixed(1)} CS/min)
+                                                            </div>
+                                                            <div className="AverageMatchRank">
+                                                                Average Rank: {this.averageRank ? this.averageRank : "Unranked"}
                                                             </div>
                                                         </div>
                                                     </div>
