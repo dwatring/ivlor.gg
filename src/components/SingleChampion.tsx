@@ -1,36 +1,35 @@
-import { makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './SingleChampion.css';
+import { makeObservable, observable } from 'mobx'
+import { observer } from 'mobx-react'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import './SingleChampion.css'
 interface Skin {
-  num: number;
-  id: string;
-  name: string;
-  chromas?: boolean;
+  num: number
+  id: string
+  name: string
+  chromas?: boolean
 }
 
 @observer
 export default class SingleChampion extends React.Component {
-  constructor(props: {}) {
-    super(props);
-    makeObservable(this);
+  constructor(props: Record<string, never>) {
+    super(props)
+    makeObservable(this)
   }
 
-
   @observable
-  championID = window.location.href.split('champions/')[1];
+  championID = window.location.href.split('champions/')[1]
 
   @observable
   champion = {
-    name: "",
-    title: "",
+    name: '',
+    title: '',
     tags: [],
-    image: { full: "" },
-    blurb: "",
+    image: { full: '' },
+    blurb: '',
     skins: [] as Skin[], // Skins are stored as an array
     spells: [] as { id: string; name: string }[], // Spells are stored as an array
-    passive: { name: "", image: { full: "" } },
+    passive: { name: '', image: { full: '' } },
     info: {
       attack: 0,
       defense: 0,
@@ -59,16 +58,18 @@ export default class SingleChampion extends React.Component {
       attackspeedperlevel: 0,
       attackspeed: 0,
     },
-  };
+  }
 
   async getChampionsFromAPI() {
     try {
       // Fetch champion data from Data Dragon
-      let response = await fetch(`https://ddragon.leagueoflegends.com/cdn/14.15.1/data/en_US/champion/${this.championID}.json`);
-      let responseJson = await response.json();
+      const response = await fetch(
+        `https://ddragon.leagueoflegends.com/cdn/14.15.1/data/en_US/champion/${this.championID}.json`,
+      )
+      const responseJson = await response.json()
 
       // Extract champion data
-      const championData = responseJson.data[this.championID];
+      const championData = responseJson.data[this.championID]
 
       // Update the champion observable
       this.champion = {
@@ -81,7 +82,8 @@ export default class SingleChampion extends React.Component {
           name: championData.passive.name,
           image: championData.passive.image,
         },
-        skins: championData.skins.map((skin: any) => ({ // Correct the variable name and ensure the correct properties
+        skins: championData.skins.map((skin: any) => ({
+          // Correct the variable name and ensure the correct properties
           num: skin.num,
           id: skin.id,
           name: skin.name,
@@ -93,21 +95,21 @@ export default class SingleChampion extends React.Component {
         })),
         info: championData.info,
         stats: championData.stats,
-      };
+      }
 
-      console.log("Champion Data:", championData);
+      console.log('Champion Data:', championData)
     } catch (error) {
-      console.error("Error fetching champion data:", error);
+      console.error('Error fetching champion data:', error)
     }
   }
 
   componentDidMount() {
-    this.getChampionsFromAPI();
+    this.getChampionsFromAPI()
   }
 
   render() {
-    const { name, title, tags, image, blurb, skins, spells, passive, info, stats } = this.champion;
-    const blurImageUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${image.full.replace('.png', '_0.jpg')}`;
+    const { name, title, tags, image, blurb, skins, spells, passive, info, stats } = this.champion
+    const blurImageUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${image.full.replace('.png', '_0.jpg')}`
 
     return (
       <div className="championWrapper">
@@ -122,7 +124,9 @@ export default class SingleChampion extends React.Component {
               <strong>Tags:</strong>
               <ul className="tagsList">
                 {tags.map((tag, index) => (
-                  <li className="tagItem" key={index}>{tag}</li>
+                  <li className="tagItem" key={index}>
+                    {tag}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -130,7 +134,9 @@ export default class SingleChampion extends React.Component {
             <p className="blurbText">{blurb}</p>
           </div>
 
-          <Link className="changePageLink" to="/champions">RETURN TO CHAMPION LIST</Link>
+          <Link className="changePageLink" to="/champions">
+            RETURN TO CHAMPION LIST
+          </Link>
         </div>
 
         {/* Skin Container (contains Skins, Spells, Info, and Stats sections) */}
@@ -242,7 +248,6 @@ export default class SingleChampion extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
-
