@@ -130,7 +130,6 @@ const fetchRankedData = async (summonerId: string, apiKey: string): Promise<Rank
         }
 
         const rankedEntries: RankedData[] = await response.json()
-        console.log('Ranked entries:', rankedEntries)
 
         const soloDuo = rankedEntries.find((entry) => entry.queueType === 'RANKED_SOLO_5x5')
         const flex = rankedEntries.find((entry) => entry.queueType === 'RANKED_FLEX_SR')
@@ -172,55 +171,89 @@ const rankToScore: { [key: string]: number } = {
     CHALLENGER: 27,
 }
 
+const rankColors: { [key: string]: string } = {
+    IRON: '#5e4b47',         // dark brownish gray
+    BRONZE: '#a97142',       // bronze
+    SILVER: '#9faecf',       // soft silver-blue
+    GOLD: '#d4af37',         // classic gold
+    PLATINUM: '#27e2a4',     // teal green
+    EMERALD: '#20c997',      // vibrant green
+    DIAMOND: '#5b9ee9',      // crystal blue
+    MASTER: '#b660e1',       // magenta-purple
+    GRANDMASTER: '#de453f',  // red-orange
+    CHALLENGER: '#e0b75f',   // glowing gold-white
+};
+
+
+const getTierColor = (rank: string): string => {
+    if (!rank) return 'gray';
+    const tier = rank.split(' ')[0]; // e.g., "GOLD II" → "GOLD"
+    return rankColors[tier] || 'gray';
+};
+
+
 const rankedDataCache: { [puuid: string]: RankedData | null } = {}
 
 const getRankedDataArrayForMatch = async (participantPuuids: string[], apiKey: string): Promise<RankedData[]> => {
     const data: RankedData[] = []
 
-    // Step 1: Fetch missing summoner data (if not cached)
-    const summonersToFetch = participantPuuids.filter((puuid) => !playerCache[puuid])
+    // Skip everything for fully cached puuids
+    const uncachedPuuids = participantPuuids.filter((puuid) => !rankedDataCache[puuid]);
 
+    // Now filter only puuids missing summoner data
+    const puuidsMissingSummoner = uncachedPuuids.filter((puuid) => !playerCache[puuid]);
+
+    // Batch fetch missing summoner data
     const fetchedSummoners = await Promise.all(
-        summonersToFetch.map(async (puuid) => {
+        puuidsMissingSummoner.map(async (puuid) => {
             try {
                 const res = await fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}`, {
                     headers: { 'X-Riot-Token': apiKey },
-                })
-                if (!res.ok) return null
+                });
+                if (!res.ok) return null;
 
-                const summoner = await res.json()
-                playerCache[puuid] = summoner
-                return summoner
+                const summoner = await res.json();
+                playerCache[puuid] = summoner;
+                return summoner;
             } catch (err) {
-                console.error(`Error fetching summoner for puuid ${puuid}`, err)
-                return null
+                console.error(`Error fetching summoner for puuid ${puuid}`, err);
+                return null;
             }
-        }),
-    )
+        })
+    );
 
-    // Step 2: Fetch ranked data for successfully retrieved summoners
-    const rankedDataResults = await Promise.all(
-        fetchedSummoners
-            .filter((summoner): summoner is { id: string; puuid: string } => summoner !== null)
-            .map(async (summoner) => {
-                const rankedData = await fetchRankedData(summoner.id, apiKey)
-                rankedDataCache[summoner.puuid] = rankedData
-                return rankedData
-            }),
-    )
+    // 👇 Merge fetched and already-cached summoners
+    const allSummoners = [
+        ...fetchedSummoners.filter(Boolean),
+        ...uncachedPuuids
+            .filter((puuid) => playerCache[puuid])
+            .map((puuid) => playerCache[puuid]),
+    ];
 
-    data.push(...rankedDataResults.filter((r): r is RankedData => r !== null))
+    // 🧠 Only fetch ranked data if not already cached
+    const newlyFetchedRanked = await Promise.all(
+        allSummoners
+            .filter((s): s is { id: string; puuid: string } => s && !rankedDataCache[s.puuid])
+            .map(async (s) => {
+                const ranked = await fetchRankedData(s.id, apiKey);
+                if (ranked) rankedDataCache[s.puuid] = ranked;
+                return ranked;
+            })
+    );
 
-    // Step 3: Get ranked data from cache for already-cached puuids
-    const cachedRanked = participantPuuids
+    data.push(...newlyFetchedRanked.filter(Boolean));
+
+    // ✅ Add pre-cached ranked data
+    const cached = participantPuuids
         .filter((puuid) => rankedDataCache[puuid])
         .map((puuid) => rankedDataCache[puuid])
-        .filter((r): r is RankedData => r !== null)
+        .filter((r): r is RankedData => r !== null);
 
-    data.push(...cachedRanked)
+    data.push(...cached);
 
-    return data
-}
+    return data;
+};
+
 
 interface SummonerData {
     id: string
@@ -466,40 +499,36 @@ export default class SummonerSearch extends React.Component {
         try {
             // Step 1: Fetch recent match IDs
             const matchIds: string[] = await fetchWithRetry(
-                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=1`,
+                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=2`,
                 { headers: { 'X-Riot-Token': apiKey } },
             );
 
-            console.log('Fetched match IDs:', matchIds); // Log the match IDs
+            console.log('Fetched match IDs:', matchIds);
 
-            // If no match IDs are returned, exit early
             if (matchIds.length === 0) {
                 console.error('No match history found.');
+                this.matchHistory = []; // clear any old data
                 return [];
             }
 
-            // Step 2: For each match, fetch match details and attach ranked data
+            // Step 2: Fetch and enrich match details
             const matchDetails = await Promise.all(
                 matchIds.map(async (matchId: string) => {
-                    const matchData = await fetchWithRetry(`https://americas.api.riotgames.com/lol/match/v5/matches/${matchId}`, {
-                        headers: { 'X-Riot-Token': apiKey },
-                    });
+                    const matchData = await fetchWithRetry(
+                        `https://americas.api.riotgames.com/lol/match/v5/matches/${matchId}`,
+                        { headers: { 'X-Riot-Token': apiKey } },
+                    );
 
-                    console.log(`[MATCH ${matchId}] Raw Data:`, matchData); // Log raw match data
+                    console.log(`[MATCH ${matchId}] Raw Data:`, matchData);
 
-                    // Check if matchData is valid
                     if (!matchData) {
                         console.error(`[MATCH ${matchId}] No match data found.`);
                         return null;
                     }
 
                     const participantPuuids = matchData.metadata.participants;
-                    console.log('Participant PUUIDs:', participantPuuids); // Log participant PUUIDs
-
                     const rankedDataArray = await getRankedDataArrayForMatch(participantPuuids, apiKey);
-                    console.log('Ranked Data Array:', rankedDataArray); // Log ranked data array
 
-                    // Enrich matchData with ranked data
                     matchData.info.participants = matchData.info.participants.map((participant: any) => {
                         const rankedData = rankedDataArray.find((data) => data.puuid === participant.puuid);
                         return rankedData
@@ -512,22 +541,22 @@ export default class SummonerSearch extends React.Component {
                             : participant;
                     });
 
-                    // Check the enriched match data
-                    console.log(`[MATCH ${matchId}] Enriched Data:`, matchData);
-
-                    // Step 3: Calculate and store average rank
                     await this.fetchAverageRank(matchData, apiKey);
 
-                    return matchData; // No cloning, just return the enriched matchData
+                    return matchData;
                 }),
             );
 
-            console.log('Returning matchDetails:', matchDetails); // Log the final match details
+            // ✅ Store in MobX state
+            this.matchHistory = matchDetails.filter(Boolean); // filter out nulls if any
 
-            return matchDetails;
+            console.log('Returning matchDetails:', this.matchHistory);
+
+            return this.matchHistory;
         } catch (error) {
             console.error('[fetchMatchHistory] Error:', error);
             this.setErrorMessage('Failed to load match history.');
+            this.matchHistory = [];
             return [];
         }
     };
@@ -595,9 +624,6 @@ export default class SummonerSearch extends React.Component {
     }
 
     render() {
-        console.log('Rerendering SummonerSearch, current average rank:', this.averageRank)
-        console.log('Match History', this.matchHistory.length)
-
         return (
             <div className="contentContainer">
                 <div className="searchContainer">
@@ -748,7 +774,6 @@ export default class SummonerSearch extends React.Component {
                                                                     return `${kdaValue.toFixed(2)} : 1 KDA`
                                                                 })()}
                                                             </div>
-                                                            d
                                                         </div>
                                                         {/* Kill Participation Display */}
                                                         <div className="KPCSRankContainer">
@@ -783,8 +808,11 @@ export default class SummonerSearch extends React.Component {
                                                                 )}{' '}
                                                                 CS/min)
                                                             </div>
-                                                            <div className="AverageMatchRank">
-                                                                Average Rank: {this.averageRank ? this.averageRank : 'Unranked'}
+                                                            <div
+                                                                className="AverageMatchRank"
+                                                                style={{ color: getTierColor(this.averageRank) }}
+                                                            >
+                                                                Average Rank: {this.averageRank || 'Unranked'}
                                                             </div>
                                                         </div>
                                                     </div>

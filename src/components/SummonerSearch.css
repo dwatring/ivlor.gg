@@ -227,7 +227,8 @@
 }
 
 .KPScore,
-.CScore {
+.CScore,
+.AverageMatchRank {
   display: flex;
   color: gray;
   font-size: 12px;
@@ -239,10 +240,6 @@
   color: white;
   font-size: 12px;
   justify-content: left; /* Optional: centers the content horizontally inside each flex container */
-}
-
-.AverageMatchRank {
-  display: flex;
 }
 
 .matchParticipantsContainer {
