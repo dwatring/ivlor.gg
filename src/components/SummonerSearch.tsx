@@ -115,32 +115,6 @@ const summonerSpellIdMap: { [id: number]: string } = {
     61: 'SummonerShurimaRecall', // Shurima Recall
 }
 
-// REVISIT
-const fetchRankedData = async (summonerId: string, apiKey: string): Promise<RankedData | null> => {
-    try {
-        const response = await fetch(`https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`, {
-            headers: {
-                'X-Riot-Token': apiKey,
-            },
-        })
-
-        if (!response.ok) {
-            console.error('Response not OK:', response)
-            throw new Error('Failed to fetch ranked data')
-        }
-
-        const rankedEntries: RankedData[] = await response.json()
-
-        const soloDuo = rankedEntries.find((entry) => entry.queueType === 'RANKED_SOLO_5x5')
-        const flex = rankedEntries.find((entry) => entry.queueType === 'RANKED_FLEX_SR')
-
-        return soloDuo || flex || null
-    } catch (error) {
-        console.error('Error fetching ranked data:', error)
-        return null
-    }
-}
-
 const rankToScore: { [key: string]: number } = {
     'IRON IV': 1,
     'IRON III': 2,
@@ -192,6 +166,32 @@ const getTierColor = (rank: string): string => {
 };
 
 
+// REVISIT
+const fetchRankedData = async (summonerId: string, apiKey: string): Promise<RankedData | null> => {
+    try {
+        const response = await fetch(`https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`, {
+            headers: {
+                'X-Riot-Token': apiKey,
+            },
+        })
+
+        if (!response.ok) {
+            console.error('Response not OK:', response)
+            throw new Error('Failed to fetch ranked data')
+        }
+
+        const rankedEntries: RankedData[] = await response.json()
+
+        const soloDuo = rankedEntries.find((entry) => entry.queueType === 'RANKED_SOLO_5x5')
+        const flex = rankedEntries.find((entry) => entry.queueType === 'RANKED_FLEX_SR')
+
+        return soloDuo || flex || null
+    } catch (error) {
+        console.error('Error fetching ranked data:', error)
+        return null
+    }
+}
+
 const rankedDataCache: { [puuid: string]: RankedData | null } = {}
 
 const getRankedDataArrayForMatch = async (participantPuuids: string[], apiKey: string): Promise<RankedData[]> => {
@@ -230,7 +230,7 @@ const getRankedDataArrayForMatch = async (participantPuuids: string[], apiKey: s
             .map((puuid) => playerCache[puuid]),
     ];
 
-    // 🧠 Only fetch ranked data if not already cached
+    // Only fetch ranked data if not already cached
     const newlyFetchedRanked = await Promise.all(
         allSummoners
             .filter((s): s is { id: string; puuid: string } => s && !rankedDataCache[s.puuid])
@@ -241,9 +241,10 @@ const getRankedDataArrayForMatch = async (participantPuuids: string[], apiKey: s
             })
     );
 
-    data.push(...newlyFetchedRanked.filter(Boolean));
+    // Filter nulls before pushing
+    data.push(...newlyFetchedRanked.filter((r): r is RankedData => r !== null));
 
-    // ✅ Add pre-cached ranked data
+    // Add pre-cached ranked data
     const cached = participantPuuids
         .filter((puuid) => rankedDataCache[puuid])
         .map((puuid) => rankedDataCache[puuid])
@@ -499,7 +500,7 @@ export default class SummonerSearch extends React.Component {
         try {
             // Step 1: Fetch recent match IDs
             const matchIds: string[] = await fetchWithRetry(
-                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=2`,
+                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=1`,
                 { headers: { 'X-Riot-Token': apiKey } },
             );
 
