@@ -7,7 +7,7 @@
   padding: 6px 12px;
   border-radius: 4px;
   display: flex;
-  gap: 8px; /* adds spacing between input and button */
+  gap: 8px;
 }
 
 .inputContainer {
@@ -36,6 +36,59 @@
   align-items: center;
 }
 
+.accountDetailsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
+  gap: 10px;
+  border-left: 6px;
+}
+
+.accountDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.summonerIcon {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px; /* Rounded edges, not circular */
+  margin-bottom: 10px;
+}
+
+.summonerDisplay {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  gap: 6px;
+}
+
+.summonerName {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.summonerLevel {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: white;
+  font-size: 10px;
+  background-color: rgb(32, 45, 55);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .summonerData {
   background-color: white;
 }
@@ -58,7 +111,7 @@
   align-items: center;
   color: var(--lol-gray-500);
   display: flex;
-  border-radius: 5px; /* Rounds the corners by 10px */
+  border-radius: 5px;
   padding: 4px, 12px;
 }
 
@@ -222,7 +275,7 @@
   width: 152px;
   height: 58px;
   display: flex;
-  flex-direction: column; /* This will stack the child elements vertically */
+  flex-direction: column;
   justify-content: left;
 }
 
@@ -232,14 +285,14 @@
   display: flex;
   color: gray;
   font-size: 12px;
-  justify-content: left; /* Optional: centers the content horizontally inside each flex container */
+  justify-content: left;
 }
 
 .RankedScore {
   display: flex;
   color: white;
   font-size: 12px;
-  justify-content: left; /* Optional: centers the content horizontally inside each flex container */
+  justify-content: left;
 }
 
 .matchParticipantsContainer {
@@ -262,11 +315,15 @@
 .participantItem {
   width: 60px;
   height: 16px;
-  font-size: 12px;
   display: flex;
+  font-size: 12px;
+  color: gray;
   text-overflow: ellipsis;
   overflow: hidden;
-  color: gray;
+  max-width: 100%;
+  text-size-adjust: 100%;
+  text-wrap-mode: nowrap;
+  white-space-collapse: collapse;
 }
 
 .lobbyInfo {
@@ -275,16 +332,16 @@
 }
 
 .participantsContainer {
-  display: flex; /* Use Flexbox to align columns side by side */
-  gap: 20px; /* Add space between the two columns */
+  display: flex;
+  gap: 20px;
 }
 
 .participantsColumn {
-  list-style: none; /* Remove bullet points */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .participantsColumn li {
-  margin-bottom: 8px; /* Add space between list items */
+  margin-bottom: 8px;
 }

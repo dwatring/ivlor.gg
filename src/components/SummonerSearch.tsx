@@ -167,7 +167,7 @@ const getTierColor = (rank: string): string => {
 
 
 // REVISIT
-const fetchRankedData = async (summonerId: string, apiKey: string): Promise<RankedData | null> => {
+const fetchSummonerRankedData = async (summonerId: string, apiKey: string): Promise<RankedData | null> => {
     try {
         const response = await fetch(`https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summonerId}`, {
             headers: {
@@ -194,7 +194,7 @@ const fetchRankedData = async (summonerId: string, apiKey: string): Promise<Rank
 
 const rankedDataCache: { [puuid: string]: RankedData | null } = {}
 
-const getRankedDataArrayForMatch = async (participantPuuids: string[], apiKey: string): Promise<RankedData[]> => {
+const fetchMatchRankedData = async (participantPuuids: string[], apiKey: string): Promise<RankedData[]> => {
     const data: RankedData[] = []
 
     // Skip everything for fully cached puuids
@@ -235,7 +235,7 @@ const getRankedDataArrayForMatch = async (participantPuuids: string[], apiKey: s
         allSummoners
             .filter((s): s is { id: string; puuid: string } => s && !rankedDataCache[s.puuid])
             .map(async (s) => {
-                const ranked = await fetchRankedData(s.id, apiKey);
+                const ranked = await fetchSummonerRankedData(s.id, apiKey);
                 if (ranked) rankedDataCache[s.puuid] = ranked;
                 return ranked;
             })
@@ -263,6 +263,7 @@ interface SummonerData {
     name: string
     profileIconId: number
     summonerLevel: number
+    tagLine: string
 }
 
 interface MatchData {
@@ -425,6 +426,7 @@ export default class SummonerSearch extends React.Component {
         }
 
         const [gameName, tagLine] = this.summonerName.replace(/\s/g, '').split('#')
+
         if (!gameName || !tagLine) {
             this.setErrorMessage('Invalid Riot ID format. Use Name#Tag (e.g., Player#NA1).')
             return
@@ -467,13 +469,14 @@ export default class SummonerSearch extends React.Component {
                 summonerData = await summonerRes.json()
                 playerCache[puuid] = summonerData
             }
+            summonerData.tagLine = tagLine;
 
             this.setSummonerData(summonerData)
 
             // Step 3: Fetch Ranked Data
             let rankData = rankedDataCache[puuid]
             if (!rankData) {
-                rankData = await fetchRankedData(summonerData.id, apiKey)
+                rankData = await fetchSummonerRankedData(summonerData.id, apiKey)
                 rankedDataCache[puuid] = rankData
             }
 
@@ -528,7 +531,7 @@ export default class SummonerSearch extends React.Component {
                     }
 
                     const participantPuuids = matchData.metadata.participants;
-                    const rankedDataArray = await getRankedDataArrayForMatch(participantPuuids, apiKey);
+                    const rankedDataArray = await fetchMatchRankedData(participantPuuids, apiKey);
 
                     matchData.info.participants = matchData.info.participants.map((participant: any) => {
                         const rankedData = rankedDataArray.find((data) => data.puuid === participant.puuid);
@@ -577,7 +580,7 @@ export default class SummonerSearch extends React.Component {
             const participantPuuids = match.info.participants.map((p) => p.puuid)
 
             // Step 2: Fetch ranked data for each participant
-            const rankedDataArray = await getRankedDataArrayForMatch(participantPuuids, apiKey)
+            const rankedDataArray = await fetchMatchRankedData(participantPuuids, apiKey)
 
             // Step 3: Convert ranked data to numeric scores using rankToScore mapping
             const scores: number[] = rankedDataArray.map((entry) => {
@@ -627,6 +630,7 @@ export default class SummonerSearch extends React.Component {
     render() {
         return (
             <div className="contentContainer">
+
                 <div className="searchContainer">
                     <input
                         className="inputContainer"
@@ -638,346 +642,373 @@ export default class SummonerSearch extends React.Component {
                     <button className="buttonSearch" onClick={this.handleSearch}>
                         Search
                     </button>
-
-                    {this.errorMessage && <p style={{ color: 'red' }}>{this.errorMessage}</p>}
                 </div>
-                {this.isLoading ? (
-                    <div className="matchHistory">
-                        <h3>Loading match history...</h3>
+                {this.errorMessage && (
+                    <div className="errorMessageContainer">
+                        <p style={{ color: 'red', marginTop: '8px' }}>{this.errorMessage}</p>
                     </div>
-                ) : this.matchHistory.length > 0 ? (
-                    <div className="matchHistory">
-                        <h3>Recent Matches</h3>
-                        <div className="summonerProfile">
-                            {this.rankedData ? (
-                                <div className="RankedScore">
-                                    Current Rank: {this.rankedData.tier} {this.rankedData.rank} - {this.rankedData.leaguePoints} LP
-                                </div>
-                            ) : (
-                                <div className="RankedScore">Unranked</div>
-                            )}
+                )}
+                {this.summonerData && (
+                    <div className="accountDetailsContainer">
+                        <div className="accountDetails">
+                            <div className="summonerDisplay">
+                                {/* Display Profile Icon */}
+                                <img
+                                    src={`https://ddragon.leagueoflegends.com/cdn/12.21.1/img/profileicon/${this.summonerData.profileIconId}.png`}
+                                    alt={`${this.summonerData.name}'s profile`}
+                                    className="summonerIcon"
+                                />
+                                <div className="summonerLevel">{this.summonerData.summonerLevel}</div>
+                            </div>
                         </div>
-                        {this.matchHistory.map((match, index) => {
-                            // Split participants into two groups
-                            const firstFiveParticipants = match.info.participants.slice(0, 5)
-                            const secondFiveParticipants = match.info.participants.slice(5, 10)
 
-                            const searchedParticipant = match.info.participants.find(
-                                (player: any) => player.puuid === this.summonerData?.puuid,
-                            )
+                        <div className="summonerName">
+                            <p>{this.summonerName}</p>
+                        </div>
+                    </div>
+                )}
+                {
+                    this.isLoading ? (
+                        <div className="matchHistory">
+                            <h3>Loading match history...</h3>
+                        </div>
+                    ) : this.matchHistory.length > 0 ? (
+                        <div className="matchHistory">
+                            <div className="summonerProfile">
+                                {this.rankedData ? (
+                                    <div className="RankedScore">
+                                        Current Rank: {this.rankedData.tier} {this.rankedData.rank} - {this.rankedData.leaguePoints} LP
+                                    </div>
+                                ) : (
+                                    <div className="RankedScore">Unranked</div>
+                                )}
+                            </div>
+                            {this.matchHistory.map((match, index) => {
+                                // Split participants into two groups
+                                const firstFiveParticipants = match.info.participants.slice(0, 5)
+                                const secondFiveParticipants = match.info.participants.slice(5, 10)
 
-                            return (
-                                <div key={index} className="matchCard">
-                                    <div className={`searchedParticipantCard ${searchedParticipant?.win ? 'win' : 'loss'}`}>
-                                        {/* Game Info */}
-                                        <div className="gameInfo">
-                                            <div className="gameInfoType">
-                                                <div className={`blueRedSpan ${searchedParticipant?.win ? 'win' : 'loss'}`}>
-                                                    {getQueueName(match.info.queueId)}
-                                                </div>
-                                                <div className="graySpan">{timeAgo(match.info.gameStartTimestamp)}</div>
-                                            </div>
-                                            <div>--</div>
-                                            <div className="gameInfoWinLoss">
-                                                {!searchedParticipant ? (
-                                                    <span>Loading...</span>
-                                                ) : (
-                                                    <div className="graySpan">{searchedParticipant.win ? 'Victory' : 'Defeat'}</div>
-                                                )}
-                                                <div className="graySpan">
-                                                    {Math.floor(match.info.gameDuration / 60)}m {match.info.gameDuration % 60}s
-                                                </div>
-                                            </div>
-                                        </div>
+                                const searchedParticipant = match.info.participants.find(
+                                    (player: any) => player.puuid === this.summonerData?.puuid,
+                                )
 
-                                        {/* Champion Info */}
-                                        <div className="championInfo">
-                                            {searchedParticipant ? (
-                                                <>
-                                                    <div className="championInfoContainer">
-                                                        <div className="spriteContainer">
-                                                            <img
-                                                                className="championSprite"
-                                                                src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${searchedParticipant.championName}.png`}
-                                                                alt={`${searchedParticipant.championName} Sprite`}
-                                                                width="48"
-                                                                height="48"
-                                                            />
-                                                            <div className="championSpriteLevel">{searchedParticipant.champLevel}</div>
-                                                        </div>
-                                                        <div className="SummonerSpellAndRunesContainer">
-                                                            <div className="SummonerSpellContainer">
-                                                                {/* Define spell1Name and spell2Name here */}
-                                                                {searchedParticipant && (
-                                                                    <>
-                                                                        {(() => {
-                                                                            const spell1Name = summonerSpellIdMap[searchedParticipant.summoner1Id]
-                                                                            const spell2Name = summonerSpellIdMap[searchedParticipant.summoner2Id]
-
-                                                                            // Define URLs for spell icons
-                                                                            const spell1Url = spell1Name
-                                                                                ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell1Name}.png`
-                                                                                : '/fallback-icon.png' // Fallback if spell is missing
-                                                                            const spell2Url = spell2Name
-                                                                                ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell2Name}.png`
-                                                                                : '/fallback-icon.png' // Fallback if spell is missing
-
-                                                                            return (
-                                                                                <>
-                                                                                    <img
-                                                                                        src={spell1Url}
-                                                                                        alt={`Summoner Spell 1 - ${spell1Name}`}
-                                                                                        width="22"
-                                                                                        height="22"
-                                                                                    />
-                                                                                    <img
-                                                                                        src={spell2Url}
-                                                                                        alt={`Summoner Spell 2 - ${spell2Name}`}
-                                                                                        width="22"
-                                                                                        height="22"
-                                                                                    />
-                                                                                </>
-                                                                            )
-                                                                        })()}
-                                                                    </>
-                                                                )}
-                                                            </div>
-                                                            <div className="RunesContainer">
-                                                                <img
-                                                                    src={this.getRunePerkIconURL(
-                                                                        searchedParticipant.perks.styles[0].style,
-                                                                        searchedParticipant.perks.styles[0].selections[0].perk,
-                                                                    )}
-                                                                    alt="Keystone Rune"
-                                                                    width="22"
-                                                                    height="22"
-                                                                />
-
-                                                                <img
-                                                                    src={this.getRuneStyleIconURL(searchedParticipant.perks.styles[1].style)}
-                                                                    alt="Secondary Rune Style"
-                                                                    width="22"
-                                                                    height="22"
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="KDAContainer">
-                                                            {/* KDA Display */}
-                                                            <div className="KDAScore">
-                                                                {searchedParticipant.kills} /{' '}
-                                                                <span className="death-text">{searchedParticipant.deaths}</span> /{' '}
-                                                                {searchedParticipant.assists}
-                                                            </div>
-                                                            <div className="KDAComparison">
-                                                                {(() => {
-                                                                    const { kills, assists, deaths } = searchedParticipant
-                                                                    const kdaValue = deaths === 0 ? kills + assists : (kills + assists) / deaths
-                                                                    return `${kdaValue.toFixed(2)} : 1 KDA`
-                                                                })()}
-                                                            </div>
-                                                        </div>
-                                                        {/* Kill Participation Display */}
-                                                        <div className="KPCSRankContainer">
-                                                            <div className="KPScore">
-                                                                {(() => {
-                                                                    // Find participant index (used to infer team)
-                                                                    const participantIndex = match.info.participants.findIndex(
-                                                                        (p) => p.puuid === searchedParticipant.puuid,
-                                                                    )
-
-                                                                    const isTeamOne = participantIndex < 5
-
-                                                                    // Get team kills
-                                                                    const teamKills = match.info.participants
-                                                                        .filter((_, idx) => (isTeamOne ? idx < 5 : idx >= 5))
-                                                                        .reduce((sum, p) => sum + p.kills, 0)
-
-                                                                    // Calculate KP
-                                                                    const playerKP =
-                                                                        teamKills > 0
-                                                                            ? ((searchedParticipant.kills + searchedParticipant.assists) / teamKills) * 100
-                                                                            : 0
-
-                                                                    return `P/Kill ${playerKP.toFixed(0)}%`
-                                                                })()}
-                                                            </div>
-                                                            <div className="CScore">
-                                                                CS {searchedParticipant.totalMinionsKilled}
-                                                                &nbsp;(
-                                                                {(searchedParticipant.totalMinionsKilled / (match.info.gameDuration / 60)).toFixed(
-                                                                    1,
-                                                                )}{' '}
-                                                                CS/min)
-                                                            </div>
-                                                            <div
-                                                                className="AverageMatchRank"
-                                                                style={{ color: getTierColor(this.averageRank) }}
-                                                            >
-                                                                Average Rank: {this.averageRank || 'Unranked'}
-                                                            </div>
-                                                        </div>
+                                return (
+                                    <div key={index} className="matchCard">
+                                        <div className={`searchedParticipantCard ${searchedParticipant?.win ? 'win' : 'loss'}`}>
+                                            {/* Game Info */}
+                                            <div className="gameInfo">
+                                                <div className="gameInfoType">
+                                                    <div className={`blueRedSpan ${searchedParticipant?.win ? 'win' : 'loss'}`}>
+                                                        {getQueueName(match.info.queueId)}
                                                     </div>
+                                                    <div className="graySpan">{timeAgo(match.info.gameStartTimestamp)}</div>
+                                                </div>
+                                                <div>--</div>
+                                                <div className="gameInfoWinLoss">
+                                                    {!searchedParticipant ? (
+                                                        <span>Loading...</span>
+                                                    ) : (
+                                                        <div className="graySpan">{searchedParticipant.win ? 'Victory' : 'Defeat'}</div>
+                                                    )}
+                                                    <div className="graySpan">
+                                                        {Math.floor(match.info.gameDuration / 60)}m {match.info.gameDuration % 60}s
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                    <div className="items">
-                                                        {[
-                                                            searchedParticipant.item0,
-                                                            searchedParticipant.item1,
-                                                            searchedParticipant.item2,
-                                                            searchedParticipant.item3,
-                                                            searchedParticipant.item4,
-                                                            searchedParticipant.item5,
-                                                            searchedParticipant.item6,
-                                                        ].map((itemId, itemIndex) => {
-                                                            if (itemId !== 0) {
-                                                                const itemImageUrl = getItemImageUrl(itemId)
-                                                                return (
+                                            {/* Champion Info */}
+                                            <div className="championInfo">
+                                                {searchedParticipant ? (
+                                                    <>
+                                                        <div className="championInfoContainer">
+                                                            <div className="spriteContainer">
+                                                                <img
+                                                                    className="championSprite"
+                                                                    src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${searchedParticipant.championName}.png`}
+                                                                    alt={`${searchedParticipant.championName} Sprite`}
+                                                                    width="48"
+                                                                    height="48"
+                                                                />
+                                                                <div className="championSpriteLevel">{searchedParticipant.champLevel}</div>
+                                                            </div>
+                                                            <div className="SummonerSpellAndRunesContainer">
+                                                                <div className="SummonerSpellContainer">
+                                                                    {/* Define spell1Name and spell2Name here */}
+                                                                    {searchedParticipant && (
+                                                                        <>
+                                                                            {(() => {
+                                                                                const spell1Name = summonerSpellIdMap[searchedParticipant.summoner1Id]
+                                                                                const spell2Name = summonerSpellIdMap[searchedParticipant.summoner2Id]
+
+                                                                                // Define URLs for spell icons
+                                                                                const spell1Url = spell1Name
+                                                                                    ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell1Name}.png`
+                                                                                    : '/fallback-icon.png' // Fallback if spell is missing
+                                                                                const spell2Url = spell2Name
+                                                                                    ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell2Name}.png`
+                                                                                    : '/fallback-icon.png' // Fallback if spell is missing
+
+                                                                                return (
+                                                                                    <>
+                                                                                        <img
+                                                                                            src={spell1Url}
+                                                                                            alt={`Summoner Spell 1 - ${spell1Name}`}
+                                                                                            width="22"
+                                                                                            height="22"
+                                                                                        />
+                                                                                        <img
+                                                                                            src={spell2Url}
+                                                                                            alt={`Summoner Spell 2 - ${spell2Name}`}
+                                                                                            width="22"
+                                                                                            height="22"
+                                                                                        />
+                                                                                    </>
+                                                                                )
+                                                                            })()}
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                <div className="RunesContainer">
                                                                     <img
-                                                                        key={itemIndex}
-                                                                        src={itemImageUrl}
-                                                                        alt={`Item ${itemId}`}
+                                                                        src={this.getRunePerkIconURL(
+                                                                            searchedParticipant.perks.styles[0].style,
+                                                                            searchedParticipant.perks.styles[0].selections[0].perk,
+                                                                        )}
+                                                                        alt="Keystone Rune"
                                                                         width="22"
                                                                         height="22"
                                                                     />
-                                                                )
-                                                            } else {
-                                                                return (
-                                                                    <div
-                                                                        key={itemIndex}
-                                                                        className={`itemPlaceholder ${searchedParticipant.win ? 'win' : 'loss'}`}
+
+                                                                    <img
+                                                                        src={this.getRuneStyleIconURL(searchedParticipant.perks.styles[1].style)}
+                                                                        alt="Secondary Rune Style"
+                                                                        width="22"
+                                                                        height="22"
                                                                     />
-                                                                )
-                                                            }
-                                                        })}
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div>Loading...</div>
-                                            )}
-                                        </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="KDAContainer">
+                                                                {/* KDA Display */}
+                                                                <div className="KDAScore">
+                                                                    {searchedParticipant.kills} /{' '}
+                                                                    <span className="death-text">{searchedParticipant.deaths}</span> /{' '}
+                                                                    {searchedParticipant.assists}
+                                                                </div>
+                                                                <div className="KDAComparison">
+                                                                    {(() => {
+                                                                        const { kills, assists, deaths } = searchedParticipant
+                                                                        const kdaValue = deaths === 0 ? kills + assists : (kills + assists) / deaths
+                                                                        return `${kdaValue.toFixed(2)} : 1 KDA`
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                            {/* Kill Participation Display */}
+                                                            <div className="KPCSRankContainer">
+                                                                <div className="KPScore">
+                                                                    {(() => {
+                                                                        // Find participant index (used to infer team)
+                                                                        const participantIndex = match.info.participants.findIndex(
+                                                                            (p) => p.puuid === searchedParticipant.puuid,
+                                                                        )
 
-                                        {/* Match Participants - Inside the card, outside championInfo */}
-                                        <div className="matchParticipantsContainer">
-                                            <div className="matchParticipantsGroupOne">
-                                                {match.info.participants.slice(0, 5).map((player, idx) => (
-                                                    <div key={idx} className="participantItem">
-                                                        <img
-                                                            src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
-                                                            alt={player.championName}
-                                                            width="16"
-                                                            height="16"
-                                                        />
-                                                        <span className="participantName">{player.riotIdGameName}</span>
-                                                    </div>
-                                                ))}
+                                                                        const isTeamOne = participantIndex < 5
+
+                                                                        // Get team kills
+                                                                        const teamKills = match.info.participants
+                                                                            .filter((_, idx) => (isTeamOne ? idx < 5 : idx >= 5))
+                                                                            .reduce((sum, p) => sum + p.kills, 0)
+
+                                                                        // Calculate KP
+                                                                        const playerKP =
+                                                                            teamKills > 0
+                                                                                ? ((searchedParticipant.kills + searchedParticipant.assists) / teamKills) * 100
+                                                                                : 0
+
+                                                                        return `P/Kill ${playerKP.toFixed(0)}%`
+                                                                    })()}
+                                                                </div>
+                                                                <div className="CScore">
+                                                                    CS {searchedParticipant.totalMinionsKilled}
+                                                                    &nbsp;(
+                                                                    {(searchedParticipant.totalMinionsKilled / (match.info.gameDuration / 60)).toFixed(
+                                                                        1,
+                                                                    )}{' '}
+                                                                    CS/min)
+                                                                </div>
+                                                                <div
+                                                                    className="AverageMatchRank"
+                                                                    style={{ color: getTierColor(this.averageRank) }}
+                                                                >
+                                                                    Average Rank: {this.averageRank || 'Unranked'}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="items">
+                                                            {[
+                                                                searchedParticipant.item0,
+                                                                searchedParticipant.item1,
+                                                                searchedParticipant.item2,
+                                                                searchedParticipant.item3,
+                                                                searchedParticipant.item4,
+                                                                searchedParticipant.item5,
+                                                                searchedParticipant.item6,
+                                                            ].map((itemId, itemIndex) => {
+                                                                if (itemId !== 0) {
+                                                                    const itemImageUrl = getItemImageUrl(itemId)
+                                                                    return (
+                                                                        <img
+                                                                            key={itemIndex}
+                                                                            src={itemImageUrl}
+                                                                            alt={`Item ${itemId}`}
+                                                                            width="22"
+                                                                            height="22"
+                                                                        />
+                                                                    )
+                                                                } else {
+                                                                    return (
+                                                                        <div
+                                                                            key={itemIndex}
+                                                                            className={`itemPlaceholder ${searchedParticipant.win ? 'win' : 'loss'}`}
+                                                                        />
+                                                                    )
+                                                                }
+                                                            })}
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div>Loading...</div>
+                                                )}
                                             </div>
 
-                                            <div className="matchParticipantsGroupTwo">
-                                                {match.info.participants.slice(5, 10).map((player, idx) => (
-                                                    <div key={idx + 5} className="participantItem">
-                                                        <img
-                                                            src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
-                                                            alt={player.championName}
-                                                            width="16"
-                                                            height="16"
-                                                        />
-                                                        <span className="participantName">{player.riotIdGameName}</span>
-                                                    </div>
-                                                ))}
+                                            {/* Match Participants - Inside the card, outside championInfo */}
+                                            <div className="matchParticipantsContainer">
+                                                <div className="matchParticipantsGroupOne">
+                                                    {match.info.participants.slice(0, 5).map((player, idx) => (
+                                                        <div key={idx} className="participantItem">
+                                                            <img
+                                                                src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                alt={player.championName}
+                                                                width="16"
+                                                                height="16"
+                                                            />
+                                                            <span className="participantName" title={player.riotIdGameName}>
+                                                                {player.riotIdGameName}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                <div className="matchParticipantsGroupTwo">
+                                                    {match.info.participants.slice(5, 10).map((player, idx) => (
+                                                        <div key={idx + 5} className="participantItem">
+                                                            <img
+                                                                src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                alt={player.championName}
+                                                                width="16"
+                                                                height="16"
+                                                            />
+                                                            <span className="participantName" title={player.riotIdGameName}>
+                                                                {player.riotIdGameName}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
+
+                                        {/* Display Participants with riotIdGameName */}
+                                        {match.info.participants.length > 0 && (
+                                            <>
+                                                <h4>Participants:</h4>
+                                                <div className="participantsContainer">
+                                                    <ul className="participantsColumn">
+                                                        {firstFiveParticipants.map((player, idx) => (
+                                                            <li key={idx}>
+                                                                {player.riotIdGameName}
+
+                                                                {/* Display item images */}
+                                                                <div className="items">
+                                                                    {[
+                                                                        player.item0,
+                                                                        player.item1,
+                                                                        player.item2,
+                                                                        player.item3,
+                                                                        player.item4,
+                                                                        player.item5,
+                                                                        player.item6,
+                                                                    ].map((itemId, itemIndex) => {
+                                                                        if (itemId !== 0) {
+                                                                            // Only display item if itemId is not 0
+                                                                            const itemImageUrl = getItemImageUrl(itemId)
+                                                                            return (
+                                                                                <img
+                                                                                    key={itemIndex}
+                                                                                    src={itemImageUrl}
+                                                                                    alt={`Item ${itemId}`}
+                                                                                    width="30"
+                                                                                    height="30"
+                                                                                />
+                                                                            )
+                                                                        }
+                                                                        return null
+                                                                    })}
+                                                                </div>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                    <ul className="participantsColumn">
+                                                        {secondFiveParticipants.map((player, idx) => (
+                                                            <li key={idx + 5}>
+                                                                {' '}
+                                                                {/* Use idx + 5 to avoid key conflicts */}
+                                                                {player.riotIdGameName}
+                                                                {/* Display item images */}
+                                                                <div className="items">
+                                                                    {[
+                                                                        player.item0,
+                                                                        player.item1,
+                                                                        player.item2,
+                                                                        player.item3,
+                                                                        player.item4,
+                                                                        player.item5,
+                                                                        player.item6,
+                                                                    ].map((itemId, itemIndex) => {
+                                                                        if (itemId !== 0) {
+                                                                            // Only display item if itemId is not 0
+                                                                            const itemImageUrl = getItemImageUrl(itemId)
+                                                                            return (
+                                                                                <img
+                                                                                    key={itemIndex}
+                                                                                    src={itemImageUrl}
+                                                                                    alt={`Item ${itemId}`}
+                                                                                    width="30"
+                                                                                    height="30"
+                                                                                />
+                                                                            )
+                                                                        }
+                                                                        return null
+                                                                    })}
+                                                                </div>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </>
+                                        )}
+                                        <hr />
                                     </div>
-
-                                    {/* Display Participants with riotIdGameName */}
-                                    {match.info.participants.length > 0 && (
-                                        <>
-                                            <h4>Participants:</h4>
-                                            <div className="participantsContainer">
-                                                <ul className="participantsColumn">
-                                                    {firstFiveParticipants.map((player, idx) => (
-                                                        <li key={idx}>
-                                                            {player.riotIdGameName}
-
-                                                            {/* Display item images */}
-                                                            <div className="items">
-                                                                {[
-                                                                    player.item0,
-                                                                    player.item1,
-                                                                    player.item2,
-                                                                    player.item3,
-                                                                    player.item4,
-                                                                    player.item5,
-                                                                    player.item6,
-                                                                ].map((itemId, itemIndex) => {
-                                                                    if (itemId !== 0) {
-                                                                        // Only display item if itemId is not 0
-                                                                        const itemImageUrl = getItemImageUrl(itemId)
-                                                                        return (
-                                                                            <img
-                                                                                key={itemIndex}
-                                                                                src={itemImageUrl}
-                                                                                alt={`Item ${itemId}`}
-                                                                                width="30"
-                                                                                height="30"
-                                                                            />
-                                                                        )
-                                                                    }
-                                                                    return null
-                                                                })}
-                                                            </div>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                                <ul className="participantsColumn">
-                                                    {secondFiveParticipants.map((player, idx) => (
-                                                        <li key={idx + 5}>
-                                                            {' '}
-                                                            {/* Use idx + 5 to avoid key conflicts */}
-                                                            {player.riotIdGameName}
-                                                            {/* Display item images */}
-                                                            <div className="items">
-                                                                {[
-                                                                    player.item0,
-                                                                    player.item1,
-                                                                    player.item2,
-                                                                    player.item3,
-                                                                    player.item4,
-                                                                    player.item5,
-                                                                    player.item6,
-                                                                ].map((itemId, itemIndex) => {
-                                                                    if (itemId !== 0) {
-                                                                        // Only display item if itemId is not 0
-                                                                        const itemImageUrl = getItemImageUrl(itemId)
-                                                                        return (
-                                                                            <img
-                                                                                key={itemIndex}
-                                                                                src={itemImageUrl}
-                                                                                alt={`Item ${itemId}`}
-                                                                                width="30"
-                                                                                height="30"
-                                                                            />
-                                                                        )
-                                                                    }
-                                                                    return null
-                                                                })}
-                                                            </div>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </>
-                                    )}
-                                    <hr />
-                                </div>
-                            )
-                        })}
-                    </div>
-                ) : (
-                    <div className="matchHistory">
-                        <h3>No match history found.</h3>
-                    </div>
-                )}
+                                )
+                            })}
+                        </div>
+                    ) : (
+                        <div className="matchHistory">
+                            <h3>No match history found.</h3>
+                        </div>
+                    )
+                }
                 <Link to={`/`}>GO TO HOME</Link>
-            </div>
+            </div >
         );
     }
 }
