@@ -913,6 +913,9 @@ export default class SummonerSearch extends React.Component {
                                                     ))}
                                                 </div>
                                             </div>
+                                            <div className="displayMatchDetailsButton">
+                                                <button className="matchDetailsButton"></button>
+                                            </div>
                                         </div>
 
                                         {/* Display Participants with riotIdGameName */}
