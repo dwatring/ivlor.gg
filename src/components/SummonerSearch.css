@@ -311,19 +311,23 @@
   flex-direction: column;
 }
 
-.participantName,
-.participantItem {
+.participantName {
   width: 60px;
   height: 16px;
-  display: flex;
   font-size: 12px;
+  text-size-adjust: 100%;
   color: gray;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width: 100%;
+  white-space: nowrap;
+}
+.participantItem {
+  width: 60px;
+  height: 16px;
+  font-size: 12px;
   text-size-adjust: 100%;
-  text-wrap-mode: nowrap;
-  white-space-collapse: collapse;
+  color: gray;
+  display: flex;
 }
 
 .lobbyInfo {
