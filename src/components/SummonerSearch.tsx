@@ -662,9 +662,7 @@ export default class SummonerSearch extends React.Component {
                             </div>
                         </div>
 
-                        <div className="summonerName">
-                            <p>{this.summonerName}</p>
-                        </div>
+                        <div className="summonerName">{this.summonerName}</div>
                     </div>
                 )}
                 {
