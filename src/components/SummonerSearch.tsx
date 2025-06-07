@@ -915,10 +915,15 @@ export default class SummonerSearch extends React.Component {
                                             </div>
                                             <div className="displayMatchDetailsButton">
                                                 <button className="matchDetailsButton">
-                                                    <svg> <path></path></svg>
+                                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                                        <path
+                                                            fillRule="nonzero"
+                                                            d="M12 13.2 16.5 9l1.5 1.4-6 5.6-6-5.6L7.5 9z"
+                                                        />
+                                                    </svg>
                                                 </button>
-
                                             </div>
+
                                         </div>
 
                                         {/* Display Participants with riotIdGameName */}
