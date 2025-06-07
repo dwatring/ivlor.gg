@@ -923,7 +923,7 @@ export default class SummonerSearch extends React.Component {
                                             <div className="displayMatchDetailsButton">
                                                 <button className="matchDetailsButton" onClick={this.handleToggle}>
                                                     <svg
-                                                        className={`arrowIcon ${this.state.isFlipped ? 'flipped' : ''}`}
+                                                        className={`arrowIcon ${this.isFlipped ? 'flipped' : ''}`}
                                                         viewBox="0 0 24 24"
                                                         width="20"
                                                         height="20"
@@ -936,7 +936,6 @@ export default class SummonerSearch extends React.Component {
                                                     </svg>
                                                 </button>
                                             </div>
-
                                         </div>
 
                                         {/* Display Participants with riotIdGameName */}
