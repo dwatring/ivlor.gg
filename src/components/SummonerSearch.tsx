@@ -628,6 +628,11 @@ export default class SummonerSearch extends React.Component {
         }
     }
 
+    @action
+    handleToggle = () => {
+        this.isFlipped = !this.isFlipped;
+    }
+
 
     render() {
         return (
