@@ -365,3 +365,11 @@ svg {
   height: 24px;
   color: red;
 }
+
+.arrowIcon {
+  transition: transform 0.3s ease;
+}
+
+.flipped {
+  transform: rotate(180deg);
+}

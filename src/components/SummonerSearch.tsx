@@ -362,6 +362,7 @@ export default class SummonerSearch extends React.Component {
     @observable rankedData: RankedData | null = null
     @observable averageRank = 'Unranked' // Make sure to mark it as observable
     @observable isLoading = false;
+    @observable isFlipped = false;
 
 
     constructor(props: Record<string, never>) {
@@ -626,6 +627,7 @@ export default class SummonerSearch extends React.Component {
             this.averageRank = 'Unranked'
         }
     }
+
 
     render() {
         return (
@@ -914,8 +916,14 @@ export default class SummonerSearch extends React.Component {
                                                 </div>
                                             </div>
                                             <div className="displayMatchDetailsButton">
-                                                <button className="matchDetailsButton">
-                                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                                <button className="matchDetailsButton" onClick={this.handleToggle}>
+                                                    <svg
+                                                        className={`arrowIcon ${this.state.isFlipped ? 'flipped' : ''}`}
+                                                        viewBox="0 0 24 24"
+                                                        width="20"
+                                                        height="20"
+                                                        fill="currentColor"
+                                                    >
                                                         <path
                                                             fillRule="nonzero"
                                                             d="M12 13.2 16.5 9l1.5 1.4-6 5.6-6-5.6L7.5 9z"
