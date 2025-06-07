@@ -351,7 +351,17 @@
 }
 
 .displayMatchDetailsButton {
+  width: 40px;
+  height: 96px;
 }
 
 .matchDetailsButton {
+  width: 40px;
+  height: 96px;
+}
+
+svg {
+  width: 24px;
+  height: 24px;
+  color: red;
 }

@@ -914,7 +914,10 @@ export default class SummonerSearch extends React.Component {
                                                 </div>
                                             </div>
                                             <div className="displayMatchDetailsButton">
-                                                <button className="matchDetailsButton"></button>
+                                                <button className="matchDetailsButton">
+                                                    <svg> <path></path></svg>
+                                                </button>
+
                                             </div>
                                         </div>
 
