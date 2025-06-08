@@ -921,7 +921,7 @@ export default class SummonerSearch extends React.Component {
                                                 </div>
                                             </div>
                                             <div className="displayMatchDetailsButtonContainer">
-                                                <button className="matchDetailsButton" onClick={this.handleToggle}>
+                                                <button className={`matchDetailsButton ${searchedParticipant?.win ? 'win' : 'loss'}`} onClick={this.handleToggle}>
                                                     <svg
                                                         className={`arrowIcon ${searchedParticipant?.win ? 'win' : 'loss'} ${this.isFlipped ? 'flipped' : ''}`}
                                                         viewBox="0 0 24 24"
