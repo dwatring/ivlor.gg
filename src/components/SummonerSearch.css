@@ -402,3 +402,17 @@ svg {
   transform: rotate(180deg);
   transition: transform 0.3s ease;
 }
+
+.expandedMatchDetails {
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.expandedMatchDetails.open {
+  width: 694px;
+  height: 642px;
+  opacity: 1;
+}
