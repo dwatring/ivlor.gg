@@ -937,6 +937,9 @@ export default class SummonerSearch extends React.Component {
                                                 </button>
                                             </div>
                                         </div>
+                                        <div className={`expandedMatchDetails ${this.isFlipped ? 'open' : ''}`}>
+                                            {/* Your expanded match details go here */}
+                                        </div>
 
                                         {/* Display Participants with riotIdGameName */}
                                         {match.info.participants.length > 0 && (
