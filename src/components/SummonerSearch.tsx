@@ -504,7 +504,7 @@ export default class SummonerSearch extends React.Component {
         try {
             // Step 1: Fetch recent match IDs
             const matchIds: string[] = await fetchWithRetry(
-                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=1`,
+                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=2`,
                 { headers: { 'X-Riot-Token': apiKey } },
             );
 
@@ -923,7 +923,7 @@ export default class SummonerSearch extends React.Component {
                                             <div className="displayMatchDetailsButton">
                                                 <button className="matchDetailsButton" onClick={this.handleToggle}>
                                                     <svg
-                                                        className={`arrowIcon ${this.isFlipped ? 'flipped' : ''}`}
+                                                        className={`arrowIcon ${searchedParticipant?.win ? 'win' : 'loss'} ${this.isFlipped ? 'flipped' : ''}`}
                                                         viewBox="0 0 24 24"
                                                         width="20"
                                                         height="20"
