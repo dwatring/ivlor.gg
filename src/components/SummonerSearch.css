@@ -105,7 +105,7 @@
 }
 
 .searchedParticipantCard {
-  width: 694px;
+  width: 734px;
   height: 96px;
   flex-direction: row;
   align-items: center;
@@ -355,6 +355,7 @@
   height: 96px;
   position: relative;
   border-radius: 6px;
+  left: 32px;
 }
 
 .matchDetailsButton {
@@ -412,7 +413,7 @@ svg {
 }
 
 .expandedMatchDetails.open {
-  width: 694px;
+  width: 734px;
   height: 642px;
   border-radius: 6px;
 
