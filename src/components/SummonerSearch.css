@@ -414,5 +414,14 @@ svg {
 .expandedMatchDetails.open {
   width: 694px;
   height: 642px;
+  border-radius: 6px;
+
+  background-color: gray;
   opacity: 1;
+}
+
+.matchCardDisplay {
+  width: 694px;
+  height: auto;
+  gap: 4px;
 }
