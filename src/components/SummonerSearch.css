@@ -350,14 +350,18 @@
   margin-bottom: 8px;
 }
 
-.displayMatchDetailsButton {
+.displayMatchDetailsButtonContainer {
   width: 40px;
   height: 96px;
+  position: relative;
+  border-radius: 6px;
 }
 
 .matchDetailsButton {
   width: 40px;
   height: 96px;
+  position: relative;
+  border-radius: 6px;
 }
 
 svg {
