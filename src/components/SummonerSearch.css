@@ -375,6 +375,10 @@ svg {
   color: blue;
 }
 
+.arrowIcon.loss {
+  color: red;
+}
+
 .arrowIcon.flipped {
   transform: rotate(180deg);
   transition: transform 0.3s ease;
