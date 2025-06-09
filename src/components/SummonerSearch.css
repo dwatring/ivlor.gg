@@ -420,10 +420,17 @@ svg {
   opacity: 1;
 }
 
+.matchCardDisplayWrapper {
+  display: flex;
+  width: 740px;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
 .matchCardDisplay {
   display: flex;
   align-items: center;
-  width: 734px;
+  width: 740px;
   height: 96px;
 }
 
