@@ -701,7 +701,7 @@ export default class SummonerSearch extends React.Component {
                                 return (
                                     <div key={index} className="matchCard">
                                         <div className="matchCardDisplay">
-                                            <div className="frontalCard"></div>
+                                            <div className={`frontalCard ${searchedParticipant?.win ? 'win' : 'loss'}`}></div>
                                             <div className={`searchedParticipantCard ${searchedParticipant?.win ? 'win' : 'loss'}`}>
                                                 {/* Game Info */}
                                                 <div className="gameInfo">
