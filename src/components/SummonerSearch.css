@@ -435,12 +435,29 @@ svg {
 }
 
 .expandedMatchDetailsSectionsWrapper {
-  width: 740px;
+  width: 732px;
   height: 36px;
   background-color: rgb(49, 49, 60);
+  display: flex;
+  font-size: 14;
+  padding-left: 4px;
+  padding-right: 4px;
+  justify-content: flex-start;
+  margin-bottom: 4px;
 }
 
-.expandedMatchDetailsSectionsOverview {
+.expandedMatchDetailsSectionsSelected {
+  flex: 1;
+  height: 28px;
+  background-color: rgb(103, 102, 120);
+  color: rgb(255, 255, 255);
+  border-color: rgb(28, 28, 31);
+  border-radius: 4px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  row-gap: 4px;
+  font-size: 14;
+  text-align: center;
 }
 
 .expandedMatchDetailsSections {
