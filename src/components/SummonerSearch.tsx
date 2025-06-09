@@ -945,6 +945,7 @@ export default class SummonerSearch extends React.Component {
                                             <div className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''}`}>
                                                 <div className="expandedMatchDetailsSectionsWrapper">
                                                     <button className='expandedMatchDetailsSectionsOverview'>Overview</button>
+                                                    <button className='expandedMatchDetailsSections'>Iv Score</button>
                                                 </div>
                                             </div>
                                         </div>
