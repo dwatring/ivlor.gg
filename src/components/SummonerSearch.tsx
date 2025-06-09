@@ -701,6 +701,7 @@ export default class SummonerSearch extends React.Component {
                                 return (
                                     <div key={index} className="matchCard">
                                         <div className="matchCardDisplay">
+                                            <div className="frontalCard"></div>
                                             <div className={`searchedParticipantCard ${searchedParticipant?.win ? 'win' : 'loss'}`}>
                                                 {/* Game Info */}
                                                 <div className="gameInfo">
@@ -922,25 +923,25 @@ export default class SummonerSearch extends React.Component {
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <div className="displayMatchDetailsButtonContainer">
-                                                    <button className={`matchDetailsButton ${searchedParticipant?.win ? 'win' : 'loss'}`} onClick={this.handleToggle}>
-                                                        <svg
-                                                            className={`arrowIcon ${searchedParticipant?.win ? 'win' : 'loss'} ${this.isFlipped ? 'flipped' : ''}`}
-                                                            viewBox="0 0 24 24"
-                                                            width="20"
-                                                            height="20"
-                                                            fill="currentColor"
-                                                        >
-                                                            <path
-                                                                fillRule="nonzero"
-                                                                d="M12 13.2 16.5 9l1.5 1.4-6 5.6-6-5.6L7.5 9z"
-                                                            />
-                                                        </svg>
-                                                    </button>
-                                                </div>
                                             </div>
-                                            <div className={`expandedMatchDetails ${this.isFlipped ? 'open' : ''}`}>
-                                                {/* Your expanded match details go here */}
+                                            <div className="displayMatchDetailsButtonContainer">
+                                                <button className={`matchDetailsButton ${searchedParticipant?.win ? 'win' : 'loss'}`} onClick={() => this.handleToggle(match.metadata.matchId)}>
+                                                    <svg
+                                                        className={`arrowIcon ${searchedParticipant?.win ? 'win' : 'loss'} ${this.flippedMatches[match.metadata.matchId] ? 'flipped' : ''}`}
+                                                        viewBox="0 0 24 24"
+                                                        width="20"
+                                                        height="20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="nonzero"
+                                                            d="M12 13.2 16.5 9l1.5 1.4-6 5.6-6-5.6L7.5 9z"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''}`}>
+                                                <div className="expandedMatchDetailsSections"></div>
                                             </div>
                                         </div>
 

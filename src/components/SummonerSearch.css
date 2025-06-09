@@ -105,13 +105,12 @@
 }
 
 .searchedParticipantCard {
-  width: 734px;
+  width: 694px;
   height: 96px;
   flex-direction: row;
   align-items: center;
   color: var(--lol-gray-500);
   display: flex;
-  border-radius: 5px;
   padding: 4px, 12px;
 }
 
@@ -355,7 +354,6 @@
   height: 96px;
   position: relative;
   border-radius: 6px;
-  left: 32px;
 }
 
 .matchDetailsButton {
@@ -367,7 +365,8 @@
   width: 40px;
   height: 96px;
   position: relative;
-  border-radius: 6px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .matchDetailsButton.win {
@@ -422,7 +421,21 @@ svg {
 }
 
 .matchCardDisplay {
-  width: 694px;
-  height: auto;
-  gap: 4px;
+  display: flex;
+  align-items: center;
+  width: 734px;
+  height: 96px;
+}
+
+.expandedMatchDetailsSections {
+  width: 740px;
+  height: 36px;
+}
+
+.frontalCard {
+  width: 6px;
+  height: 96px;
+  background-color: black;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
