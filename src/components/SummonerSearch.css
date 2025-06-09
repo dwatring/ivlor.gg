@@ -434,9 +434,13 @@ svg {
   height: 96px;
 }
 
-.expandedMatchDetailsSections {
+.expandedMatchDetailsSectionsWrapper {
   width: 740px;
   height: 36px;
+  background-color: rgb(49, 49, 60);
+}
+
+.expandedMatchDetailsSectionsOverview {
 }
 
 .frontalCard {
