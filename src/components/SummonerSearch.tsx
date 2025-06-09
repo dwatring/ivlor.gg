@@ -360,9 +360,10 @@ export default class SummonerSearch extends React.Component {
     @observable matchHistory: MatchData[] = []
     @observable runesReforged: runeStyle[] = []
     @observable rankedData: RankedData | null = null
-    @observable averageRank = 'Unranked' // Make sure to mark it as observable
+    @observable averageRank = 'Unranked'
     @observable isLoading = false;
-    @observable isFlipped = false;
+    @observable flippedMatches: Record<string, boolean> = {}
+
 
 
     constructor(props: Record<string, never>) {
@@ -629,8 +630,8 @@ export default class SummonerSearch extends React.Component {
     }
 
     @action
-    handleToggle = () => {
-        this.isFlipped = !this.isFlipped;
+    handleToggle = (matchId: string) => {
+        this.flippedMatches[matchId] = !this.flippedMatches[matchId]
     }
 
 
