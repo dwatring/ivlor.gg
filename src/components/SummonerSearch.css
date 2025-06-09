@@ -439,3 +439,11 @@ svg {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
+
+.frontalCard.win {
+  background-color: #0649d8;
+}
+
+.frontalCard.loss {
+  background-color: #d50730;
+}
