@@ -947,6 +947,7 @@ export default class SummonerSearch extends React.Component {
                                                     <button className='expandedMatchDetailsSectionsOverview'>Overview</button>
                                                     <button className='expandedMatchDetailsSections'>Iv Score</button>
                                                     <button className='expandedMatchDetailsSections'>Team analysis</button>
+                                                    <button className='expandedMatchDetailsSections'>Build</button>
                                                 </div>
                                             </div>
                                         </div>
