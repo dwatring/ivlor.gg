@@ -949,11 +949,19 @@ export default class SummonerSearch extends React.Component {
                                             </div>
                                             <div className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''}`}>
                                                 <div className="expandedMatchDetailsSectionsWrapper">
-                                                    <button className='expandedMatchDetailsSectionsSelected'>Overview</button>
-                                                    <button className='expandedMatchDetailsSections'>Iv Score</button>
-                                                    <button className='expandedMatchDetailsSections'>Team analysis</button>
-                                                    <button className='expandedMatchDetailsSections'>Build</button>
-                                                    <button className='expandedMatchDetailsSections'>Etc.</button>
+                                                    {['Overview', 'Iv Score', 'Team analysis', 'Build', 'Etc.'].map((section) => (
+                                                        <button
+                                                            key={section}
+                                                            className={
+                                                                this.selectedSection === section
+                                                                    ? 'expandedMatchDetailsSectionsSelected'
+                                                                    : 'expandedMatchDetailsSections'
+                                                            }
+                                                            onClick={() => this.handleSectionChange(section)}
+                                                        >
+                                                            {section}
+                                                        </button>
+                                                    ))}
                                                 </div>
                                             </div>
                                         </div>
