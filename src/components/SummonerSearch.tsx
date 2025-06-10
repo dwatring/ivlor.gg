@@ -966,11 +966,21 @@ export default class SummonerSearch extends React.Component {
                                                 <div className="sectionContentWrapper">
                                                     {this.selectedSection === 'Overview' && (
                                                         <div className="OverviewTeamHeaderWrapper">
+                                                            {/* Stats Header */}
                                                             <div className="OverviewTeamHeader">
-                                                                <div className='championMatchDetailsCard'>
 
-                                                                </div>
                                                             </div>
+                                                            {/* Team 1 */}
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            {/* Objectives Display*/}
+                                                            <div className='matchDetailsObjectiveDisplay'></div>
+
+                                                            {/* Team 2 */}
+
                                                         </div>
 
                                                     )}
@@ -999,84 +1009,86 @@ export default class SummonerSearch extends React.Component {
                                         </div>
 
                                         {/* Display Participants with riotIdGameName */}
-                                        {match.info.participants.length > 0 && (
-                                            <>
-                                                <h4>Participants:</h4>
-                                                <div className="participantsContainer">
-                                                    <ul className="participantsColumn">
-                                                        {firstFiveParticipants.map((player, idx) => (
-                                                            <li key={idx}>
-                                                                {player.riotIdGameName}
+                                        {
+                                            match.info.participants.length > 0 && (
+                                                <>
+                                                    <h4>Participants:</h4>
+                                                    <div className="participantsContainer">
+                                                        <ul className="participantsColumn">
+                                                            {firstFiveParticipants.map((player, idx) => (
+                                                                <li key={idx}>
+                                                                    {player.riotIdGameName}
 
-                                                                {/* Display item images */}
-                                                                <div className="items">
-                                                                    {[
-                                                                        player.item0,
-                                                                        player.item1,
-                                                                        player.item2,
-                                                                        player.item3,
-                                                                        player.item4,
-                                                                        player.item5,
-                                                                        player.item6,
-                                                                    ].map((itemId, itemIndex) => {
-                                                                        if (itemId !== 0) {
-                                                                            // Only display item if itemId is not 0
-                                                                            const itemImageUrl = getItemImageUrl(itemId)
-                                                                            return (
-                                                                                <img
-                                                                                    key={itemIndex}
-                                                                                    src={itemImageUrl}
-                                                                                    alt={`Item ${itemId}`}
-                                                                                    width="30"
-                                                                                    height="30"
-                                                                                />
-                                                                            )
-                                                                        }
-                                                                        return null
-                                                                    })}
-                                                                </div>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                    <ul className="participantsColumn">
-                                                        {secondFiveParticipants.map((player, idx) => (
-                                                            <li key={idx + 5}>
-                                                                {' '}
-                                                                {/* Use idx + 5 to avoid key conflicts */}
-                                                                {player.riotIdGameName}
-                                                                {/* Display item images */}
-                                                                <div className="items">
-                                                                    {[
-                                                                        player.item0,
-                                                                        player.item1,
-                                                                        player.item2,
-                                                                        player.item3,
-                                                                        player.item4,
-                                                                        player.item5,
-                                                                        player.item6,
-                                                                    ].map((itemId, itemIndex) => {
-                                                                        if (itemId !== 0) {
-                                                                            // Only display item if itemId is not 0
-                                                                            const itemImageUrl = getItemImageUrl(itemId)
-                                                                            return (
-                                                                                <img
-                                                                                    key={itemIndex}
-                                                                                    src={itemImageUrl}
-                                                                                    alt={`Item ${itemId}`}
-                                                                                    width="30"
-                                                                                    height="30"
-                                                                                />
-                                                                            )
-                                                                        }
-                                                                        return null
-                                                                    })}
-                                                                </div>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            </>
-                                        )}
+                                                                    {/* Display item images */}
+                                                                    <div className="items">
+                                                                        {[
+                                                                            player.item0,
+                                                                            player.item1,
+                                                                            player.item2,
+                                                                            player.item3,
+                                                                            player.item4,
+                                                                            player.item5,
+                                                                            player.item6,
+                                                                        ].map((itemId, itemIndex) => {
+                                                                            if (itemId !== 0) {
+                                                                                // Only display item if itemId is not 0
+                                                                                const itemImageUrl = getItemImageUrl(itemId)
+                                                                                return (
+                                                                                    <img
+                                                                                        key={itemIndex}
+                                                                                        src={itemImageUrl}
+                                                                                        alt={`Item ${itemId}`}
+                                                                                        width="30"
+                                                                                        height="30"
+                                                                                    />
+                                                                                )
+                                                                            }
+                                                                            return null
+                                                                        })}
+                                                                    </div>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                        <ul className="participantsColumn">
+                                                            {secondFiveParticipants.map((player, idx) => (
+                                                                <li key={idx + 5}>
+                                                                    {' '}
+                                                                    {/* Use idx + 5 to avoid key conflicts */}
+                                                                    {player.riotIdGameName}
+                                                                    {/* Display item images */}
+                                                                    <div className="items">
+                                                                        {[
+                                                                            player.item0,
+                                                                            player.item1,
+                                                                            player.item2,
+                                                                            player.item3,
+                                                                            player.item4,
+                                                                            player.item5,
+                                                                            player.item6,
+                                                                        ].map((itemId, itemIndex) => {
+                                                                            if (itemId !== 0) {
+                                                                                // Only display item if itemId is not 0
+                                                                                const itemImageUrl = getItemImageUrl(itemId)
+                                                                                return (
+                                                                                    <img
+                                                                                        key={itemIndex}
+                                                                                        src={itemImageUrl}
+                                                                                        alt={`Item ${itemId}`}
+                                                                                        width="30"
+                                                                                        height="30"
+                                                                                    />
+                                                                                )
+                                                                            }
+                                                                            return null
+                                                                        })}
+                                                                    </div>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </>
+                                            )
+                                        }
                                         <hr />
                                     </div>
                                 )
