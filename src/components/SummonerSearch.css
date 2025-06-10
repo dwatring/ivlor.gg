@@ -488,3 +488,26 @@ svg {
 .frontalCard.loss {
   background-color: #d50730;
 }
+
+.sectionContentWrapper {
+}
+
+.OverviewTeamHeader {
+  width: 740px;
+  height: 32px;
+}
+
+/* Todo */
+
+/* .IvScoreWrapper {
+}
+
+.TeamAnalysisWrapper {
+}
+
+.BuildWrapper {
+}
+
+.EtcWrapper{
+
+} */
