@@ -966,8 +966,11 @@ export default class SummonerSearch extends React.Component {
                                                 <div className="sectionContentWrapper">
                                                     {this.selectedSection === 'Overview' && (
                                                         <div className="OverviewTeamHeader">
+                                                            <div className='championMatchDetailsCard'>
 
+                                                            </div>
                                                         </div>
+
                                                     )}
                                                     {this.selectedSection === 'Iv Score' && (
                                                         <div className="IvScoreWrapper">

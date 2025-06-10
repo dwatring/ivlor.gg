@@ -497,6 +497,11 @@ svg {
   height: 32px;
 }
 
+.championMatchDetailsCard {
+  width: 740px;
+  height: 42.5px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
