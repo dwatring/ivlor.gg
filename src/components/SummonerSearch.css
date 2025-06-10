@@ -497,12 +497,25 @@ svg {
   height: 32px;
 }
 
+.OverviewTeamHeaderBlue {
+  width: 740px;
+  height: 32px;
+}
+
+.OverviewTeamHeaderRed {
+  width: 740px;
+  height: 32px;
+}
+
 .championMatchDetailsCard {
   width: 740px;
   height: 42.5px;
 }
 
 .matchDetailsObjectiveDisplay {
+  background-color: black;
+  width: 740px;
+  height: 58px;
 }
 
 /* Todo */

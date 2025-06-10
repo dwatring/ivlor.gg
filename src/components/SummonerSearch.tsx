@@ -967,7 +967,7 @@ export default class SummonerSearch extends React.Component {
                                                     {this.selectedSection === 'Overview' && (
                                                         <div className="OverviewTeamHeaderWrapper">
                                                             {/* Stats Header */}
-                                                            <div className="OverviewTeamHeader">
+                                                            <div className="OverviewTeamHeaderBlue">
 
                                                             </div>
                                                             {/* Team 1 */}
@@ -980,6 +980,14 @@ export default class SummonerSearch extends React.Component {
                                                             <div className='matchDetailsObjectiveDisplay'></div>
 
                                                             {/* Team 2 */}
+                                                            <div className="OverviewTeamHeaderRed">
+
+                                                            </div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
+                                                            <div className='championMatchDetailsCard'></div>
 
                                                         </div>
 
