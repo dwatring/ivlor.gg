@@ -363,7 +363,7 @@ export default class SummonerSearch extends React.Component {
     @observable averageRank = 'Unranked'
     @observable isLoading = false;
     @observable flippedMatches: Record<string, boolean> = {}
-    @observable selectSection = 'Overview'
+    @observable selectedSection = 'Overview'
 
 
 
@@ -633,6 +633,11 @@ export default class SummonerSearch extends React.Component {
     @action
     handleToggle = (matchId: string) => {
         this.flippedMatches[matchId] = !this.flippedMatches[matchId]
+    }
+
+    @action
+    handleSectionChange = (section: string) => {
+        this.selectedSection = section;
     }
 
     render() {
