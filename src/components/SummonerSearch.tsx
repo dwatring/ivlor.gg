@@ -989,6 +989,9 @@ export default class SummonerSearch extends React.Component {
                                                             <div className='championMatchDetailsCard'></div>
                                                             <div className='championMatchDetailsCard'></div>
 
+                                                            {/* Divider */}
+                                                            <div className='matchDetailsDivider'></div>
+
                                                         </div>
 
                                                     )}

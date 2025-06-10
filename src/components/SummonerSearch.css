@@ -518,6 +518,15 @@ svg {
   height: 58px;
 }
 
+.matchDetailsDivider {
+  background-color: black;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-top: 8px;
+  width: 740px;
+  height: 18px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
