@@ -971,15 +971,15 @@ export default class SummonerSearch extends React.Component {
                                                 <div className="sectionContentWrapper">
                                                     {this.selectedSection === 'Overview' && (
                                                         <div className="OverviewTeamHeaderWrapper">
-                                                            <table className="championMatchDetailsTable">
+                                                            <table className="championMatchDetailsTableBlue">
                                                                 <colgroup>
-                                                                    <col style={{ width: '12%' }} /> {/* Victory */}
-                                                                    <col style={{ width: '12%' }} /> {/* IV Score */}
-                                                                    <col style={{ width: '14%' }} /> {/* KDA */}
-                                                                    <col style={{ width: '16%' }} /> {/* Damage */}
-                                                                    <col style={{ width: '14%' }} /> {/* Wards */}
-                                                                    <col style={{ width: '12%' }} /> {/* CS */}
-                                                                    <col style={{ width: '20%' }} /> {/* Items */}
+                                                                    <col style={{ width: 'auto' }} />    {/* Victory */}
+                                                                    <col style={{ width: '68px' }} />    {/* IV Score */}
+                                                                    <col style={{ width: '98px' }} />    {/* KDA */}
+                                                                    <col style={{ width: '120px' }} />   {/* Damage */}
+                                                                    <col style={{ width: '48px' }} />    {/* Wards */}
+                                                                    <col style={{ width: '56px' }} />    {/* CS */}
+                                                                    <col style={{ width: '175px' }} />   {/* Items */}
                                                                 </colgroup>
 
                                                                 <thead>
@@ -995,7 +995,6 @@ export default class SummonerSearch extends React.Component {
                                                                 </thead>
 
                                                                 <tbody>
-                                                                    {/* Your existing championMatchDetailsCard rows go here */}
                                                                     <tr className="championMatchDetailsCard">
                                                                         {/* Example static data */}
                                                                         <td>Victory</td>
@@ -1019,15 +1018,49 @@ export default class SummonerSearch extends React.Component {
                                                             {/* Objectives Display*/}
                                                             <div className='matchDetailsObjectiveDisplay'></div>
 
-                                                            {/* Team 2 */}
-                                                            <div className="OverviewTeamHeaderRed">
+                                                            <table className="championMatchDetailsTableRed">
+                                                                <colgroup>
+                                                                    <col style={{ width: 'auto' }} />    {/* Victory */}
+                                                                    <col style={{ width: '68px' }} />    {/* IV Score */}
+                                                                    <col style={{ width: '98px' }} />    {/* KDA */}
+                                                                    <col style={{ width: '120px' }} />   {/* Damage */}
+                                                                    <col style={{ width: '48px' }} />    {/* Wards */}
+                                                                    <col style={{ width: '56px' }} />    {/* CS */}
+                                                                    <col style={{ width: '175px' }} />   {/* Items */}
+                                                                </colgroup>
 
-                                                            </div>
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
+                                                                <thead>
+                                                                    <tr className="OverviewTeamHeaderRow">
+                                                                        <th scope="col">Victory</th>
+                                                                        <th scope="col">IV Score</th>
+                                                                        <th scope="col">KDA</th>
+                                                                        <th scope="col">Damage</th>
+                                                                        <th scope="col">Wards</th>
+                                                                        <th scope="col">CS</th>
+                                                                        <th scope="col">Items</th>
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                    <tr className="championMatchDetailsCard">
+                                                                        {/* Example static data */}
+                                                                        <td>Victory</td>
+                                                                        <td>25</td>
+                                                                        <td>10/2/5</td>
+                                                                        <td>15000</td>
+                                                                        <td>12</td>
+                                                                        <td>180</td>
+                                                                        <td>
+                                                                            {/* Items images or placeholders */}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+
+                                                                </tbody>
+                                                            </table>
 
                                                             {/* Divider */}
                                                             <div className='matchDetailsDivider'></div>

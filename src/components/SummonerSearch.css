@@ -527,6 +527,16 @@ svg {
   height: 18px;
 }
 
+.championMatchDetailsTableBlue {
+  width: 740px;
+  height: 242.5px;
+}
+
+.championMatchDetailsTableRed {
+  width: 740px;
+  height: 242.5px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
