@@ -351,10 +351,6 @@ interface RankedData {
     queueType: string
 }
 
-interface Props {
-    participants: MatchData['info']['participants'];
-}
-
 @observer
 export default class SummonerSearch extends React.Component {
     @observable summonerName = 'FrankTheTank27#NA1'
@@ -984,7 +980,9 @@ export default class SummonerSearch extends React.Component {
 
                                                                 <thead>
                                                                     <tr className="OverviewTeamHeaderRow">
-                                                                        <th scope="col">Victory</th>
+                                                                        <th scope="col">
+                                                                            {match.info.participants[0].win ? 'Victory (Blue Team)' : 'Defeat (Blue Team)'}
+                                                                        </th>
                                                                         <th scope="col">IV Score</th>
                                                                         <th scope="col">KDA</th>
                                                                         <th scope="col">Damage</th>
@@ -1031,8 +1029,9 @@ export default class SummonerSearch extends React.Component {
 
                                                                 <thead>
                                                                     <tr className="OverviewTeamHeaderRow">
-                                                                        <th scope="col">Victory</th>
-                                                                        <th scope="col">IV Score</th>
+                                                                        <th scope="col">
+                                                                            {match.info.participants[5].win ? 'Victory (Red Team)' : 'Defeat (Red Team)'}
+                                                                        </th>                                                                        <th scope="col">IV Score</th>
                                                                         <th scope="col">KDA</th>
                                                                         <th scope="col">Damage</th>
                                                                         <th scope="col">Wards</th>
