@@ -351,6 +351,10 @@ interface RankedData {
     queueType: string
 }
 
+interface Props {
+    participants: MatchData['info']['participants'];
+}
+
 @observer
 export default class SummonerSearch extends React.Component {
     @observable summonerName = 'FrankTheTank27#NA1'
@@ -641,6 +645,7 @@ export default class SummonerSearch extends React.Component {
     }
 
     render() {
+
         return (
             <div className="contentContainer">
 
@@ -966,16 +971,51 @@ export default class SummonerSearch extends React.Component {
                                                 <div className="sectionContentWrapper">
                                                     {this.selectedSection === 'Overview' && (
                                                         <div className="OverviewTeamHeaderWrapper">
-                                                            {/* Stats Header */}
-                                                            <div className="OverviewTeamHeaderBlue">
+                                                            <table className="championMatchDetailsTable">
+                                                                <colgroup>
+                                                                    <col style={{ width: '12%' }} /> {/* Victory */}
+                                                                    <col style={{ width: '12%' }} /> {/* IV Score */}
+                                                                    <col style={{ width: '14%' }} /> {/* KDA */}
+                                                                    <col style={{ width: '16%' }} /> {/* Damage */}
+                                                                    <col style={{ width: '14%' }} /> {/* Wards */}
+                                                                    <col style={{ width: '12%' }} /> {/* CS */}
+                                                                    <col style={{ width: '20%' }} /> {/* Items */}
+                                                                </colgroup>
 
-                                                            </div>
-                                                            {/* Team 1 */}
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
-                                                            <div className='championMatchDetailsCard'></div>
+                                                                <thead>
+                                                                    <tr className="OverviewTeamHeaderRow">
+                                                                        <th scope="col">Victory</th>
+                                                                        <th scope="col">IV Score</th>
+                                                                        <th scope="col">KDA</th>
+                                                                        <th scope="col">Damage</th>
+                                                                        <th scope="col">Wards</th>
+                                                                        <th scope="col">CS</th>
+                                                                        <th scope="col">Items</th>
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                    {/* Your existing championMatchDetailsCard rows go here */}
+                                                                    <tr className="championMatchDetailsCard">
+                                                                        {/* Example static data */}
+                                                                        <td>Victory</td>
+                                                                        <td>25</td>
+                                                                        <td>10/2/5</td>
+                                                                        <td>15000</td>
+                                                                        <td>12</td>
+                                                                        <td>180</td>
+                                                                        <td>
+                                                                            {/* Items images or placeholders */}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+                                                                    <tr className="championMatchDetailsCard"></tr>
+
+                                                                </tbody>
+                                                            </table>
+
                                                             {/* Objectives Display*/}
                                                             <div className='matchDetailsObjectiveDisplay'></div>
 
