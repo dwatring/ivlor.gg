@@ -536,6 +536,13 @@ svg {
   width: 740px;
   height: 242.5px;
 }
+.spriteMatchDetailsContainer {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
