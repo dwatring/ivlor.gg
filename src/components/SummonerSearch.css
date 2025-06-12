@@ -568,6 +568,16 @@ svg {
   justify-content: center;
 }
 
+.championMatchDetailsInfoContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  gap: 1px;
+  row-gap: 4px;
+  column-gap: 4px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
