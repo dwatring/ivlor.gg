@@ -993,23 +993,21 @@ export default class SummonerSearch extends React.Component {
                                                                 </thead>
 
                                                                 <tbody>
-                                                                    <tr className="championMatchDetailsCard">
-                                                                        {/* Example static data */}
-                                                                        <td>Victory</td>
-                                                                        <td>25</td>
-                                                                        <td>10/2/5</td>
-                                                                        <td>15000</td>
-                                                                        <td>12</td>
-                                                                        <td>180</td>
+                                                                    <tr key={index} className="championMatchDetailsCard">
                                                                         <td>
-                                                                            {/* Items images or placeholders */}
+                                                                            <div className="spriteMatchDetailsContainer">
+                                                                                <img
+                                                                                    className="championMatchDetailsSprite"
+                                                                                    src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${participant.championName}.png`}
+                                                                                    alt={`${participant.championName} Sprite`}
+                                                                                    width="32"
+                                                                                    height="32"
+                                                                                />
+                                                                                <div className="championMatchDetailsSpriteLevel">{participant.champLevel}</div>
+                                                                            </div>
                                                                         </td>
+                                                                        { }
                                                                     </tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
-
                                                                 </tbody>
                                                             </table>
 
