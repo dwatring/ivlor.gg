@@ -255,16 +255,6 @@ const fetchMatchRankedData = async (participantPuuids: string[], apiKey: string)
     return data;
 };
 
-const getAllParticipantPuuids = (matches: MatchData[]) => {
-    const allPuuids = new Set<string>();
-
-    matches.forEach(match => {
-        // match.metadata.participants is an array of PUUID strings
-        match.metadata.participants.forEach(puuid => allPuuids.add(puuid));
-    });
-
-    return Array.from(allPuuids);
-};
 
 interface SummonerData {
     id: string
@@ -374,10 +364,6 @@ export default class SummonerSearch extends React.Component {
     @observable isLoading = false;
     @observable flippedMatches: Record<string, boolean> = {}
     @observable selectedSection = 'Overview'
-    @observable summonerDataList: SummonerData[] = [];
-
-
-
 
     constructor(props: Record<string, never>) {
         super(props)
@@ -518,7 +504,7 @@ export default class SummonerSearch extends React.Component {
         try {
             // Step 1: Fetch recent match IDs
             const matchIds: string[] = await fetchWithRetry(
-                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=1`,
+                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=2`,
                 { headers: { 'X-Riot-Token': apiKey } },
             );
 
@@ -567,10 +553,6 @@ export default class SummonerSearch extends React.Component {
             );
 
             this.matchHistory = matchDetails.filter(Boolean); // filter out nulls if any
-
-            const puuidList = getAllParticipantPuuids(this.matchHistory);
-            console.log('PUUID List:', puuidList);
-            await this.fetchSummonerDataList(puuidList);
 
             console.log('Returning matchDetails:', this.matchHistory);
 
@@ -653,37 +635,6 @@ export default class SummonerSearch extends React.Component {
     @action
     handleSectionChange = (section: string) => {
         this.selectedSection = section;
-    }
-
-    @action async fetchSummonerDataList(puuids: string[]) {
-        try {
-            this.isLoading = true;
-            const results: SummonerData[] = [];
-
-            for (const puuid of puuids) {
-                const response = await fetch(`https://your-api/lol/summoner/v4/summoners/by-puuid/${puuid}`);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch data for PUUID ${puuid}`);
-                }
-                const data = await response.json();
-                results.push(data);
-            }
-
-            runInAction(() => {
-                this.summonerDataList = results;
-                this.isLoading = false;
-                console.log('Fetched summonerDataList:', this.summonerDataList);
-            });
-        } catch (error: unknown) {
-            runInAction(() => {
-                if (error instanceof Error) {
-                    this.errorMessage = error.message;
-                } else {
-                    this.errorMessage = String(error);
-                }
-                this.isLoading = false;
-            });
-        }
     }
 
     render() {
@@ -1040,8 +991,6 @@ export default class SummonerSearch extends React.Component {
 
                                                                 <tbody>
                                                                     {match.info.participants.slice(0, 5).map((participant, index) => {
-                                                                        const summonerData = this.summonerDataList.find(s => s.puuid === participant.puuid);
-                                                                        console.log(`Participant PUUID: ${participant.puuid}`, 'SummonerData:', summonerData);
 
                                                                         const spell1Name = summonerSpellIdMap[participant.summoner1Id];
                                                                         const spell2Name = summonerSpellIdMap[participant.summoner2Id];
@@ -1105,7 +1054,7 @@ export default class SummonerSearch extends React.Component {
                                                                                             </div>
                                                                                         </div>
 
-                                                                                        <div className="summonerMatchDetailsWrapper">
+                                                                                        {/* <div className="summonerMatchDetailsWrapper">
                                                                                             <div
                                                                                                 className="summonerMatchDetailsName"
                                                                                                 title={`${summonerData?.name ?? ''}#${summonerData?.tagLine ?? ''}`}
@@ -1115,7 +1064,7 @@ export default class SummonerSearch extends React.Component {
                                                                                             <div className="summonerMatchDetailsLevel">
                                                                                                 Lv. {summonerData?.summonerLevel ?? '-'}
                                                                                             </div>
-                                                                                        </div>
+                                                                                        </div> */}
                                                                                     </div>
                                                                                 </td>
                                                                             </tr>
