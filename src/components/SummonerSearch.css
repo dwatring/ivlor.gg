@@ -584,6 +584,10 @@ svg {
   display: flex;
   gap: 0.5px;
 }
+
+.summonerMatchDetailsWrapper {
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
