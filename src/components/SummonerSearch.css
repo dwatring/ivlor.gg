@@ -578,6 +578,13 @@ svg {
   column-gap: 4px;
 }
 
+.SummonerMatchDetailsSpellAndRunesContainer {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  gap: 0.5px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
