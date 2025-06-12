@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
 import './SummonerSearch.css'
-import { makeObservable, observable, action } from 'mobx'
+import { makeObservable, observable, action, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
 import Bottleneck from 'bottleneck'
@@ -255,7 +255,6 @@ const fetchMatchRankedData = async (participantPuuids: string[], apiKey: string)
     return data;
 };
 
-
 interface SummonerData {
     id: string
     accountId: string
@@ -364,6 +363,8 @@ export default class SummonerSearch extends React.Component {
     @observable isLoading = false;
     @observable flippedMatches: Record<string, boolean> = {}
     @observable selectedSection = 'Overview'
+    @observable summonerDataList: SummonerData[] = [];
+
 
 
 
@@ -506,7 +507,7 @@ export default class SummonerSearch extends React.Component {
         try {
             // Step 1: Fetch recent match IDs
             const matchIds: string[] = await fetchWithRetry(
-                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=2`,
+                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=1`,
                 { headers: { 'X-Riot-Token': apiKey } },
             );
 
@@ -554,7 +555,6 @@ export default class SummonerSearch extends React.Component {
                 }),
             );
 
-            // ✅ Store in MobX state
             this.matchHistory = matchDetails.filter(Boolean); // filter out nulls if any
 
             console.log('Returning matchDetails:', this.matchHistory);
@@ -993,82 +993,88 @@ export default class SummonerSearch extends React.Component {
                                                                 </thead>
 
                                                                 <tbody>
-                                                                    {match.info.participants.slice(0, 5).map((participant, index) => (
-                                                                        <tr key={index} className="championMatchDetailsCard">
-                                                                            <td>
-                                                                                <div className="championMatchDetailsInfoContainer">
-                                                                                    <div className="spriteMatchDetailsContainer">
-                                                                                        <img
-                                                                                            className="championMatchDetailsSprite"
-                                                                                            src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${participant.championName}.png`}
-                                                                                            alt={`${participant.championName} Sprite`}
-                                                                                            width="32"
-                                                                                            height="32"
-                                                                                        />
-                                                                                        <div className="championMatchDetailsSpriteLevel">{participant.champLevel}</div>
-                                                                                    </div>
+                                                                    {match.info.participants.slice(0, 5).map((participant, index) => {
+                                                                        const summonerData = this.summonerDataList.find(s => s.puuid === participant.puuid);
+                                                                        console.log(`Participant PUUID: ${participant.puuid}`, 'SummonerData:', summonerData);
 
-                                                                                    <div className="SummonerMatchDetailsSpellAndRunesContainer">
-                                                                                        <div className="SummonerSpellContainer">
-                                                                                            {(() => {
-                                                                                                const spell1Name = summonerSpellIdMap[participant.summoner1Id];
-                                                                                                const spell2Name = summonerSpellIdMap[participant.summoner2Id];
+                                                                        const spell1Name = summonerSpellIdMap[participant.summoner1Id];
+                                                                        const spell2Name = summonerSpellIdMap[participant.summoner2Id];
 
-                                                                                                const spell1Url = spell1Name
-                                                                                                    ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell1Name}.png`
-                                                                                                    : '/fallback-icon.png';
+                                                                        const spell1Url = spell1Name
+                                                                            ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell1Name}.png`
+                                                                            : '/fallback-icon.png';
 
-                                                                                                const spell2Url = spell2Name
-                                                                                                    ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell2Name}.png`
-                                                                                                    : '/fallback-icon.png';
+                                                                        const spell2Url = spell2Name
+                                                                            ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell2Name}.png`
+                                                                            : '/fallback-icon.png';
 
-                                                                                                return (
-                                                                                                    <>
-                                                                                                        <img
-                                                                                                            src={spell1Url}
-                                                                                                            alt={`Summoner Spell 1 - ${spell1Name}`}
-                                                                                                            width="16"
-                                                                                                            height="16"
-                                                                                                        />
-                                                                                                        <img
-                                                                                                            src={spell2Url}
-                                                                                                            alt={`Summoner Spell 2 - ${spell2Name}`}
-                                                                                                            width="16"
-                                                                                                            height="16"
-                                                                                                        />
-                                                                                                    </>
-                                                                                                );
-                                                                                            })()}
-                                                                                        </div>
-                                                                                        <div className="RunesContainer">
+                                                                        return (
+                                                                            <tr key={index} className="championMatchDetailsCard">
+                                                                                <td>
+                                                                                    <div className="championMatchDetailsInfoContainer">
+                                                                                        <div className="spriteMatchDetailsContainer">
                                                                                             <img
-                                                                                                src={this.getRunePerkIconURL(
-                                                                                                    participant.perks.styles[0].style,
-                                                                                                    participant.perks.styles[0].selections[0].perk
-                                                                                                )}
-                                                                                                alt="Keystone Rune"
-                                                                                                width="16"
-                                                                                                height="16"
+                                                                                                className="championMatchDetailsSprite"
+                                                                                                src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${participant.championName}.png`}
+                                                                                                alt={`${participant.championName} Sprite`}
+                                                                                                width="32"
+                                                                                                height="32"
                                                                                             />
-                                                                                            <img
-                                                                                                src={this.getRuneStyleIconURL(
-                                                                                                    participant.perks.styles[1].style
-                                                                                                )}
-                                                                                                alt="Secondary Rune Style"
-                                                                                                width="16"
-                                                                                                height="16"
-                                                                                            />
+                                                                                            <div className="championMatchDetailsSpriteLevel">{participant.champLevel}</div>
+                                                                                        </div>
+
+                                                                                        <div className="SummonerMatchDetailsSpellAndRunesContainer">
+                                                                                            <div className="SummonerSpellContainer">
+                                                                                                <img
+                                                                                                    src={spell1Url}
+                                                                                                    alt={`Summoner Spell 1 - ${spell1Name}`}
+                                                                                                    width="16"
+                                                                                                    height="16"
+                                                                                                />
+                                                                                                <img
+                                                                                                    src={spell2Url}
+                                                                                                    alt={`Summoner Spell 2 - ${spell2Name}`}
+                                                                                                    width="16"
+                                                                                                    height="16"
+                                                                                                />
+                                                                                            </div>
+                                                                                            <div className="RunesContainer">
+                                                                                                <img
+                                                                                                    src={this.getRunePerkIconURL(
+                                                                                                        participant.perks.styles[0].style,
+                                                                                                        participant.perks.styles[0].selections[0].perk
+                                                                                                    )}
+                                                                                                    alt="Keystone Rune"
+                                                                                                    width="16"
+                                                                                                    height="16"
+                                                                                                />
+                                                                                                <img
+                                                                                                    src={this.getRuneStyleIconURL(
+                                                                                                        participant.perks.styles[1].style
+                                                                                                    )}
+                                                                                                    alt="Secondary Rune Style"
+                                                                                                    width="16"
+                                                                                                    height="16"
+                                                                                                />
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                        <div className="summonerMatchDetailsWrapper">
+                                                                                            <div
+                                                                                                className="summonerMatchDetailsName"
+                                                                                                title={`${summonerData?.name ?? ''}#${summonerData?.tagLine ?? ''}`}
+                                                                                            >
+                                                                                                {summonerData?.name ?? 'Unknown'}
+                                                                                            </div>
+                                                                                            <div className="summonerMatchDetailsLevel">
+                                                                                                Lv. {summonerData?.summonerLevel ?? '-'}
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div className='summonerMatchDetailsWrapper'>
-                                                                                        <div className='summonerMatchDetailsName'></div>
-                                                                                        <div className='summonerMatchDetailsLevel'></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            { }
-                                                                        </tr>
-                                                                    ))}
+                                                                                </td>
+                                                                            </tr>
+                                                                        );
+                                                                    })}
                                                                 </tbody>
                                                             </table>
 
