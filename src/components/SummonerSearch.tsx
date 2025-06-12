@@ -568,6 +568,10 @@ export default class SummonerSearch extends React.Component {
 
             this.matchHistory = matchDetails.filter(Boolean); // filter out nulls if any
 
+            const puuidList = getAllParticipantPuuids(this.matchHistory);
+            console.log('PUUID List:', puuidList);
+            await this.fetchSummonerDataList(puuidList);
+
             console.log('Returning matchDetails:', this.matchHistory);
 
             return this.matchHistory;
