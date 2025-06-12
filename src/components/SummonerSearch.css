@@ -553,6 +553,20 @@ svg {
   object-fit: cover;
 }
 
+.championMatchDetailsSpriteLevel {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  color: white;
+  font-size: 10px;
+  background-color: rgb(32, 45, 55);
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /* Todo */
 
 /* .IvScoreWrapper {
