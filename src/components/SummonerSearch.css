@@ -543,6 +543,16 @@ svg {
   height: 32px;
 }
 
+.championMatchDetailsSprite {
+  display: block;
+  width: 32px;
+  height: 32px;
+  aspect-ratio: 32 / 32;
+  color: transparent;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
