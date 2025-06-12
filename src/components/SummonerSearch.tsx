@@ -651,6 +651,37 @@ export default class SummonerSearch extends React.Component {
         this.selectedSection = section;
     }
 
+    @action async fetchSummonerDataList(puuids: string[]) {
+        try {
+            this.isLoading = true;
+            const results: SummonerData[] = [];
+
+            for (const puuid of puuids) {
+                const response = await fetch(`https://your-api/lol/summoner/v4/summoners/by-puuid/${puuid}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data for PUUID ${puuid}`);
+                }
+                const data = await response.json();
+                results.push(data);
+            }
+
+            runInAction(() => {
+                this.summonerDataList = results;
+                this.isLoading = false;
+                console.log('Fetched summonerDataList:', this.summonerDataList);
+            });
+        } catch (error: unknown) {
+            runInAction(() => {
+                if (error instanceof Error) {
+                    this.errorMessage = error.message;
+                } else {
+                    this.errorMessage = String(error);
+                }
+                this.isLoading = false;
+            });
+        }
+    }
+
     render() {
 
         return (
