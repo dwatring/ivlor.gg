@@ -1008,7 +1008,7 @@ export default class SummonerSearch extends React.Component {
                                                                                         <div className="championMatchDetailsSpriteLevel">{participant.champLevel}</div>
                                                                                     </div>
 
-                                                                                    <div className="SummonerSpellAndRunesContainer">
+                                                                                    <div className="SummonerMatchDetailsSpellAndRunesContainer">
                                                                                         <div className="SummonerSpellContainer">
                                                                                             {(() => {
                                                                                                 const spell1Name = summonerSpellIdMap[participant.summoner1Id];
