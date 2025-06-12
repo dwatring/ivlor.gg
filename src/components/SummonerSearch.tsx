@@ -993,21 +993,23 @@ export default class SummonerSearch extends React.Component {
                                                                 </thead>
 
                                                                 <tbody>
-                                                                    <tr key={index} className="championMatchDetailsCard">
-                                                                        <td>
-                                                                            <div className="spriteMatchDetailsContainer">
-                                                                                <img
-                                                                                    className="championMatchDetailsSprite"
-                                                                                    src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${participant.championName}.png`}
-                                                                                    alt={`${participant.championName} Sprite`}
-                                                                                    width="32"
-                                                                                    height="32"
-                                                                                />
-                                                                                <div className="championMatchDetailsSpriteLevel">{participant.champLevel}</div>
-                                                                            </div>
-                                                                        </td>
-                                                                        { }
-                                                                    </tr>
+                                                                    {match.info.participants.slice(0, 5).map((participant, index) => (
+                                                                        <tr key={index} className="championMatchDetailsCard">
+                                                                            <td>
+                                                                                <div className="spriteMatchDetailsContainer">
+                                                                                    <img
+                                                                                        className="championMatchDetailsSprite"
+                                                                                        src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${participant.championName}.png`}
+                                                                                        alt={`${participant.championName} Sprite`}
+                                                                                        width="32"
+                                                                                        height="32"
+                                                                                    />
+                                                                                    <div className="championMatchDetailsSpriteLevel">{participant.champLevel}</div>
+                                                                                </div>
+                                                                            </td>
+                                                                            { }
+                                                                        </tr>
+                                                                    ))}
                                                                 </tbody>
                                                             </table>
 
