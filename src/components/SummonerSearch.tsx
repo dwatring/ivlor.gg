@@ -255,6 +255,17 @@ const fetchMatchRankedData = async (participantPuuids: string[], apiKey: string)
     return data;
 };
 
+const getAllParticipantPuuids = (matches: MatchData[]) => {
+    const allPuuids = new Set<string>();
+
+    matches.forEach(match => {
+        // match.metadata.participants is an array of PUUID strings
+        match.metadata.participants.forEach(puuid => allPuuids.add(puuid));
+    });
+
+    return Array.from(allPuuids);
+};
+
 interface SummonerData {
     id: string
     accountId: string
