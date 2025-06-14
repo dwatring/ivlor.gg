@@ -607,11 +607,20 @@ svg {
 }
 
 .KDAScoreMatchDetails {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px; /* Controls spacing between K / D / A */
+  text-align: center;
+  font-size: 11px;
 }
+
 .KDAComparisonMatchDetails {
+  display: flex;
+  justify-content: center;
+  font-size: 11px;
 }
-.KDAPercentageMatchDetails {
-}
+
 /* Todo */
 
 /* .IvScoreWrapper {
