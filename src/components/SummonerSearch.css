@@ -606,6 +606,12 @@ svg {
 .ivScoreContainer {
 }
 
+.KDAMatchDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .KDAScoreMatchDetails {
   display: flex;
   justify-content: center;

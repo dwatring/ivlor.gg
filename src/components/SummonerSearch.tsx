@@ -510,7 +510,7 @@ export default class SummonerSearch extends React.Component {
         try {
             // Step 1: Fetch recent match IDs
             const matchIds: string[] = await fetchWithRetry(
-                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=2`,
+                `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=1`,
                 { headers: { 'X-Riot-Token': apiKey } },
             );
 
@@ -997,7 +997,6 @@ export default class SummonerSearch extends React.Component {
 
                                                                 <tbody>
                                                                     {match.info.participants.slice(0, 5).map((participant, index) => {
-
                                                                         const spell1Name = summonerSpellIdMap[participant.summoner1Id];
                                                                         const spell2Name = summonerSpellIdMap[participant.summoner2Id];
 
@@ -1011,7 +1010,7 @@ export default class SummonerSearch extends React.Component {
 
                                                                         return (
                                                                             <tr key={index} className="championMatchDetailsCard">
-                                                                                <td>
+                                                                                <td key={participant.puuid}>
                                                                                     <div className="championMatchDetailsInfoContainer">
                                                                                         <div className="spriteMatchDetailsContainer">
                                                                                             <img
@@ -1059,7 +1058,7 @@ export default class SummonerSearch extends React.Component {
                                                                                                 />
                                                                                             </div>
                                                                                         </div>
-                                                                                        {<div className="summonerMatchDetailsWrapper">
+                                                                                        <div className="summonerMatchDetailsWrapper">
                                                                                             <div className="summonerMatchDetailsName">
                                                                                                 {participant.riotIdGameName ?? 'Unknown'}
                                                                                             </div>
@@ -1067,49 +1066,37 @@ export default class SummonerSearch extends React.Component {
                                                                                                 Level {participant.summonerLevel ?? '-'}
                                                                                             </div>
                                                                                         </div>
-                                                                                        }
                                                                                     </div>
                                                                                 </td>
+                                                                                <td> <div className="ivScoreMatchDetailsContainer"></div></td>
                                                                                 <td>
-                                                                                    <div className="ivScoreMatchDetailsContainer"></div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    {searchedParticipant && (
-                                                                                        <div className="KDAMatchDetailsContainer">
-                                                                                            {/* KDA Display */}
-                                                                                            <div className="KDAScoreMatchDetails">
-                                                                                                {searchedParticipant.kills} /{" "}
-                                                                                                <span className="deathCount">{searchedParticipant.deaths}</span> /{" "}
-                                                                                                {searchedParticipant.assists}
-                                                                                                <span className="KPScoreMatchDetails">
-                                                                                                    {(() => {
-                                                                                                        const participantIndex = match.info.participants.findIndex(
-                                                                                                            (p) => p.puuid === searchedParticipant.puuid
-                                                                                                        );
-                                                                                                        const isTeamOne = participantIndex < 5;
-
-                                                                                                        const teamKills = match.info.participants
-                                                                                                            .filter((_, idx) => (isTeamOne ? idx < 5 : idx >= 5))
-                                                                                                            .reduce((sum, p) => sum + p.kills, 0);
-
-                                                                                                        const playerKP =
-                                                                                                            teamKills > 0
-                                                                                                                ? ((searchedParticipant.kills + searchedParticipant.assists) / teamKills) * 100
-                                                                                                                : 0;
-
-                                                                                                        return ` (${playerKP.toFixed(0)}%)`;
-                                                                                                    })()}
-                                                                                                </span>
-                                                                                            </div>
-                                                                                            <div className="KDAComparisonMatchDetails">
+                                                                                    <div className="KDAMatchDetailsContainer">
+                                                                                        <div className="KDAScoreMatchDetails">
+                                                                                            {participant.kills} /{" "}
+                                                                                            <span className="deathCount">{participant.deaths}</span> /{" "}
+                                                                                            {participant.assists}
+                                                                                            <span className="KPScoreMatchDetails">
                                                                                                 {(() => {
-                                                                                                    const { kills, assists, deaths } = searchedParticipant;
-                                                                                                    const kdaValue = deaths === 0 ? kills + assists : (kills + assists) / deaths;
-                                                                                                    return `${kdaValue.toFixed(2)} : 1 KDA`;
+                                                                                                    const teamKills = match.info.participants
+                                                                                                        .slice(0, 5)
+                                                                                                        .reduce((sum, p) => sum + p.kills, 0);
+                                                                                                    const playerKP =
+                                                                                                        teamKills > 0
+                                                                                                            ? ((participant.kills + participant.assists) / teamKills) * 100
+                                                                                                            : 0;
+                                                                                                    return ` (${playerKP.toFixed(0)}%)`;
                                                                                                 })()}
-                                                                                            </div>
+                                                                                            </span>
                                                                                         </div>
-                                                                                    )}
+
+                                                                                        <div className="KDAComparisonMatchDetails">
+                                                                                            {(() => {
+                                                                                                const { kills, assists, deaths } = participant;
+                                                                                                const kdaValue = deaths === 0 ? kills + assists : (kills + assists) / deaths;
+                                                                                                return `${kdaValue.toFixed(2)} : 1 KDA`;
+                                                                                            })()}
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div className='damageDealtMatchDetailsContainer'></div>
