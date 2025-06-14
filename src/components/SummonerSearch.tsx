@@ -1082,6 +1082,9 @@ export default class SummonerSearch extends React.Component {
                                                                                 <td>
                                                                                     <div className='wardsMatchDetailsContainer'></div>
                                                                                 </td>
+                                                                                <td>
+                                                                                    <div className='CSMatchDetailsContainer'></div>
+                                                                                </td>
                                                                             </tr>
                                                                         );
                                                                     })}
