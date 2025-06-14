@@ -573,6 +573,8 @@ svg {
   flex-direction: row;
   justify-content: left;
   align-items: center;
+  width: 159px;
+  height: 34px;
   gap: 1px;
   row-gap: 4px;
   column-gap: 4px;
@@ -591,10 +593,17 @@ svg {
 .summonerMatchDetailsName {
   width: 80px;
   height: 16px;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .summonerMatchDetailsLevel {
   height: 14px;
   font-size: 11px;
+}
+
+.ivScoreContainer {
 }
 /* Todo */
 

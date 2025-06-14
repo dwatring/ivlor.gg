@@ -1070,6 +1070,9 @@ export default class SummonerSearch extends React.Component {
                                                                                         }
                                                                                     </div>
                                                                                 </td>
+                                                                                <td>
+                                                                                    <div className="ivScoreMatchDetailsContainer"></div>
+                                                                                </td>
                                                                             </tr>
                                                                         );
                                                                     })}
