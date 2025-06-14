@@ -296,6 +296,7 @@ interface MatchData {
             champLevel: number
             totalMinionsKilled: number
             win: boolean
+            visionScore: number
             wardsKilled: number
             wardPlaced: number
             summoner1Id: number //ADDED VARIABLE
