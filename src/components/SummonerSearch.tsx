@@ -1073,6 +1073,9 @@ export default class SummonerSearch extends React.Component {
                                                                                 <td>
                                                                                     <div className="ivScoreMatchDetailsContainer"></div>
                                                                                 </td>
+                                                                                <td>
+                                                                                    <div className='KDAMatchDetailsContainer'></div>
+                                                                                </td>
                                                                             </tr>
                                                                         );
                                                                     })}
