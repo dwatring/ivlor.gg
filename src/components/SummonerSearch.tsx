@@ -1059,18 +1059,15 @@ export default class SummonerSearch extends React.Component {
                                                                                                 />
                                                                                             </div>
                                                                                         </div>
-
-                                                                                        {/* <div className="summonerMatchDetailsWrapper">
-                                                                                            <div
-                                                                                                className="summonerMatchDetailsName"
-                                                                                                title={`${summonerData?.name ?? ''}#${summonerData?.tagLine ?? ''}`}
-                                                                                            >
-                                                                                                {summonerData?.name ?? 'Unknown'}
+                                                                                        {<div className="summonerMatchDetailsWrapper">
+                                                                                            <div className="summonerMatchDetailsName">
+                                                                                                {participant.riotIdGameName ?? 'Unknown'}
                                                                                             </div>
                                                                                             <div className="summonerMatchDetailsLevel">
-                                                                                                Lv. {summonerData?.summonerLevel ?? '-'}
+                                                                                                Level {participant.summonerLevel ?? '-'}
                                                                                             </div>
-                                                                                        </div> */}
+                                                                                        </div>
+                                                                                        }
                                                                                     </div>
                                                                                 </td>
                                                                             </tr>

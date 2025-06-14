@@ -589,8 +589,12 @@ svg {
 }
 
 .summonerMatchDetailsName {
+  width: 80px;
+  height: 16px;
 }
 .summonerMatchDetailsLevel {
+  height: 14px;
+  font-size: 11px;
 }
 /* Todo */
 
