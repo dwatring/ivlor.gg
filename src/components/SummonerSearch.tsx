@@ -255,7 +255,6 @@ const fetchMatchRankedData = async (participantPuuids: string[], apiKey: string)
     return data;
 };
 
-
 interface SummonerData {
     id: string
     accountId: string
@@ -1099,7 +1098,13 @@ export default class SummonerSearch extends React.Component {
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <div className='damageDealtMatchDetailsContainer'></div>
+                                                                                    <div className='damageDealtMatchDetailsWrapper'>
+
+                                                                                    </div>
+
+                                                                                    <div className='damageTakenMatchDetailsWrapper'>
+
+                                                                                    </div>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div className='wardsMatchDetailsContainer'></div>
