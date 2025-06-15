@@ -1098,7 +1098,7 @@ export default class SummonerSearch extends React.Component {
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <div className='damageDealtMatchDetailsWrapper'>
+                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage dealt to champions (${participant.totalDamageDealtToChampions.toLocaleString()})`}>
                                                                                         <div className='damageDealtMatchDetails'>
                                                                                             {participant.totalDamageDealtToChampions.toLocaleString()}
                                                                                         </div>
@@ -1107,7 +1107,7 @@ export default class SummonerSearch extends React.Component {
                                                                                         }}></div>
                                                                                     </div>
 
-                                                                                    <div className='damageTakenMatchDetailsWrapper'>
+                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage taken (${participant.totalDamageTaken.toLocaleString()})`}>
                                                                                         <div className='damageTakenMatchDetails'>
                                                                                             {participant.totalDamageTaken.toLocaleString()}
                                                                                         </div>
