@@ -1099,11 +1099,15 @@ export default class SummonerSearch extends React.Component {
                                                                                 </td>
                                                                                 <td>
                                                                                     <div className='damageDealtMatchDetailsWrapper'>
-
+                                                                                        <div className='damageDealtMatchDetails'>
+                                                                                        </div>
+                                                                                        <div className='damageDealtMatchDetailsBar'></div>
                                                                                     </div>
 
                                                                                     <div className='damageTakenMatchDetailsWrapper'>
-
+                                                                                        <div className='damageTakenMatchDetails'>
+                                                                                        </div>
+                                                                                        <div className='damageTakenMatchDetailsBar'></div>
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
