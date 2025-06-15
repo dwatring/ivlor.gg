@@ -1100,14 +1100,20 @@ export default class SummonerSearch extends React.Component {
                                                                                 <td>
                                                                                     <div className='damageDealtMatchDetailsWrapper'>
                                                                                         <div className='damageDealtMatchDetails'>
+                                                                                            {participant.totalDamageDealtToChampions.toLocaleString()}
                                                                                         </div>
-                                                                                        <div className='damageDealtMatchDetailsBar'></div>
+                                                                                        <div className='damageDealtMatchDetailsBar' style={{
+                                                                                            width: `${(participant.totalDamageDealtToChampions / Math.max(...match.info.participants.slice(0, 5).map(p => p.totalDamageDealtToChampions))) * 100}%`
+                                                                                        }}></div>
                                                                                     </div>
 
                                                                                     <div className='damageTakenMatchDetailsWrapper'>
                                                                                         <div className='damageTakenMatchDetails'>
+                                                                                            {participant.totalDamageTaken.toLocaleString()}
                                                                                         </div>
-                                                                                        <div className='damageTakenMatchDetailsBar'></div>
+                                                                                        <div className='damageTakenMatchDetailsBar' style={{
+                                                                                            width: `${(participant.totalDamageTaken / Math.max(...match.info.participants.slice(0, 5).map(p => p.totalDamageTaken))) * 100}%`
+                                                                                        }}></div>
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
