@@ -680,6 +680,8 @@ svg {
   overflow: hidden;
   position: relative;
 }
+.wardsMatchDetailsContainer {
+}
 
 .pinkWardsMatchDetails {
   display: flex;
@@ -691,6 +693,15 @@ svg {
   display: flex;
   justify-content: center;
   font-size: 13px;
+}
+
+.CSMatchDetailsContainer {
+}
+
+.CSTotalMatchDetails {
+}
+
+.CSCalculationMatchDetails {
 }
 
 /* Todo */
