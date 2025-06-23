@@ -1123,6 +1123,7 @@ export default class SummonerSearch extends React.Component {
                                                                                             {participant.detectorWardsPlaced}
                                                                                         </div>
                                                                                         <div className='wardsMatchDetails'>
+                                                                                            {participant.wardPlaced} / {participant.wardsKilled}
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
