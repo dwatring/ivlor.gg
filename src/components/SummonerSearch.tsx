@@ -1179,6 +1179,9 @@ export default class SummonerSearch extends React.Component {
                                                                                         <div className='CSTotalMatchDetails'>
 
                                                                                         </div>
+                                                                                        <div className='CSCalculationMatchDetails'>
+
+                                                                                        </div>
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
