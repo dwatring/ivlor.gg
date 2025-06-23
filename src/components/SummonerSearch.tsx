@@ -1195,7 +1195,34 @@ export default class SummonerSearch extends React.Component {
                                                                                 </td>
                                                                                 <td>
                                                                                     <div className='itemsMatchDetailsContainer'>
-
+                                                                                        <div className="itemsMatchDetailsContainer">
+                                                                                            <div className="items">
+                                                                                                {[
+                                                                                                    participant.item0,
+                                                                                                    participant.item1,
+                                                                                                    participant.item2,
+                                                                                                    participant.item3,
+                                                                                                    participant.item4,
+                                                                                                    participant.item5,
+                                                                                                    participant.item6,
+                                                                                                ].map((itemId, index) => (
+                                                                                                    itemId !== 0 ? (
+                                                                                                        <img
+                                                                                                            key={index}
+                                                                                                            src={getItemImageUrl(itemId)}
+                                                                                                            alt={`Item ${itemId}`}
+                                                                                                            width="22"
+                                                                                                            height="22"
+                                                                                                        />
+                                                                                                    ) : (
+                                                                                                        <div
+                                                                                                            key={index}
+                                                                                                            className={`itemPlaceholder ${participant.win ? 'win' : 'loss'}`}
+                                                                                                        />
+                                                                                                    )
+                                                                                                ))}
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </td>
                                                                             </tr>
@@ -1231,22 +1258,6 @@ export default class SummonerSearch extends React.Component {
                                                                 </thead>
 
                                                                 <tbody>
-                                                                    <tr className="championMatchDetailsCard">
-                                                                        {/* Example static data */}
-                                                                        <td>Victory</td>
-                                                                        <td>25</td>
-                                                                        <td>10/2/5</td>
-                                                                        <td>15000</td>
-                                                                        <td>12</td>
-                                                                        <td>180</td>
-                                                                        <td>
-                                                                            {/* Items images or placeholders */}
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
-                                                                    <tr className="championMatchDetailsCard"></tr>
 
                                                                 </tbody>
                                                             </table>
