@@ -413,7 +413,9 @@ svg {
 
 .expandedMatchDetails.open {
   width: 740px;
-  height: 642px;
+  min-height: 642px; /* Changed from fixed height */
+  height: auto;
+  overflow: visible; /* Changed from hidden */
   border-radius: 6px;
 
   background-color: rgb(55, 55, 55);
@@ -429,9 +431,11 @@ svg {
 
 .matchCardDisplay {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   width: 740px;
-  height: 96px;
+  min-height: 96px;
+  height: auto;
+  padding-bottom: 10px;
 }
 
 .expandedMatchDetailsSectionsWrapper {
@@ -526,16 +530,13 @@ svg {
   width: 740px;
   height: 18px;
 }
-
+.championMatchDetailsTableRed,
 .championMatchDetailsTableBlue {
   width: 740px;
-  height: 242.5px;
+  min-height: 242.5px;
+  height: auto;
 }
 
-.championMatchDetailsTableRed {
-  width: 740px;
-  height: 242.5px;
-}
 .spriteMatchDetailsContainer {
   position: relative;
   display: inline-block;
