@@ -663,7 +663,7 @@ svg {
   color: gray;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-
+.damageTakenMatchDetailsBar,
 .damageDealtMatchDetailsBar {
   height: 6px;
   border-radius: 3px;
@@ -673,23 +673,12 @@ svg {
   position: relative;
 }
 .damageTakenMatchDetailsBar {
-  height: 6px;
-  border-radius: 3px;
   background: gray;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  position: relative;
 }
 .wardsMatchDetailsContainer {
 }
-
+.wardsMatchDetails,
 .pinkWardsMatchDetails {
-  display: flex;
-  justify-content: center;
-  font-size: 13px;
-}
-
-.wardsMatchDetails {
   display: flex;
   justify-content: center;
   font-size: 13px;
@@ -697,11 +686,11 @@ svg {
 
 .CSMatchDetailsContainer {
 }
-
+.CSCalculationMatchDetails,
 .CSTotalMatchDetails {
-}
-
-.CSCalculationMatchDetails {
+  display: flex;
+  justify-content: center;
+  font-size: 13;
 }
 
 /* Todo */
