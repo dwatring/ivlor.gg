@@ -1184,6 +1184,13 @@ export default class SummonerSearch extends React.Component {
 
                                                                                         </div>
                                                                                         <div className='CSCalculationMatchDetails'>
+                                                                                            &nbsp;
+                                                                                            {(
+                                                                                                (participant.totalMinionsKilled + participant.neutralMinionsKilled) /
+                                                                                                (match.info.gameDuration / 60)
+                                                                                            ).toFixed(1)}
+                                                                                            {' '}
+                                                                                            /m
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
