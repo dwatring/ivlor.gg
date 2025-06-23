@@ -894,11 +894,13 @@ export default class SummonerSearch extends React.Component {
                                                                             })()}
                                                                         </div>
                                                                         <div className="CScore">
-                                                                            CS {searchedParticipant.totalMinionsKilled}
+                                                                            {searchedParticipant.totalMinionsKilled + searchedParticipant.neutralMinionsKilled}
                                                                             &nbsp;(
-                                                                            {(searchedParticipant.totalMinionsKilled / (match.info.gameDuration / 60)).toFixed(
-                                                                                1,
-                                                                            )}{' '}
+                                                                            {(
+                                                                                (searchedParticipant.totalMinionsKilled + searchedParticipant.neutralMinionsKilled) /
+                                                                                (match.info.gameDuration / 60)
+                                                                            ).toFixed(1)}
+                                                                            {' '}
                                                                             CS/min)
                                                                         </div>
                                                                         <div
