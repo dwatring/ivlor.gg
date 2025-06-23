@@ -1180,6 +1180,8 @@ export default class SummonerSearch extends React.Component {
                                                                                 <td>
                                                                                     <div className='CSMatchDetailsContainer'>
                                                                                         <div className='CSTotalMatchDetails'>
+                                                                                            {participant.totalMinionsKilled + participant.neutralMinionsKilled}
+
                                                                                         </div>
                                                                                         <div className='CSCalculationMatchDetails'>
                                                                                         </div>
@@ -1193,7 +1195,6 @@ export default class SummonerSearch extends React.Component {
                                                                     })}
                                                                 </tbody>
                                                             </table>
-
                                                             {/* Objectives Display*/}
                                                             <div className='matchDetailsObjectiveDisplay'></div>
 
