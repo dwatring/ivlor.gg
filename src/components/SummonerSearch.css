@@ -690,7 +690,7 @@ svg {
 .CSTotalMatchDetails {
   display: flex;
   justify-content: center;
-  font-size: 13;
+  font-size: 13px;
 }
 
 /* Todo */
