@@ -301,8 +301,9 @@ interface MatchData {
             visionScore: number
             wardsKilled: number
             wardPlaced: number
-            summoner1Id: number //ADDED VARIABLE
-            summoner2Id: number //ADDED VARIABLE
+            detectorWardsPlaced: number //Pink Wards
+            summoner1Id: number
+            summoner2Id: number
 
             perks: {
                 statPerks: {
@@ -1098,7 +1099,7 @@ export default class SummonerSearch extends React.Component {
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage dealt to champions (${participant.totalDamageDealtToChampions.toLocaleString()})`}>
+                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage dealt to champions ${participant.totalDamageDealtToChampions.toLocaleString()}`}>
                                                                                         <div className='damageDealtMatchDetails'>
                                                                                             {participant.totalDamageDealtToChampions.toLocaleString()}
                                                                                         </div>
@@ -1107,7 +1108,7 @@ export default class SummonerSearch extends React.Component {
                                                                                         }}></div>
                                                                                     </div>
 
-                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage taken (${participant.totalDamageTaken.toLocaleString()})`}>
+                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage taken ${participant.totalDamageTaken.toLocaleString()}`}>
                                                                                         <div className='damageTakenMatchDetails'>
                                                                                             {participant.totalDamageTaken.toLocaleString()}
                                                                                         </div>
@@ -1117,7 +1118,9 @@ export default class SummonerSearch extends React.Component {
                                                                                     </div>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <div className='wardsMatchDetailsContainer'></div>
+                                                                                    <div className='wardsMatchDetailsContainer'>
+
+                                                                                    </div>
                                                                                 </td>
                                                                                 <td>
                                                                                     <div className='CSMatchDetailsContainer'></div>
