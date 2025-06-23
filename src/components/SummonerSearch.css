@@ -682,9 +682,15 @@ svg {
 }
 
 .pinkWardsMatchDetails {
+  display: flex;
+  justify-content: center;
+  font-size: 11px;
 }
 
 .wardsMatchDetails {
+  display: flex;
+  justify-content: center;
+  font-size: 11px;
 }
 
 /* Todo */
