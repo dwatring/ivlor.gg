@@ -299,6 +299,7 @@ interface MatchData {
             totalDamageDealtToChampions: number
             totalDamageTaken: number
             visionScore: number
+            neutralMinionsKilled: number
             wardsKilled: number
             wardsPlaced: number
             detectorWardsPlaced: number //Pink Wards
@@ -1177,10 +1178,8 @@ export default class SummonerSearch extends React.Component {
                                                                                 <td>
                                                                                     <div className='CSMatchDetailsContainer'>
                                                                                         <div className='CSTotalMatchDetails'>
-
                                                                                         </div>
                                                                                         <div className='CSCalculationMatchDetails'>
-
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
