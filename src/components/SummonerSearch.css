@@ -517,6 +517,7 @@ svg {
 }
 
 .championMatchDetailsCard.win {
+  background-color: #3e4c83;
 }
 
 .championMatchDetailsCard.loss {
