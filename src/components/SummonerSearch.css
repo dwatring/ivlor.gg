@@ -502,13 +502,10 @@ svg {
 }
 
 .OverviewTeamHeaderRow.win {
-  width: 740px;
-  height: 32px;
+  background-color: #3e4c83;
 }
 
 .OverviewTeamHeaderRow.loss {
-  width: 740px;
-  height: 32px;
 }
 
 .championMatchDetailsCard {
