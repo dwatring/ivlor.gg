@@ -537,6 +537,7 @@ svg {
   height: 18px;
 }
 .matchDetailsDivider.win {
+  background-color: #3e4c83;
 }
 .matchDetailsDivider.loss {
 }
