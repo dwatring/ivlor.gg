@@ -506,7 +506,7 @@ svg {
   height: 32px;
 }
 
-.OverviewTeamHeaderRed {
+.OverviewTeamHeaderRow.loss {
   width: 740px;
   height: 32px;
 }
