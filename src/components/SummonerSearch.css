@@ -519,6 +519,9 @@ svg {
 .championMatchDetailsCard.win {
 }
 
+.championMatchDetailsCard.loss {
+}
+
 .matchDetailsObjectiveDisplay {
   background-color: black;
   width: 740px;
