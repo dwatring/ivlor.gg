@@ -527,22 +527,36 @@ svg {
   width: 740px;
   height: 58px;
 }
-
 .matchDetailsDivider {
+  position: relative;
   background-color: black;
   padding-top: 4px;
   padding-bottom: 4px;
-  margin-top: 8px;
+  margin: 8px 0;
   width: 740px;
   height: 18px;
 }
 
 .matchDetailsDivider.win {
+  background-color: black;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.matchDetailsDivider.win::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
   background-color: #3e4c83;
 }
 
 .matchDetailsDivider.loss {
-  background-color: #883d4a;
+  background-color: black;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 table {
