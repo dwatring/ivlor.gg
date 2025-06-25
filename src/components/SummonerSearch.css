@@ -501,7 +501,7 @@ svg {
   height: 32px;
 }
 
-.OverviewTeamHeaderBlue {
+.OverviewTeamHeaderRow.win {
   width: 740px;
   height: 32px;
 }
