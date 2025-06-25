@@ -1059,7 +1059,10 @@ export default class SummonerSearch extends React.Component {
                                                                             : '/fallback-icon.png';
 
                                                                         return (
-                                                                            <tr key={index} className="championMatchDetailsCard">
+                                                                            <tr
+                                                                                key={index}
+                                                                                className={`championMatchDetailsCard ${participant.win ? 'win' : 'loss'}`}
+                                                                            >
                                                                                 <td key={participant.puuid}>
                                                                                     <div className="championMatchDetailsInfoContainer">
                                                                                         <div className="spriteMatchDetailsContainer">
