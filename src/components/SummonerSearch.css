@@ -538,7 +538,8 @@ svg {
 }
 .matchDetailsDivider.win {
 }
-
+.matchDetailsDivider.loss {
+}
 table {
   border-collapse: collapse;
   border: none;
