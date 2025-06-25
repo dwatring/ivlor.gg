@@ -536,6 +536,9 @@ svg {
   width: 740px;
   height: 18px;
 }
+.matchDetailsDivider.win {
+}
+
 table {
   border-collapse: collapse;
   border: none;
