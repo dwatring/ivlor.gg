@@ -520,6 +520,7 @@ svg {
 }
 
 .championMatchDetailsCard.loss {
+  background-color: #883d4a;
 }
 
 .matchDetailsObjectiveDisplay {
