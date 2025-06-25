@@ -1451,8 +1451,7 @@ export default class SummonerSearch extends React.Component {
                                                             </table>
 
                                                             {/* Divider */}
-                                                            <div className='matchDetailsDivider'></div>
-
+                                                            <div className={`matchDetailsDivider ${!match.info.participants[0].win ? 'win' : 'loss'}`}></div>
                                                         </div>
 
                                                     )}
