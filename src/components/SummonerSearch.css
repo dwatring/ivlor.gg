@@ -559,6 +559,16 @@ svg {
   margin-bottom: 12px;
 }
 
+.matchDetailsDivider.loss::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background-color: #883d4a;
+}
+
 table {
   border-collapse: collapse;
   border: none;
