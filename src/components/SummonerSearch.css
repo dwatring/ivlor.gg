@@ -751,6 +751,8 @@ th {
   display: flex;
   list-style: none;
   align-items: center;
+  justify-content: left;
+  gap: 1px;
 }
 
 /* Todo */
