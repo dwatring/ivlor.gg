@@ -1245,6 +1245,16 @@ export default class SummonerSearch extends React.Component {
                                                                     </svg>
                                                                     <span className="iconBaronBlue">x</span>
                                                                 </li>
+                                                                <li className="iconListItem">
+                                                                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            fill="currentColor"
+                                                                            fillRule="nonzero"
+                                                                            d="M8 0 6 4 3 1v4H0l3 3v3l4 5h2l4-5V8l3-3h-3V1l-3 3zm1 11 1-2 2-1-1 2zM4 8l1 2 2 1-1-2z"
+                                                                        />
+                                                                    </svg>
+                                                                    <span className="iconDragonBlue">x</span>
+                                                                </li>
                                                             </div>
 
                                                             <table className="championMatchDetailsTableRed">
