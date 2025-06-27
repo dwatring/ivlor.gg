@@ -744,7 +744,6 @@ th {
   width: 740px;
   height: 58px;
   flex-wrap: wrap;
-  gap: 1px;
 }
 
 .iconListItem {
@@ -770,6 +769,22 @@ th {
 .iconInhibitorBlue {
   width: 14px;
   height: 20px;
+}
+.objectivesBlueSide {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1px;
+}
+
+.damageMeterDisplay {
+}
+
+.objectivesRedSide {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1px;
 }
 
 /* Todo */
