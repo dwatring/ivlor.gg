@@ -1236,7 +1236,7 @@ export default class SummonerSearch extends React.Component {
                                                             {/* Objectives Display*/}
                                                             <div className='matchDetailsObjectiveDisplay'>
                                                                 <div className='objectivesBlueSide'>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1246,7 +1246,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconBaronBlue">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1256,7 +1256,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconDragonBlue">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1266,7 +1266,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconRiftHeraldBlue">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1283,7 +1283,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconAtakhanBlue">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1292,7 +1292,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconVoidGrubBlue">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1301,7 +1301,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconTurretBlue">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1319,7 +1319,7 @@ export default class SummonerSearch extends React.Component {
 
                                                                 </div>
                                                                 <div className='objectivesRedSide'>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1329,7 +1329,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconBaronRed">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1339,7 +1339,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconDragonRed">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1349,7 +1349,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconRiftHeraldRed">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1366,7 +1366,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconAtakhanRed">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1375,7 +1375,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconVoidGrubRed">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"
@@ -1384,7 +1384,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </svg>
                                                                         <span className="iconTurretRed">x</span>
                                                                     </li>
-                                                                    <li className="iconListItem">
+                                                                    <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                             <path
                                                                                 fill="currentColor"

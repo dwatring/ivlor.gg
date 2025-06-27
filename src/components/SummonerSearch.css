@@ -747,7 +747,15 @@ th {
   flex-wrap: wrap;
 }
 
-.iconListItem {
+.iconListItemRed {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  justify-content: left;
+  gap: 1px;
+}
+
+.iconListItemBlue {
   display: flex;
   list-style: none;
   align-items: center;
@@ -756,9 +764,16 @@ th {
 }
 
 /* Force reset svg native parameters */
-.iconListItem svg {
+.iconListItemBlue svg {
   width: 16px;
   height: 16px;
+  color: #3e4c83;
+}
+
+.iconListItemRed svg {
+  width: 16px;
+  height: 16px;
+  color: #883d4a;
 }
 
 .iconBaronBlue,
