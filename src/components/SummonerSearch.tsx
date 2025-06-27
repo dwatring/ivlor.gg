@@ -1265,6 +1265,23 @@ export default class SummonerSearch extends React.Component {
                                                                     </svg>
                                                                     <span className="iconRiftHeraldBlue">x</span>
                                                                 </li>
+                                                                <li className="iconListItem">
+                                                                    <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path
+                                                                            fill="currentColor"
+                                                                            fillRule="nonzero"
+                                                                            d="M8 0 6.476 3.048l.508 2.54L8 7.11l1.016-1.524.508-2.54zM6.476 5.587l-.508-2.031-2.031-1.524v2.031L2.413 5.587v1.016h1.016L4.952 5.08z" />
+                                                                        <path
+                                                                            fill="currentColor"
+                                                                            fillRule="nonzero"
+                                                                            d="M4.444 6.095 8 8.127l3.556-2.032 1.015 1.016.508 1.524.508-1.524L16 6.603l-3.429 6.095-1.015 2.54-1.016-1.016v-1.524l-1.524 1.016H6.984L5.46 12.698v1.524l-1.016 1.016-1.015-2.54L0 6.603l2.413.508.508 1.524.508-1.524zm2.032 3.556.508 1.524-2.032-1.016-.508-1.524zm3.048 0-.508 1.524 2.032-1.016.508-1.524z" />
+                                                                        <path
+                                                                            fill="currentColor"
+                                                                            fillRule="nonzero"
+                                                                            d="m9.524 5.587.508-2.031 2.031-1.524v2.031l1.524 1.524v1.016h-1.016L11.048 5.08z" />
+                                                                    </svg>
+                                                                    <span className="iconAtakhanBlue">x</span>
+                                                                </li>
 
                                                             </div>
 
