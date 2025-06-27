@@ -740,7 +740,8 @@ th {
 
 .matchDetailsObjectiveDisplay {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
   width: 740px;
   height: 58px;
   flex-wrap: wrap;
@@ -770,18 +771,36 @@ th {
   width: 14px;
   height: 20px;
 }
+
+.iconBaronRed,
+.iconDragonRed,
+.iconRiftHeraldRed,
+.iconAtakhanRed,
+.iconVoidGrubRed,
+.iconTurretRed,
+.iconInhibitorRed {
+  width: 14px;
+  height: 20px;
+}
+
 .objectivesBlueSide {
   display: flex;
+  width: 150px;
+  height: 40px;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1px;
 }
 
 .damageMeterDisplay {
+  width: 383px;
+  height: 36px;
 }
 
 .objectivesRedSide {
   display: flex;
+  width: 150px;
+  height: 40px;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1px;
