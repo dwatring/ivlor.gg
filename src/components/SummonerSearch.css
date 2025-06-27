@@ -755,6 +755,12 @@ th {
   gap: 1px;
 }
 
+/* Force reset svg native parameters */
+.iconListItem svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {

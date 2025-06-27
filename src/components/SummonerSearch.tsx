@@ -1236,7 +1236,7 @@ export default class SummonerSearch extends React.Component {
                                                             {/* Objectives Display*/}
                                                             <div className='matchDetailsObjectiveDisplay'>
                                                                 <li className="iconListItem">
-                                                                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                                    <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                         <path
                                                                             fill="currentColor"
                                                                             fillRule="nonzero"
@@ -1246,7 +1246,7 @@ export default class SummonerSearch extends React.Component {
                                                                     <span className="iconBaronBlue">x</span>
                                                                 </li>
                                                                 <li className="iconListItem">
-                                                                    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                                    <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                                         <path
                                                                             fill="currentColor"
                                                                             fillRule="nonzero"
