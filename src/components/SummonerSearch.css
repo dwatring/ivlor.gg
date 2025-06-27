@@ -521,10 +521,6 @@ svg {
   background-color: #883d4a;
 }
 
-.matchDetailsObjectiveDisplay {
-  width: 740px;
-  height: 58px;
-}
 .matchDetailsDivider {
   position: relative;
   background-color: black;
@@ -740,6 +736,15 @@ th {
   display: flex;
   justify-content: center;
   font-size: 12px;
+}
+
+.matchDetailsObjectiveDisplay {
+  display: flex;
+  flex-direction: row;
+  width: 740px;
+  height: 58px;
+  flex-wrap: wrap;
+  gap: 1px;
 }
 
 .iconListItem {
