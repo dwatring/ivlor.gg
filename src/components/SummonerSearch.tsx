@@ -324,6 +324,19 @@ interface MatchData {
                 }[]
             }
         }[]
+        teams: {
+            bans: {
+
+            }[]
+            feats: {
+
+            }[]
+            objectives: {
+
+            }[]
+            teamID: number
+            win: boolean
+        }[]
     }
 }
 
