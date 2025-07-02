@@ -505,6 +505,7 @@ export default class SummonerSearch extends React.Component {
         const item = data.data[itemId]
         return item
     }
+
     @action
     fetchMatchHistory = async (puuid: string, apiKey: string) => {
         try {
@@ -518,7 +519,7 @@ export default class SummonerSearch extends React.Component {
 
             if (matchIds.length === 0) {
                 console.error('No match history found.');
-                this.matchHistory = [];
+                this.matchHistory = []; // clear any old data
                 return [];
             }
 
@@ -530,13 +531,7 @@ export default class SummonerSearch extends React.Component {
                         { headers: { 'X-Riot-Token': apiKey } },
                     );
 
-                    console.log(`[MATCH ${matchId}] Raw Data Structure:`, {
-                        metadata: matchData.metadata,
-                        info: {
-                            gameDuration: matchData.info.gameDuration,
-                            participantsCount: matchData.info.participants?.length
-                        }
-                    });
+                    console.log(`[MATCH ${matchId}] Raw Data:`, matchData);
 
                     if (!matchData) {
                         console.error(`[MATCH ${matchId}] No match data found.`);
@@ -546,10 +541,9 @@ export default class SummonerSearch extends React.Component {
                     const participantPuuids = matchData.metadata.participants;
                     const rankedDataArray = await fetchMatchRankedData(participantPuuids, apiKey);
 
-                    // Process participants with enhanced debugging
                     matchData.info.participants = matchData.info.participants.map((participant: any) => {
                         const rankedData = rankedDataArray.find((data) => data.puuid === participant.puuid);
-                        const mergedData = rankedData
+                        return rankedData
                             ? {
                                 ...participant,
                                 rank: rankedData.rank,
@@ -557,36 +551,7 @@ export default class SummonerSearch extends React.Component {
                                 leaguePoints: rankedData.leaguePoints,
                             }
                             : participant;
-
-                        // Debug ward data for each participant
-                        console.log(`[PARTICIPANT ${participant.puuid}] Vision Stats:`, {
-                            name: participant.riotIdGameName,
-                            champion: participant.championName,
-                            wardsPlaced: participant.wardsPlaced,
-                            wardsKilled: participant.wardsKilled,
-                            pinkWards: participant.detectorWardsPlaced,
-                            visionScore: participant.visionScore,
-                            items: [participant.item0, participant.item1, participant.item2] // First 3 items
-                        });
-
-                        return mergedData;
                     });
-
-                    // Log sample participant data after processing
-                    if (matchData.info.participants.length > 0) {
-                        const sampleParticipant = matchData.info.participants[0];
-                        console.log(`[MATCH ${matchId}] Sample Participant:`, {
-                            name: sampleParticipant.riotIdGameName,
-                            champion: sampleParticipant.championName,
-                            kills: sampleParticipant.kills,
-                            deaths: sampleParticipant.deaths,
-                            wards: {
-                                placed: sampleParticipant.wardsPlaced,
-                                killed: sampleParticipant.wardsKilled,
-                                pink: sampleParticipant.detectorWardsPlaced
-                            }
-                        });
-                    }
 
                     await this.fetchAverageRank(matchData, apiKey);
 
@@ -594,27 +559,15 @@ export default class SummonerSearch extends React.Component {
                 }),
             );
 
-            this.matchHistory = matchDetails.filter(Boolean);
+            // ✅ Store in MobX state
+            this.matchHistory = matchDetails.filter(Boolean); // filter out nulls if any
 
-            // Final debug output
-            console.log('Processed Match History Summary:', {
-                count: this.matchHistory.length,
-                matches: this.matchHistory.map(match => ({
-                    id: match.metadata.matchId,
-                    duration: match.info.gameDuration,
-                    participants: match.info.participants.map(p => ({
-                        name: p.riotIdGameName,
-                        champion: p.championName,
-                        wards: p.wardsPlaced,
-                        visionScore: p.visionScore
-                    }))
-                }))
-            });
+            console.log('Returning matchDetails:', this.matchHistory);
 
             return this.matchHistory;
         } catch (error) {
             console.error('[fetchMatchHistory] Error:', error);
-            this.setErrorMessage('Failed to load match history. ' + (error as Error).message);
+            this.setErrorMessage('Failed to load match history.');
             this.matchHistory = [];
             return [];
         }
