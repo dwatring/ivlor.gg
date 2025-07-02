@@ -1325,8 +1325,8 @@ export default class SummonerSearch extends React.Component {
                                                                     </li>
                                                                 </div>
                                                                 <div className='totalTeamStats'>
-                                                                    <div> </div>
-                                                                    <div> </div>
+                                                                    <div className="totalTeamKills"></div>
+                                                                    <div className="totalTeamGold"></div>
 
                                                                 </div>
                                                                 <div className='objectivesRedSide'>
