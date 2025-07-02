@@ -1319,7 +1319,7 @@ export default class SummonerSearch extends React.Component {
                                                                                 d="m8 4 4 4-4 4-4-4z" />
                                                                         </svg>
 
-                                                                        <span className="iconInhibitorBlue">x</span>
+                                                                        <span className="iconInhibitorBlue">{match.info.teams[0].objectives.inhibitor.kills}</span>
 
                                                                     </li>
                                                                 </div>
