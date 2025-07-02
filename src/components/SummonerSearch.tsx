@@ -1322,9 +1322,66 @@ export default class SummonerSearch extends React.Component {
                                                                         <span className="iconInhibitorBlue">{match.info.teams[0].objectives.inhibitor.kills}</span>
                                                                     </li>
                                                                 </div>
-                                                                <div className='totalTeamStats'>
-                                                                    <div className="totalTeamKills"></div>
-                                                                    <div className="totalTeamGold"></div>
+                                                                <div className="totalTeamStats">
+                                                                    {/* Calculate totals */}
+                                                                    {(() => {
+                                                                        const blueTeam = match.info.participants.slice(0, 5);
+                                                                        const redTeam = match.info.participants.slice(5);
+
+                                                                        const blueKills = blueTeam.reduce((sum, p) => sum + p.kills, 0);
+                                                                        const redKills = redTeam.reduce((sum, p) => sum + p.kills, 0);
+                                                                        const totalKills = blueKills + redKills;
+
+                                                                        const blueGold = blueTeam.reduce((sum, p) => sum + p.goldEarned, 0);
+                                                                        const redGold = redTeam.reduce((sum, p) => sum + p.goldEarned, 0);
+                                                                        const totalGold = blueGold + redGold;
+
+                                                                        // Calculate percentages for bar widths
+                                                                        const blueKillPercent = totalKills > 0 ? (blueKills / totalKills) * 100 : 50;
+                                                                        const blueGoldPercent = totalGold > 0 ? (blueGold / totalGold) * 100 : 50;
+
+                                                                        return (
+                                                                            <>
+                                                                                {/* Kills Graph (Top) */}
+                                                                                <div className="graphRow">
+                                                                                    <div className="graphBarContainer">
+                                                                                        <div
+                                                                                            className="graphBar blueBar"
+                                                                                            style={{ width: `${blueKillPercent}%` }}
+                                                                                        >
+                                                                                            <span className="graphValue">{blueKills}</span>
+                                                                                        </div>
+                                                                                        <div className="graphTotal">Total Kills</div>
+                                                                                        <div
+                                                                                            className="graphBar redBar"
+                                                                                            style={{ width: `${100 - blueKillPercent}%` }}
+                                                                                        >
+                                                                                            <span className="graphValue">{redKills}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                {/* Gold Graph (Bottom) */}
+                                                                                <div className="graphRow">
+                                                                                    <div className="graphBarContainer">
+                                                                                        <div
+                                                                                            className="graphBar blueBar"
+                                                                                            style={{ width: `${blueGoldPercent}%` }}
+                                                                                        >
+                                                                                            <span className="graphValue">{(blueGold / 1000).toFixed(1)}k</span>
+                                                                                        </div>
+                                                                                        <div className="graphTotal">Total Gold</div>
+                                                                                        <div
+                                                                                            className="graphBar redBar"
+                                                                                            style={{ width: `${100 - blueGoldPercent}%` }}
+                                                                                        >
+                                                                                            <span className="graphValue">{(redGold / 1000).toFixed(1)}k</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </>
+                                                                        );
+                                                                    })()}
                                                                 </div>
                                                                 <div className='objectivesRedSide'>
                                                                     <li className="iconListItemRed">
