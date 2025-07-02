@@ -1388,7 +1388,7 @@ export default class SummonerSearch extends React.Component {
                                                                                 clipRule="evenodd"
                                                                             />
                                                                         </svg>
-                                                                        <span className="iconVoidGrubRed">x</span>
+                                                                        <span className="iconVoidGrubRed">{match.info.teams[1].objectives.horde.kills}</span>
                                                                     </li>
                                                                     <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
