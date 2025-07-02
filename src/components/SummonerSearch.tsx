@@ -1487,7 +1487,7 @@ export default class SummonerSearch extends React.Component {
                                                                 <thead>
                                                                     <tr className={`OverviewTeamHeaderRow ${match.info.participants[5].win ? 'win' : 'loss'}`}>
                                                                         <th scope="col">
-                                                                            {match.info.participants[0].win ? 'Victory (Blue Team)' : 'Defeat (Blue Team)'}
+                                                                            {match.info.participants[5].win ? 'Victory (Red Team)' : 'Defeat (Red Team)'}
                                                                         </th>
                                                                         <th scope="col">IV Score</th>
                                                                         <th scope="col">KDA</th>
