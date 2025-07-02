@@ -807,11 +807,6 @@ th {
   gap: 1px;
 }
 
-.totalTeamStats {
-  width: 383px;
-  height: 36px;
-}
-
 .objectivesRedSide {
   display: flex;
   width: 150px;
@@ -819,6 +814,13 @@ th {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1px;
+}
+.totalTeamStats {
+  width: 383px;
+  height: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Todo */

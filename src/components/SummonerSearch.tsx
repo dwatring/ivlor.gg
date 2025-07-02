@@ -303,6 +303,7 @@ interface MatchData {
             wardsKilled: number
             wardsPlaced: number
             detectorWardsPlaced: number //Pink Wards
+            goldEarned: number
             summoner1Id: number
             summoner2Id: number
 
@@ -1318,15 +1319,12 @@ export default class SummonerSearch extends React.Component {
                                                                                 fillRule="nonzero"
                                                                                 d="m8 4 4 4-4 4-4-4z" />
                                                                         </svg>
-
                                                                         <span className="iconInhibitorBlue">{match.info.teams[0].objectives.inhibitor.kills}</span>
-
                                                                     </li>
                                                                 </div>
                                                                 <div className='totalTeamStats'>
                                                                     <div className="totalTeamKills"></div>
                                                                     <div className="totalTeamGold"></div>
-
                                                                 </div>
                                                                 <div className='objectivesRedSide'>
                                                                     <li className="iconListItemRed">
