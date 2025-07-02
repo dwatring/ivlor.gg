@@ -1351,7 +1351,7 @@ export default class SummonerSearch extends React.Component {
                                                                                         >
                                                                                             <span className="graphValue">{blueKills}</span>
                                                                                         </div>
-                                                                                        <div className="graphTotal">Total Kills</div>
+                                                                                        <div className="graphTitle">Total Kills</div>
                                                                                         <div
                                                                                             className="graphBar redBar"
                                                                                             style={{ width: `${100 - blueKillPercent}%` }}
@@ -1370,7 +1370,7 @@ export default class SummonerSearch extends React.Component {
                                                                                         >
                                                                                             <span className="graphValue">{(blueGold / 1000).toFixed(1)}k</span>
                                                                                         </div>
-                                                                                        <div className="graphTotal">Total Gold</div>
+                                                                                        <div className="graphTitle">Total Gold</div>
                                                                                         <div
                                                                                             className="graphBar redBar"
                                                                                             style={{ width: `${100 - blueGoldPercent}%` }}
