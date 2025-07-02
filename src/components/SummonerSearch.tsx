@@ -336,6 +336,10 @@ interface MatchData {
             objectives: {
                 teamId: number
                 win: boolean
+                atakhan: {
+                    first: boolean
+                    kills: number
+                }
                 baron: {
                     first: boolean
                     kills: number
@@ -1279,7 +1283,7 @@ export default class SummonerSearch extends React.Component {
                                                                                 fillRule="nonzero"
                                                                                 d="m9.524 5.587.508-2.031 2.031-1.524v2.031l1.524 1.524v1.016h-1.016L11.048 5.08z" />
                                                                         </svg>
-                                                                        <span className="iconAtakhanBlue">x</span>
+                                                                        <span className="iconAtakhanBlue">{match.info.teams[0].objectives.atakhan.kills}</span>
                                                                     </li>
                                                                     <li className="iconListItemBlue">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
