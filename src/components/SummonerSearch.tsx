@@ -1377,7 +1377,7 @@ export default class SummonerSearch extends React.Component {
                                                                                 fillRule="nonzero"
                                                                                 d="m9.524 5.587.508-2.031 2.031-1.524v2.031l1.524 1.524v1.016h-1.016L11.048 5.08z" />
                                                                         </svg>
-                                                                        <span className="iconAtakhanRed">x</span>
+                                                                        <span className="iconAtakhanRed">{match.info.teams[1].objectives.atakhan.kills}</span>
                                                                     </li>
                                                                     <li className="iconListItemRed">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
