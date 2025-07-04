@@ -745,6 +745,7 @@ th {
   width: 740px;
   height: 58px;
   flex-wrap: wrap;
+  background-color: rgb(49, 49, 49);
 }
 
 .iconListItemRed {
@@ -767,13 +768,13 @@ th {
 .iconListItemBlue svg {
   width: 16px;
   height: 16px;
-  color: #3e4c83;
+  color: #3e56b3;
 }
 
 .iconListItemRed svg {
   width: 16px;
   height: 16px;
-  color: #883d4a;
+  color: #a94253;
 }
 
 .iconBaronBlue,
