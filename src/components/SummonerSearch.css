@@ -798,6 +798,7 @@ th {
 .iconInhibitorRed {
   width: 14px;
   height: 20px;
+  color: gray;
 }
 
 .objectivesBlueSide {
