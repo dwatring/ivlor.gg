@@ -422,6 +422,15 @@ svg {
   opacity: 1;
 }
 
+/* Section specific heights */
+.expandedMatchDetailsOpen.overviewSection,
+.expandedMatchDetailsOpen.ivScoreSection,
+.expandedMatchDetailsOpen.teamAnalysisSection,
+.expandedMatchDetailsOpen.buildSection,
+.expandedMatchDetailsOpen.etcSection {
+  min-height: 200px;
+}
+
 .matchCardDisplayWrapper {
   display: flex;
   width: 740px;
