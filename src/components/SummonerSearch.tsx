@@ -1731,6 +1731,7 @@ export default class SummonerSearch extends React.Component {
                                                             </div>
                                                             <div className='TeamAnalysisLegend'>
                                                                 <div className='winningTeamLegend'>
+                                                                    <span>Winning Team</span>
                                                                 </div>
                                                                 <div className='losingTeamLegend'>
                                                                 </div>
