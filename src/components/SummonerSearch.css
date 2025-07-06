@@ -911,6 +911,13 @@ th {
   padding-left: 0px;
 }
 
+.TeamAnalysisLegend {
+}
+
+.winningTeamLegend,
+.losingTeamLegend {
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
