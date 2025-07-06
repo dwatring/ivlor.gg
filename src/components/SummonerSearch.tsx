@@ -1740,6 +1740,7 @@ export default class SummonerSearch extends React.Component {
                                                                 </div>
                                                             </div>
                                                             <div className='TeamAnalyisSectionWrapper'>
+                                                                <div className='sectionHeader'></div>
                                                                 <div className='TeamAnalysisSection'></div>
                                                             </div>
                                                         </div>
