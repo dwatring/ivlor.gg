@@ -891,12 +891,29 @@ th {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
 }
+
+.TeamAnalysisWrapper {
+}
+
+.TeamAnalysisHeader {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}
+.matchAnalysisHeader,
+.timelineHeader {
+  display: flex;
+  justify-content: center;
+  width: 366px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
 /* Todo */
 
 /* .IvScoreWrapper {
-}
-
-.TeamAnalysisWrapper {
 }
 
 .BuildWrapper {
