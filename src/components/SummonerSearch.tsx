@@ -1739,7 +1739,9 @@ export default class SummonerSearch extends React.Component {
                                                                     <span className='spanLegend'>Losing Team</span>
                                                                 </div>
                                                             </div>
-                                                            <div className='TeamAnalyisSectionWrapper'></div>
+                                                            <div className='TeamAnalyisSectionWrapper'>
+                                                                <div className='TeamAnalysisSection'></div>
+                                                            </div>
                                                         </div>
                                                     )}
                                                     {this.selectedSection === 'Build' && (
