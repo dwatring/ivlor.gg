@@ -916,15 +916,39 @@ th {
   width: 740px;
   height: 42px;
   justify-content: center;
-  gap: 2px;
+  padding-top: 12px;
+  padding-bottom: 10px;
+  gap: 20px;
 }
 
 .winningTeamLegend,
 .losingTeamLegend {
   display: flex;
+  height: 14px;
   justify-content: center;
+  align-items: center;
 }
 
+.spanLegend {
+  font-size: 12px;
+}
+.winningTeamLegendDot {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  margin-right: 8px;
+  border-radius: 9999px;
+  background-color: rgb(83, 131, 232);
+}
+
+.losingTeamLegendDot {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  margin-right: 8px;
+  border-radius: 9999px;
+  background-color: rgb(232, 64, 87);
+}
 /* Todo */
 
 /* .IvScoreWrapper {

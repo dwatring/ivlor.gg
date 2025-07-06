@@ -1731,10 +1731,12 @@ export default class SummonerSearch extends React.Component {
                                                             </div>
                                                             <div className='TeamAnalysisLegend'>
                                                                 <div className='winningTeamLegend'>
-                                                                    <span>Winning Team</span>
+                                                                    <em className='winningTeamLegendDot'></em>
+                                                                    <span className='spanLegend'>Winning Team</span>
                                                                 </div>
                                                                 <div className='losingTeamLegend'>
-                                                                    <span>Losing Team</span>
+                                                                    <em className='losingTeamLegendDot'></em>
+                                                                    <span className='spanLegend'>Losing Team</span>
                                                                 </div>
                                                             </div>
 
