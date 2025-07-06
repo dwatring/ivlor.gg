@@ -695,15 +695,15 @@ export default class SummonerSearch extends React.Component {
 
 
     @action
-    updateExpandedHeight(section) {
-        const heightMap = {
-            'Overview': '200px',
+    getExpandedDetailsHeight(section: string): string {
+        const heightMap: Record<string, string> = {
+            'Overview': '980px',
             'Iv Score': '150px',
             'Team analysis': '300px',
             'Build': '250px',
             'Etc.': '180px'
         };
-        this.expandedMatchDetailsHeight = heightMap[section] || '200px';
+        return heightMap[section] || '200px';
     }
 
 
@@ -1017,7 +1017,12 @@ export default class SummonerSearch extends React.Component {
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''}`}>
+                                            <div
+                                                className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''}`}
+                                                style={{
+                                                    height: this.getExpandedDetailsHeight(this.selectedSection)
+                                                }}
+                                            >
                                                 <div className="expandedMatchDetailsSectionsWrapper">
                                                     {['Overview', 'Iv Score', 'Team analysis', 'Build', 'Etc.'].map((section) => (
                                                         <button
