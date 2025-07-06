@@ -1019,8 +1019,8 @@ export default class SummonerSearch extends React.Component {
                                             </div>
                                             <div
                                                 className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''} ${this.flippedMatches[match.metadata.matchId]
-                                                        ? `${this.selectedSection.toLowerCase().replace(/\s+/g, '')}Section`
-                                                        : ''
+                                                    ? `${this.selectedSection.toLowerCase().replace(/\s+/g, '')}Section`
+                                                    : ''
                                                     }`}
                                                 style={{
                                                     height: this.flippedMatches[match.metadata.matchId]
@@ -1725,7 +1725,8 @@ export default class SummonerSearch extends React.Component {
                                                     )}
                                                     {this.selectedSection === 'Team analysis' && (
                                                         <div className="TeamAnalysisWrapper">
-
+                                                            <div className="TeamAnalysisHeader">
+                                                            </div>
                                                         </div>
                                                     )}
                                                     {this.selectedSection === 'Build' && (
