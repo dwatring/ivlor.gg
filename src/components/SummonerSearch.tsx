@@ -694,6 +694,19 @@ export default class SummonerSearch extends React.Component {
 
 
 
+    @action
+    updateExpandedHeight(section) {
+        const heightMap = {
+            'Overview': '200px',
+            'Iv Score': '150px',
+            'Team analysis': '300px',
+            'Build': '250px',
+            'Etc.': '180px'
+        };
+        this.expandedMatchDetailsHeight = heightMap[section] || '200px';
+    }
+
+
     render() {
 
         return (
