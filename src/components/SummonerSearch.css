@@ -912,10 +912,17 @@ th {
 }
 
 .TeamAnalysisLegend {
+  display: flex;
+  width: 740px;
+  height: 42px;
+  justify-content: center;
+  gap: 2px;
 }
 
 .winningTeamLegend,
 .losingTeamLegend {
+  display: flex;
+  justify-content: center;
 }
 
 /* Todo */
