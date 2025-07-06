@@ -1730,7 +1730,7 @@ export default class SummonerSearch extends React.Component {
                                                                 <button className='timelineHeader'>Timeline</button>
                                                             </div>
                                                             <div className='TeamAnalysisLegend'>
-
+                                                                <div className='winningTeamLegend'></div>
                                                             </div>
 
                                                         </div>
