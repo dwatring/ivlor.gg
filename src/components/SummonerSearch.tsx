@@ -1018,9 +1018,14 @@ export default class SummonerSearch extends React.Component {
                                                 </div>
                                             </div>
                                             <div
-                                                className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''}`}
+                                                className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''} ${this.flippedMatches[match.metadata.matchId]
+                                                        ? `${this.selectedSection.toLowerCase().replace(/\s+/g, '')}Section`
+                                                        : ''
+                                                    }`}
                                                 style={{
-                                                    height: this.getExpandedDetailsHeight(this.selectedSection)
+                                                    height: this.flippedMatches[match.metadata.matchId]
+                                                        ? this.getExpandedDetailsHeight(this.selectedSection)
+                                                        : '0px'
                                                 }}
                                             >
                                                 <div className="expandedMatchDetailsSectionsWrapper">
