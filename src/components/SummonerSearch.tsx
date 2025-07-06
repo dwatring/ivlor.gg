@@ -418,6 +418,7 @@ export default class SummonerSearch extends React.Component {
     @observable isLoading = false;
     @observable flippedMatches: Record<string, boolean> = {}
     @observable selectedSection = 'Overview'
+    @observable expandedMatchDetailsHeight = '200px'
 
     constructor(props: Record<string, never>) {
         super(props)
@@ -690,6 +691,8 @@ export default class SummonerSearch extends React.Component {
     handleSectionChange = (section: string) => {
         this.selectedSection = section;
     }
+
+
 
     render() {
 
