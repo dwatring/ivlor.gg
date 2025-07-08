@@ -1737,6 +1737,7 @@ export default class SummonerSearch extends React.Component {
                                                                                         width="16"
                                                                                         height="16"
                                                                                     />
+                                                                                    <span className="participantStat">{player.kills}</span>
                                                                                 </div>
                                                                             ))}
                                                                         </div>
