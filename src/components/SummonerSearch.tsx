@@ -1748,6 +1748,17 @@ export default class SummonerSearch extends React.Component {
 
                                                                         {/* Red Team (Participants 5-9) */}
                                                                         <div className="redTeamStatistics">
+                                                                            {match.info.participants.slice(5, 10).map((player, idx) => (
+                                                                                <div key={`red-${idx}`} className="participantItem">
+                                                                                    <img
+                                                                                        src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                        alt={player.championName}
+                                                                                        className="championIcon"
+                                                                                        width="16"
+                                                                                        height="16"
+                                                                                    />
+                                                                                </div>
+                                                                            ))}
                                                                         </div>
                                                                     </div>
                                                                 </div>
