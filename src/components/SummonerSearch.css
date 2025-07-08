@@ -413,7 +413,7 @@ svg {
 
 .expandedMatchDetails.open {
   width: 740px;
-  min-height: 642px; /* Changed from fixed height */
+  min-height: 300px; /* Changed from fixed height */
   height: auto;
   overflow: visible; /* Changed from hidden */
   border-radius: 6px;
@@ -423,12 +423,17 @@ svg {
 }
 
 /* Section specific heights */
-.expandedMatchDetailsOpen.overviewSection,
-.expandedMatchDetailsOpen.ivScoreSection,
-.expandedMatchDetailsOpen.teamAnalysisSection,
-.expandedMatchDetailsOpen.buildSection,
-.expandedMatchDetailsOpen.etcSection {
-  min-height: 200px;
+.expandedMatchDetails.open.overviewSection {
+  min-height: 980px;
+}
+.expandedMatchDetails.open.ivscoreSection {
+}
+.expandedMatchDetails.open.teamanalysisSection {
+  min-height: 547px;
+}
+.expandedMatchDetails.open.buildSection {
+}
+.expandedMatchDetails.open.etcSection {
 }
 
 .matchCardDisplayWrapper {

@@ -692,20 +692,6 @@ export default class SummonerSearch extends React.Component {
         this.selectedSection = section;
     }
 
-
-
-    @action
-    getExpandedDetailsHeight(section: string): string {
-        const heightMap: Record<string, string> = {
-            'Overview': 'auto',       // Let content dictate height
-            'Iv Score': 'auto',
-            'Team analysis': 'auto',  // Critical change
-            'Build': 'auto',
-            'Etc.': 'auto'
-        };
-        return heightMap[section] || 'auto';
-    }
-
     render() {
 
         return (
@@ -1018,13 +1004,10 @@ export default class SummonerSearch extends React.Component {
                                             </div>
                                             <div
                                                 className={`expandedMatchDetails ${this.flippedMatches[match.metadata.matchId] ? 'open' : ''} ${this.flippedMatches[match.metadata.matchId]
-                                                    ? `${this.selectedSection.toLowerCase().replace(/\s+/g, '')}Section`
+                                                    ? `${this.selectedSection.charAt(0).toLowerCase() + this.selectedSection.slice(1).replace(/\s+/g, '')}Section`
                                                     : ''
                                                     }`}
                                                 style={{
-                                                    height: this.flippedMatches[match.metadata.matchId]
-                                                        ? this.getExpandedDetailsHeight(this.selectedSection)
-                                                        : '0px'
                                                 }}
                                             >
                                                 <div className="expandedMatchDetailsSectionsWrapper">
