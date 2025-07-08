@@ -1778,6 +1778,16 @@ export default class SummonerSearch extends React.Component {
                                                                         <div className="redTeamStatistics"></div>
                                                                     </div>
                                                                 </div>
+
+                                                                {/* Item 5 */}
+                                                                <div className="grid-item">
+                                                                    <div className="sectionHeader">Damage taken</div>
+                                                                    <div className="TeamAnalysisSection">
+                                                                        <div className="blueTeamStatistics"></div>
+                                                                        <div className="graphComparisonStatistics"></div>
+                                                                        <div className="redTeamStatistics"></div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     )}
