@@ -897,9 +897,6 @@ th {
   white-space: nowrap;
 }
 
-.TeamAnalysisWrapper {
-}
-
 .TeamAnalysisHeader {
   display: flex;
   justify-content: center;
@@ -972,6 +969,13 @@ th {
   display: flex;
   width: 370px;
   height: 96px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
 }
 
 /* Todo */

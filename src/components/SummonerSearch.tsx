@@ -1726,9 +1726,28 @@ export default class SummonerSearch extends React.Component {
                                                                 <div className="grid-item">
                                                                     <div className="sectionHeader">Kills</div>
                                                                     <div className="TeamAnalysisSection">
-                                                                        <div className="blueTeamStatistics"></div>
-                                                                        <div className="graphComparisonStatistics"></div>
-                                                                        <div className="redTeamStatistics"></div>
+                                                                        {/* Blue Team (Participants 0-4) */}
+                                                                        <div className="blueTeamStatistics">
+                                                                            {match.info.participants.slice(0, 5).map((player, idx) => (
+                                                                                <div key={`blue-${idx}`} className="participantItem">
+                                                                                    <img
+                                                                                        src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                        alt={player.championName}
+                                                                                        className="championIcon"
+                                                                                        width="16"
+                                                                                        height="16"
+                                                                                    />
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+
+                                                                        {/* Graph Comparison */}
+                                                                        <div className="graphComparisonStatistics">
+                                                                        </div>
+
+                                                                        {/* Red Team (Participants 5-9) */}
+                                                                        <div className="redTeamStatistics">
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
