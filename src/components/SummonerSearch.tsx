@@ -697,15 +697,14 @@ export default class SummonerSearch extends React.Component {
     @action
     getExpandedDetailsHeight(section: string): string {
         const heightMap: Record<string, string> = {
-            'Overview': '980px',
-            'Iv Score': '150px',
-            'Team analysis': '300px',
-            'Build': '250px',
-            'Etc.': '180px'
+            'Overview': 'auto',       // Let content dictate height
+            'Iv Score': 'auto',
+            'Team analysis': 'auto',  // Critical change
+            'Build': 'auto',
+            'Etc.': 'auto'
         };
-        return heightMap[section] || '200px';
+        return heightMap[section] || 'auto';
     }
-
 
     render() {
 
@@ -1739,54 +1738,15 @@ export default class SummonerSearch extends React.Component {
                                                                     <span className='spanLegend'>Losing Team</span>
                                                                 </div>
                                                             </div>
-                                                            <div className='TeamAnalyisSectionWrapper'>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
-                                                                </div>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
-                                                                </div>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
-                                                                </div>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
-                                                                </div>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
-                                                                </div>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
-                                                                </div>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
-                                                                </div>
-                                                                <div className='sectionHeader'></div>
-                                                                <div className='TeamAnalysisSection'>
-                                                                    <div className='blueTeamStatistics'></div>
-                                                                    <div className='graphComparisonStatistics'></div>
-                                                                    <div className='redTeamStatistics'></div>
+                                                            <div className="grid-container">
+                                                                {/* Item 1 */}
+                                                                <div className="grid-item">
+                                                                    <div className="sectionHeader">Kills</div>
+                                                                    <div className="TeamAnalysisSection">
+                                                                        <div className="blueTeamStatistics"></div>
+                                                                        <div className="graphComparisonStatistics"></div>
+                                                                        <div className="redTeamStatistics"></div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

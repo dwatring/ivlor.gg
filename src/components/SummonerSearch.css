@@ -914,7 +914,7 @@ th {
 .TeamAnalysisLegend {
   display: flex;
   width: 740px;
-  height: 42px;
+  height: 20px;
   justify-content: center;
   padding-top: 12px;
   padding-bottom: 10px;
@@ -949,9 +949,18 @@ th {
   border-radius: 9999px;
   background-color: rgb(232, 64, 87);
 }
-.TeamAnalysisSectionWrapper {
+
+.grid-container {
   display: grid;
-  grid-template-columns: 370px 370px;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  grid-auto-rows: minmax(96px, auto); /* Flexible row height */
+  width: 100%;
+  row-gap: 30px;
+}
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  height: 96px;
 }
 
 .TeamAnalysisSection {
@@ -959,6 +968,7 @@ th {
   width: 370px;
   height: 96px;
 }
+
 /* Todo */
 
 /* .IvScoreWrapper {
