@@ -967,6 +967,8 @@ th {
 
 .TeamAnalysisSection {
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 370px;
   height: 96px;
 }

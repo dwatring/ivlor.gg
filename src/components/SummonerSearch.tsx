@@ -1744,6 +1744,7 @@ export default class SummonerSearch extends React.Component {
 
                                                                         {/* Graph Comparison */}
                                                                         <div className="graphComparisonStatistics">
+
                                                                         </div>
 
                                                                         {/* Red Team (Participants 5-9) */}
