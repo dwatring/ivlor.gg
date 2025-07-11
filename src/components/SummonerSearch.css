@@ -993,25 +993,6 @@ th {
   height: 90px;
 }
 
-.pieChartLabel {
-  font-size: 8px;
-  font-weight: bold;
-  fill: #1f2937;
-  text-anchor: middle;
-  dominant-baseline: middle;
-}
-
-.donut-chart {
-  width: 90px;
-  height: 90px;
-}
-
-/* Ensure SVG inherits size */
-.donut-chart svg {
-  width: 90px !important;
-  height: 90px !important;
-}
-
 .championIcon {
   border-radius: 50%;
 }

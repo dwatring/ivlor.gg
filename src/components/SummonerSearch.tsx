@@ -5,7 +5,6 @@ import { makeObservable, observable, action, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
 import Bottleneck from 'bottleneck'
-import { PieChart } from 'react-minimal-pie-chart'
 
 const limiter = new Bottleneck({
     reservoir: 90, // Allow 100 requests per cycle
