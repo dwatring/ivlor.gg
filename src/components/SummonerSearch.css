@@ -993,6 +993,17 @@ th {
   height: 90px;
 }
 
+.donut-chart {
+  width: 90px;
+  height: 90px;
+}
+
+/* Ensure SVG inherits size */
+.donut-chart svg {
+  width: 90px !important;
+  height: 90px !important;
+}
+
 .championIcon {
   border-radius: 50%;
 }
