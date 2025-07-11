@@ -962,7 +962,7 @@ th {
 .grid-item {
   display: flex;
   flex-direction: column;
-  height: 96px;
+  height: 128px;
 }
 
 .TeamAnalysisSection {
@@ -971,13 +971,87 @@ th {
   align-items: center;
   width: 370px;
   height: 96px;
+  gap: 10px;
 }
 
 .sectionHeader {
   display: flex;
+  width: 370px;
+  height: 20px;
   justify-content: center;
   color: white;
   font-size: 12px;
+}
+
+.graphComparisonStatistics {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90px;
+  height: 90px;
+}
+
+.pieChartLabel {
+  font-size: 8px;
+  font-weight: bold;
+  fill: #1f2937;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.donut-chart {
+  width: 90px;
+  height: 90px;
+}
+
+/* Ensure SVG inherits size */
+.donut-chart svg {
+  width: 90px !important;
+  height: 90px !important;
+}
+
+.championIcon {
+  border-radius: 50%;
+}
+
+.killsDisplayContainer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.blueTeamKills {
+  width: 14px;
+  height: 20px;
+  color: rgb(83, 131, 232);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.redTeamKills {
+  width: 14px;
+  height: 20px;
+  color: rgb(232, 64, 87);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.separatorBar {
+  position: absolute;
+  width: 40px;
+  height: 1px;
+  background-color: #9ca3af;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Todo */

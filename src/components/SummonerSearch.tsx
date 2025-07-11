@@ -5,6 +5,7 @@ import { makeObservable, observable, action, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
 import Bottleneck from 'bottleneck'
+import { PieChart } from 'react-minimal-pie-chart'
 
 const limiter = new Bottleneck({
     reservoir: 90, // Allow 100 requests per cycle
@@ -1721,8 +1722,9 @@ export default class SummonerSearch extends React.Component {
                                                                     <span className='spanLegend'>Losing Team</span>
                                                                 </div>
                                                             </div>
+
                                                             <div className="grid-container">
-                                                                {/* Item 1 */}
+                                                                {/* Item 1 - Kills */}
                                                                 <div className="grid-item">
                                                                     <div className="sectionHeader">Kills</div>
                                                                     <div className="TeamAnalysisSection">
@@ -1742,10 +1744,77 @@ export default class SummonerSearch extends React.Component {
                                                                             ))}
                                                                         </div>
 
-                                                                        {/* Graph Comparison */}
-                                                                        <div className="graphComparisonStatistics">
+                                                                        {/* Donut Chart Comparison */}
+                                                                        {(() => {
+                                                                            const blueTeamKills = match.info.participants
+                                                                                .slice(0, 5)
+                                                                                .reduce((sum, player) => sum + player.kills, 0);
+                                                                            const redTeamKills = match.info.participants
+                                                                                .slice(5, 10)
+                                                                                .reduce((sum, player) => sum + player.kills, 0);
+                                                                            const totalKills = blueTeamKills + redTeamKills;
 
-                                                                        </div>
+                                                                            // Calculate angles in degrees
+                                                                            const blueAngle = totalKills > 0 ? (blueTeamKills / totalKills) * 360 : 0;
+                                                                            const redAngle = totalKills > 0 ? (redTeamKills / totalKills) * 360 : 0;
+
+                                                                            // Convert angle to radians for path calculations
+                                                                            const angleToRadians = (angle: number) => (angle * Math.PI) / 180;
+                                                                            const getPath = (startAngle: number, endAngle: number, outerRadius: number, innerRadius: number, cx: number, cy: number) => {
+                                                                                const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+                                                                                const startX = cx + outerRadius * Math.cos(angleToRadians(startAngle - 90));
+                                                                                const startY = cy + outerRadius * Math.sin(angleToRadians(startAngle - 90));
+                                                                                const endX = cx + outerRadius * Math.cos(angleToRadians(endAngle - 90));
+                                                                                const endY = cy + outerRadius * Math.sin(angleToRadians(endAngle - 90));
+                                                                                const innerStartX = cx + innerRadius * Math.cos(angleToRadians(endAngle - 90));
+                                                                                const innerStartY = cy + innerRadius * Math.sin(angleToRadians(endAngle - 90));
+                                                                                const innerEndX = cx + innerRadius * Math.cos(angleToRadians(startAngle - 90));
+                                                                                const innerEndY = cy + innerRadius * Math.sin(angleToRadians(startAngle - 90));
+
+                                                                                return `
+                                                                                M ${startX},${startY}
+                                                                                A ${outerRadius},${outerRadius},0,${largeArcFlag},1,${endX},${endY}
+                                                                                L ${innerStartX},${innerStartY}
+                                                                                A ${innerRadius},${innerRadius},0,${largeArcFlag},0,${innerEndX},${innerEndY}
+                                                                                Z
+                                                                                `;
+                                                                            };
+
+                                                                            return (
+                                                                                <div className="graphComparisonStatistics">
+                                                                                    <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
+                                                                                        {/* Background circle */}
+                                                                                        <circle
+                                                                                            cx="45"
+                                                                                            cy="45"
+                                                                                            r="45"
+                                                                                            fill="none"
+                                                                                            stroke="#2d3748"
+                                                                                            strokeWidth="6"
+                                                                                        />
+
+                                                                                        {/* Blue Team segment */}
+                                                                                        <path
+                                                                                            d={getPath(0, blueAngle, 45, 33, 45, 45)}
+                                                                                            fill="rgb(83, 131, 232)"
+                                                                                            stroke="none"
+                                                                                        />
+
+                                                                                        {/* Red Team segment */}
+                                                                                        <path
+                                                                                            d={getPath(blueAngle, blueAngle + redAngle, 45, 33, 45, 45)}
+                                                                                            fill="rgb(232, 83, 83)"
+                                                                                            stroke="none"
+                                                                                        />
+                                                                                    </svg>
+                                                                                    <div className="killsDisplayContainer">
+                                                                                        <div className="blueTeamKills">{blueTeamKills}</div>
+                                                                                        <span className="separatorBar"></span>
+                                                                                        <div className="redTeamKills">{redTeamKills}</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            );
+                                                                        })()}
 
                                                                         {/* Red Team (Participants 5-9) */}
                                                                         <div className="redTeamStatistics">
