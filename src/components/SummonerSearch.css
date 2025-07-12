@@ -321,7 +321,7 @@
   white-space: nowrap;
 }
 .participantItem {
-  width: 60px;
+  width: 100px;
   height: 16px;
   font-size: 12px;
   text-size-adjust: 100%;
@@ -991,6 +991,11 @@ th {
   align-items: center;
   width: 90px;
   height: 90px;
+}
+
+.participantStat {
+  width: 80px;
+  height: 16px;
 }
 
 .donut-chart {
