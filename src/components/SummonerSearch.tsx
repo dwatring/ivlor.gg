@@ -1828,7 +1828,6 @@ export default class SummonerSearch extends React.Component {
                                                                         <div className="redTeamStatistics">
                                                                             {match.info.participants.slice(5, 10).map((player, idx) => (
                                                                                 <div key={`red-${idx}`} className="participantItem">
-                                                                                    <span className="participantStat">{player.kills}</span>
                                                                                     <img
                                                                                         src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
                                                                                         alt={player.championName}
@@ -1836,6 +1835,7 @@ export default class SummonerSearch extends React.Component {
                                                                                         width="16"
                                                                                         height="16"
                                                                                     />
+                                                                                    <span className="participantStat">{player.kills}</span>
                                                                                 </div>
                                                                             ))}
                                                                         </div>
@@ -1945,9 +1945,6 @@ export default class SummonerSearch extends React.Component {
                                                                         <div className="redTeamStatistics">
                                                                             {match.info.participants.slice(5, 10).map((player, idx) => (
                                                                                 <div key={`red-${idx}`} className="participantItem">
-                                                                                    <span className="participantStat">
-                                                                                        {player.goldEarned.toLocaleString()}
-                                                                                    </span>
                                                                                     <img
                                                                                         src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
                                                                                         alt={player.championName}
@@ -1955,6 +1952,9 @@ export default class SummonerSearch extends React.Component {
                                                                                         width="16"
                                                                                         height="16"
                                                                                     />
+                                                                                    <span className="participantStat">
+                                                                                        {player.goldEarned.toLocaleString()}
+                                                                                    </span>
                                                                                 </div>
                                                                             ))}
                                                                         </div>
