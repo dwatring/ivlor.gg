@@ -327,6 +327,7 @@
   text-size-adjust: 100%;
   color: gray;
   display: flex;
+  gap: 1px;
 }
 
 .lobbyInfo {
@@ -993,11 +994,6 @@ th {
   height: 90px;
 }
 
-.participantStat {
-  width: 80px;
-  height: 16px;
-}
-
 .donut-chart {
   width: 90px;
   height: 90px;
@@ -1044,6 +1040,19 @@ th {
   color: rgb(232, 64, 87);
   font-size: 12px;
   font-weight: bold;
+  gap: 1px;
+}
+
+.blueTeamDisplayStatistics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.redTeamDisplayStatistics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .separatorBar {
@@ -1053,6 +1062,34 @@ th {
   background-color: #9ca3af;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.participantStatContainer {
+  width: 80px;
+  height: 16px;
+  position: relative;
+  background: rgb(50, 50, 50); /* Background for unfilled portion */
+  overflow: hidden;
+}
+
+.participantStat {
+  display: flex;
+  width: 80px;
+  height: 16px;
+}
+
+.participantStatDisplay {
+  position: absolute;
+  color: white;
+  font-size: 11px;
+  right: 5px;
+  top: 0;
+}
+
+.teamStatsBar {
+  height: 16px;
+  position: absolute;
+  left: 0;
 }
 
 /* Todo */

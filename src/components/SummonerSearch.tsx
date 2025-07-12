@@ -1847,7 +1847,7 @@ export default class SummonerSearch extends React.Component {
                                                                     <div className="sectionHeader">Gold</div>
                                                                     <div className="TeamAnalysisSection">
                                                                         {/* Blue Team (Participants 0-4) */}
-                                                                        <div className="blueTeamStatistics">
+                                                                        <div className="blueTeamDisplayStatistics">
                                                                             {match.info.participants.slice(0, 5).map((player, idx) => (
                                                                                 <div key={`blue-${idx}`} className="participantItem">
                                                                                     <img
@@ -1857,9 +1857,19 @@ export default class SummonerSearch extends React.Component {
                                                                                         width="16"
                                                                                         height="16"
                                                                                     />
-                                                                                    <span className="participantStat">
-                                                                                        {player.goldEarned.toLocaleString()}
-                                                                                    </span>
+                                                                                    <div className="participantStatContainer">
+                                                                                        <div className="participantStat">
+                                                                                            <div
+                                                                                                className="teamStatsBar"
+                                                                                                style={{
+                                                                                                    width: `${Math.min(100, (player.goldEarned / Math.max(...match.info.participants.map(p => p.goldEarned))) * 100)}%`,
+                                                                                                    background: 'rgb(83, 131, 232)'
+                                                                                                }}
+                                                                                            >
+                                                                                            </div>
+                                                                                            <div className='participantStatDisplay'>{player.goldEarned.toLocaleString()}</div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             ))}
                                                                         </div>
@@ -1874,6 +1884,7 @@ export default class SummonerSearch extends React.Component {
                                                                                     .slice(5, 10)
                                                                                     .reduce((sum, player) => sum + player.goldEarned, 0);
                                                                                 const totalGold = blueTeamGold + redTeamGold;
+
 
                                                                                 // Calculate angles in degrees
                                                                                 const blueAngle = totalGold > 0 ? (blueTeamGold / totalGold) * 360 : 0;
@@ -1942,7 +1953,7 @@ export default class SummonerSearch extends React.Component {
                                                                         </div>
 
                                                                         {/* Red Team (Participants 5-9) */}
-                                                                        <div className="redTeamStatistics">
+                                                                        <div className="redTeamDisplayStatistics">
                                                                             {match.info.participants.slice(5, 10).map((player, idx) => (
                                                                                 <div key={`red-${idx}`} className="participantItem">
                                                                                     <img
@@ -1952,9 +1963,19 @@ export default class SummonerSearch extends React.Component {
                                                                                         width="16"
                                                                                         height="16"
                                                                                     />
-                                                                                    <span className="participantStat">
-                                                                                        {player.goldEarned.toLocaleString()}
-                                                                                    </span>
+                                                                                    <div className="participantStatContainer">
+                                                                                        <div className="participantStat">
+                                                                                            <div
+                                                                                                className="teamStatsBar"
+                                                                                                style={{
+                                                                                                    width: `${Math.min(100, (player.goldEarned / Math.max(...match.info.participants.map(p => p.goldEarned))) * 100)}%`,
+                                                                                                    background: 'rgb(232, 64, 87)'
+                                                                                                }}
+                                                                                            >
+                                                                                            </div>
+                                                                                            <div className='participantStatDisplay'>{player.goldEarned.toLocaleString()}</div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             ))}
                                                                         </div>
