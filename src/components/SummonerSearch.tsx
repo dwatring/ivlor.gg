@@ -1815,10 +1815,10 @@ export default class SummonerSearch extends React.Component {
                                                                                             stroke="none"
                                                                                         />
                                                                                     </svg>
-                                                                                    <div className="killsDisplayContainer">
-                                                                                        <div className="blueTeamKills">{blueTeamKills}</div>
+                                                                                    <div className="displayTeamStatsContainer">
+                                                                                        <div className="blueTeamStats">{blueTeamKills}</div>
                                                                                         <span className="separatorBar"></span>
-                                                                                        <div className="redTeamKills">{redTeamKills}</div>
+                                                                                        <div className="redTeamStats">{redTeamKills}</div>
                                                                                     </div>
                                                                                 </div>
                                                                             );
@@ -1846,9 +1846,118 @@ export default class SummonerSearch extends React.Component {
                                                                 <div className="grid-item">
                                                                     <div className="sectionHeader">Gold</div>
                                                                     <div className="TeamAnalysisSection">
-                                                                        <div className="blueTeamStatistics"></div>
-                                                                        <div className="graphComparisonStatistics"></div>
-                                                                        <div className="redTeamStatistics"></div>
+                                                                        {/* Blue Team (Participants 0-4) */}
+                                                                        <div className="blueTeamStatistics">
+                                                                            {match.info.participants.slice(0, 5).map((player, idx) => (
+                                                                                <div key={`blue-${idx}`} className="participantItem">
+                                                                                    <img
+                                                                                        src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                        alt={player.championName}
+                                                                                        className="championIcon"
+                                                                                        width="16"
+                                                                                        height="16"
+                                                                                    />
+                                                                                    <span className="participantStat">
+                                                                                        {player.goldEarned.toLocaleString()}
+                                                                                    </span>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+
+                                                                        {/* Donut Chart Comparison */}
+                                                                        <div className="graphComparisonStatistics">
+                                                                            {(() => {
+                                                                                const blueTeamGold = match.info.participants
+                                                                                    .slice(0, 5)
+                                                                                    .reduce((sum, player) => sum + player.goldEarned, 0);
+                                                                                const redTeamGold = match.info.participants
+                                                                                    .slice(5, 10)
+                                                                                    .reduce((sum, player) => sum + player.goldEarned, 0);
+                                                                                const totalGold = blueTeamGold + redTeamGold;
+
+                                                                                // Calculate angles in degrees
+                                                                                const blueAngle = totalGold > 0 ? (blueTeamGold / totalGold) * 360 : 0;
+                                                                                const redAngle = totalGold > 0 ? (redTeamGold / totalGold) * 360 : 0;
+
+                                                                                const angleToRadians = (angle: number) => (angle * Math.PI) / 180;
+                                                                                const getPath = (startAngle: number, endAngle: number, outerRadius: number, innerRadius: number, cx: number, cy: number) => {
+                                                                                    const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+                                                                                    const startX = cx + outerRadius * Math.cos(angleToRadians(startAngle - 90));
+                                                                                    const startY = cy + outerRadius * Math.sin(angleToRadians(startAngle - 90));
+                                                                                    const endX = cx + outerRadius * Math.cos(angleToRadians(endAngle - 90));
+                                                                                    const endY = cy + outerRadius * Math.sin(angleToRadians(endAngle - 90));
+                                                                                    const innerStartX = cx + innerRadius * Math.cos(angleToRadians(endAngle - 90));
+                                                                                    const innerStartY = cy + innerRadius * Math.sin(angleToRadians(endAngle - 90));
+                                                                                    const innerEndX = cx + innerRadius * Math.cos(angleToRadians(startAngle - 90));
+                                                                                    const innerEndY = cy + innerRadius * Math.sin(angleToRadians(startAngle - 90));
+
+                                                                                    return `
+                                                                                    M ${startX},${startY}
+                                                                                    A ${outerRadius},${outerRadius},0,${largeArcFlag},1,${endX},${endY}
+                                                                                    L ${innerStartX},${innerStartY}
+                                                                                    A ${innerRadius},${innerRadius},0,${largeArcFlag},0,${innerEndX},${innerEndY}
+                                                                                    Z
+                                                                                `;
+                                                                                };
+
+                                                                                return (
+                                                                                    <>
+                                                                                        <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
+                                                                                            {/* Background circle */}
+                                                                                            <circle
+                                                                                                cx="45"
+                                                                                                cy="45"
+                                                                                                r="45"
+                                                                                                fill="none"
+                                                                                                stroke="#2d3748"
+                                                                                                strokeWidth="6"
+                                                                                            />
+
+                                                                                            {/* Blue Team segment */}
+                                                                                            <path
+                                                                                                d={getPath(0, blueAngle, 45, 33, 45, 45)}
+                                                                                                fill="rgb(83, 131, 232)"
+                                                                                                stroke="none"
+                                                                                            />
+
+                                                                                            {/* Red Team segment */}
+                                                                                            <path
+                                                                                                d={getPath(blueAngle, blueAngle + redAngle, 45, 33, 45, 45)}
+                                                                                                fill="rgb(232, 83, 83)"
+                                                                                                stroke="none"
+                                                                                            />
+                                                                                        </svg>
+                                                                                        <div className="displayTeamStatsContainer">
+                                                                                            <div className="blueTeamStats">
+                                                                                                {blueTeamGold.toLocaleString()}
+                                                                                            </div>
+                                                                                            <span className="separatorBar"></span>
+                                                                                            <div className="redTeamStats">
+                                                                                                {redTeamGold.toLocaleString()}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </>
+                                                                                );
+                                                                            })()}
+                                                                        </div>
+
+                                                                        {/* Red Team (Participants 5-9) */}
+                                                                        <div className="redTeamStatistics">
+                                                                            {match.info.participants.slice(5, 10).map((player, idx) => (
+                                                                                <div key={`red-${idx}`} className="participantItem">
+                                                                                    <span className="participantStat">
+                                                                                        {player.goldEarned.toLocaleString()}
+                                                                                    </span>
+                                                                                    <img
+                                                                                        src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                        alt={player.championName}
+                                                                                        className="championIcon"
+                                                                                        width="16"
+                                                                                        height="16"
+                                                                                    />
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 

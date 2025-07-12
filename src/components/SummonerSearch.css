@@ -997,7 +997,7 @@ th {
   width: 90px;
   height: 90px;
   margin: 0 auto;
-  transform: rotate(-215deg);
+  transform: rotate(-180deg);
 }
 
 /* Ensure SVG inherits size */
@@ -1010,7 +1010,9 @@ th {
   border-radius: 50%;
 }
 
-.killsDisplayContainer {
+.displayTeamStatsContainer {
+  width: 40px;
+  height: 41px;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -1023,17 +1025,17 @@ th {
   font-weight: bold;
 }
 
-.blueTeamKills {
-  width: 14px;
-  height: 20px;
+.blueTeamStats {
+  width: auto;
+  height: auto;
   color: rgb(83, 131, 232);
   font-size: 12px;
   font-weight: bold;
 }
 
-.redTeamKills {
-  width: 14px;
-  height: 20px;
+.redTeamStats {
+  width: auto;
+  height: auto;
   color: rgb(232, 64, 87);
   font-size: 12px;
   font-weight: bold;
