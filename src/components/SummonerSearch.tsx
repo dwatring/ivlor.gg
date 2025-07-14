@@ -2053,9 +2053,94 @@ export default class SummonerSearch extends React.Component {
                                                                 <div className="grid-item">
                                                                     <div className="sectionHeader">Wards</div>
                                                                     <div className="TeamAnalysisSection">
-                                                                        <div className="blueTeamStatistics"></div>
-                                                                        <div className="graphComparisonStatistics"></div>
-                                                                        <div className="redTeamStatistics"></div>
+                                                                        <div className="blueTeamDisplayStatistics">
+                                                                            {match.info.participants.slice(0, 5).map((player, idx) => (
+                                                                                <div key={`blue-${idx}`} className="participantItem">
+                                                                                    <img
+                                                                                        src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                        alt={player.championName}
+                                                                                        className="championIcon"
+                                                                                        width="16"
+                                                                                        height="16"
+                                                                                    />
+                                                                                    <div className="participantStatContainer">
+                                                                                        <div className="participantStat">
+                                                                                            <div
+                                                                                                className="teamStatsBar"
+                                                                                                style={{
+                                                                                                    width: `${Math.min(100, (player.wardsPlaced / Math.max(...match.info.participants.map(p => p.wardsPlaced))) * 100)}%`,
+                                                                                                    background: 'rgb(83, 131, 232)'
+                                                                                                }}
+                                                                                            >
+                                                                                            </div>
+                                                                                            <div className='participantStatDisplay'>{player.wardsPlaced.toLocaleString()}</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                        <div className="graphComparisonStatistics">
+                                                                            {(() => {
+                                                                                const blueWardsPlaced = match.info.participants
+                                                                                    .slice(0, 5)
+                                                                                    .reduce((sum, player) => sum + player.wardsPlaced, 0);
+                                                                                const redWardsPlaced = match.info.participants
+                                                                                    .slice(5, 10)
+                                                                                    .reduce((sum, player) => sum + player.wardsPlaced, 0);
+
+                                                                                return (
+                                                                                    <>
+                                                                                        {(() => {
+                                                                                            const chart = this.generateDonutChart(blueWardsPlaced, redWardsPlaced);
+                                                                                            return (
+                                                                                                <>
+                                                                                                    <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
+                                                                                                        <circle cx="45" cy="45" r="45" fill="none" stroke="#2d3748" strokeWidth="6" />
+                                                                                                        <path d={chart.bluePath} fill="rgb(83, 131, 232)" stroke="none" />
+                                                                                                        <path d={chart.redPath} fill="rgb(232, 83, 83)" stroke="none" />
+                                                                                                    </svg>
+                                                                                                    <div className="displayTeamStatsContainer">
+                                                                                                        <div className="blueTeamStats">
+                                                                                                            {blueWardsPlaced.toLocaleString()}
+                                                                                                        </div>
+                                                                                                        <span className="separatorBar"></span>
+                                                                                                        <div className="redTeamStats">
+                                                                                                            {redWardsPlaced.toLocaleString()}
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </>
+                                                                                            );
+                                                                                        })()}
+                                                                                    </>
+                                                                                );
+                                                                            })()}
+                                                                        </div>
+                                                                        <div className="redTeamDisplayStatistics">
+                                                                            {match.info.participants.slice(5, 10).map((player, idx) => (
+                                                                                <div key={`red-${idx}`} className="participantItem">
+                                                                                    <img
+                                                                                        src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                        alt={player.championName}
+                                                                                        className="championIcon"
+                                                                                        width="16"
+                                                                                        height="16"
+                                                                                    />
+                                                                                    <div className="participantStatContainer">
+                                                                                        <div className="participantStat">
+                                                                                            <div
+                                                                                                className="teamStatsBar"
+                                                                                                style={{
+                                                                                                    width: `${Math.min(100, (player.wardsPlaced / Math.max(...match.info.participants.map(p => p.wardsPlaced))) * 100)}%`,
+                                                                                                    background: 'rgb(232, 64, 87)'
+                                                                                                }}
+                                                                                            >
+                                                                                            </div>
+                                                                                            <div className='participantStatDisplay'>{player.wardsPlaced.toLocaleString()}</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
