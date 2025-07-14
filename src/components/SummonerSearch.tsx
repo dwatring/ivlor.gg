@@ -2243,9 +2243,104 @@ export default class SummonerSearch extends React.Component {
                                                                 <div className="grid-item">
                                                                     <div className="sectionHeader">CS</div>
                                                                     <div className="TeamAnalysisSection">
-                                                                        <div className="blueTeamStatistics"></div>
-                                                                        <div className="graphComparisonStatistics"></div>
-                                                                        <div className="redTeamStatistics"></div>
+                                                                        <div className="blueTeamDisplayStatistics">
+                                                                            {/* Blue Team CS Display */}
+                                                                            {match.info.participants.slice(0, 5).map((player, idx) => {
+                                                                                const creepScore = player.totalMinionsKilled + player.neutralMinionsKilled;
+                                                                                const maxCS = Math.max(...match.info.participants.map(p =>
+                                                                                    p.totalMinionsKilled + p.neutralMinionsKilled
+                                                                                ));
+
+                                                                                return (
+                                                                                    <div key={`blue-${idx}`} className="participantItem">
+                                                                                        <img
+                                                                                            src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                            alt={player.championName}
+                                                                                            className="championIcon"
+                                                                                            width="16"
+                                                                                            height="16"
+                                                                                        />
+                                                                                        <div className="participantStatContainer">
+                                                                                            <div className="participantStat">
+                                                                                                <div
+                                                                                                    className="teamStatsBar"
+                                                                                                    style={{
+                                                                                                        width: `${Math.min(100, (creepScore / maxCS) * 100)}%`,
+                                                                                                        background: 'rgb(83, 131, 232)'
+                                                                                                    }}
+                                                                                                ></div>
+                                                                                                <div className='participantStatDisplay'>{creepScore.toLocaleString()}</div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                        <div className="graphComparisonStatistics">
+                                                                            {(() => {
+                                                                                const blueCreepScore = match.info.participants
+                                                                                    .slice(0, 5)
+                                                                                    .reduce((sum, player) => sum + player.totalMinionsKilled + player.neutralMinionsKilled, 0);
+
+                                                                                const redCreepScore = match.info.participants
+                                                                                    .slice(5, 10)
+                                                                                    .reduce((sum, player) => sum + player.totalMinionsKilled + player.neutralMinionsKilled, 0);
+
+                                                                                const chart = this.generateDonutChart(blueCreepScore, redCreepScore);
+
+                                                                                return (
+                                                                                    <>
+                                                                                        <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
+                                                                                            <circle cx="45" cy="45" r="45" fill="none" stroke="#2d3748" strokeWidth="6" />
+                                                                                            <path d={chart.bluePath} fill="rgb(83, 131, 232)" stroke="none" />
+                                                                                            <path d={chart.redPath} fill="rgb(232, 83, 83)" stroke="none" />
+                                                                                        </svg>
+                                                                                        <div className="displayTeamStatsContainer">
+                                                                                            <div className="blueTeamStats">
+                                                                                                {blueCreepScore.toLocaleString()}
+                                                                                            </div>
+                                                                                            <span className="separatorBar"></span>
+                                                                                            <div className="redTeamStats">
+                                                                                                {redCreepScore.toLocaleString()}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </>
+                                                                                );
+                                                                            })()}
+                                                                        </div>
+                                                                        <div className="redTeamDisplayStatistics">
+                                                                            {/* Red Team CS Display */}
+                                                                            {match.info.participants.slice(5, 10).map((player, idx) => {
+                                                                                const creepScore = player.totalMinionsKilled + player.neutralMinionsKilled;
+                                                                                const maxCS = Math.max(...match.info.participants.map(p =>
+                                                                                    p.totalMinionsKilled + p.neutralMinionsKilled
+                                                                                ));
+
+                                                                                return (
+                                                                                    <div key={`red-${idx}`} className="participantItem">
+                                                                                        <img
+                                                                                            src={`https://ddragon.leagueoflegends.com/cdn/14.7.1/img/champion/${player.championName}.png`}
+                                                                                            alt={player.championName}
+                                                                                            className="championIcon"
+                                                                                            width="16"
+                                                                                            height="16"
+                                                                                        />
+                                                                                        <div className="participantStatContainer">
+                                                                                            <div className="participantStat">
+                                                                                                <div
+                                                                                                    className="teamStatsBar"
+                                                                                                    style={{
+                                                                                                        width: `${Math.min(100, (creepScore / maxCS) * 100)}%`,
+                                                                                                        background: 'rgb(232, 64, 87)'
+                                                                                                    }}
+                                                                                                ></div>
+                                                                                                <div className='participantStatDisplay'>{creepScore.toLocaleString()}</div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
