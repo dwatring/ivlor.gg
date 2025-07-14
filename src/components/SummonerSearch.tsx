@@ -692,6 +692,44 @@ export default class SummonerSearch extends React.Component {
         this.selectedSection = section;
     }
 
+    @action
+    generateDonutChart(blueValue: number, redValue: number) {
+        const total = blueValue + redValue;
+
+        // Calculate angles
+        const blueAngle = total > 0 ? (blueValue / total) * 360 : 0;
+        const redAngle = total > 0 ? (redValue / total) * 360 : 0;
+
+        const angleToRadians = (angle: number) => (angle * Math.PI) / 180;
+
+        const getPath = (startAngle: number, endAngle: number, outerRadius: number, innerRadius: number, cx: number, cy: number) => {
+            const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+            const startX = cx + outerRadius * Math.cos(angleToRadians(startAngle - 90));
+            const startY = cy + outerRadius * Math.sin(angleToRadians(startAngle - 90));
+            const endX = cx + outerRadius * Math.cos(angleToRadians(endAngle - 90));
+            const endY = cy + outerRadius * Math.sin(angleToRadians(endAngle - 90));
+            const innerStartX = cx + innerRadius * Math.cos(angleToRadians(endAngle - 90));
+            const innerStartY = cy + innerRadius * Math.sin(angleToRadians(endAngle - 90));
+            const innerEndX = cx + innerRadius * Math.cos(angleToRadians(startAngle - 90));
+            const innerEndY = cy + innerRadius * Math.sin(angleToRadians(startAngle - 90));
+
+            return `
+      M ${startX},${startY}
+      A ${outerRadius},${outerRadius},0,${largeArcFlag},1,${endX},${endY}
+      L ${innerStartX},${innerStartY}
+      A ${innerRadius},${innerRadius},0,${largeArcFlag},0,${innerEndX},${innerEndY}
+      Z
+    `;
+        };
+
+        return {
+            bluePath: getPath(0, blueAngle, 45, 33, 45, 45),
+            redPath: getPath(blueAngle, blueAngle + redAngle, 45, 33, 45, 45),
+            blueValue: blueValue.toLocaleString(),
+            redValue: redValue.toLocaleString()
+        };
+    }
+
     render() {
 
         return (
@@ -1753,73 +1791,43 @@ export default class SummonerSearch extends React.Component {
                                                                                 .reduce((sum, player) => sum + player.kills, 0);
                                                                             const totalKills = blueTeamKills + redTeamKills;
 
-                                                                            // Calculate angles in degrees
-                                                                            const blueAngle = totalKills > 0 ? (blueTeamKills / totalKills) * 360 : 0;
-                                                                            const redAngle = totalKills > 0 ? (redTeamKills / totalKills) * 360 : 0;
-
-                                                                            // Convert angle to radians for path calculations
-                                                                            //  This code converts angles to coordinates to draw a donut chart segment:
-                                                                            // - angleToRadians turns degrees into radians for math calculations.
-                                                                            // - getPath calculates the points for a segment's outer and inner arcs:
-                                                                            //   - Uses startAngle and endAngle to determine the segment's size.
-                                                                            //   - outerRadius and innerRadius set the donut's thickness.
-                                                                            //   - cx and cy are the center point of the chart.
-                                                                            //   - largeArcFlag decides if the arc is more or less than half a circle.
-                                                                            //   - Returns an SVG path string connecting these points to form a filled shape.
-
-                                                                            const angleToRadians = (angle: number) => (angle * Math.PI) / 180;
-                                                                            const getPath = (startAngle: number, endAngle: number, outerRadius: number, innerRadius: number, cx: number, cy: number) => {
-                                                                                const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
-                                                                                const startX = cx + outerRadius * Math.cos(angleToRadians(startAngle - 90));
-                                                                                const startY = cy + outerRadius * Math.sin(angleToRadians(startAngle - 90));
-                                                                                const endX = cx + outerRadius * Math.cos(angleToRadians(endAngle - 90));
-                                                                                const endY = cy + outerRadius * Math.sin(angleToRadians(endAngle - 90));
-                                                                                const innerStartX = cx + innerRadius * Math.cos(angleToRadians(endAngle - 90));
-                                                                                const innerStartY = cy + innerRadius * Math.sin(angleToRadians(endAngle - 90));
-                                                                                const innerEndX = cx + innerRadius * Math.cos(angleToRadians(startAngle - 90));
-                                                                                const innerEndY = cy + innerRadius * Math.sin(angleToRadians(startAngle - 90));
-
-                                                                                return `
-                                                                                M ${startX},${startY}
-                                                                                A ${outerRadius},${outerRadius},0,${largeArcFlag},1,${endX},${endY}
-                                                                                L ${innerStartX},${innerStartY}
-                                                                                A ${innerRadius},${innerRadius},0,${largeArcFlag},0,${innerEndX},${innerEndY}
-                                                                                Z
-                                                                                `;
-                                                                            };
-
                                                                             return (
                                                                                 <div className="graphComparisonStatistics">
-                                                                                    <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
-                                                                                        {/* Background circle */}
-                                                                                        <circle
-                                                                                            cx="45"
-                                                                                            cy="45"
-                                                                                            r="45"
-                                                                                            fill="none"
-                                                                                            stroke="#2d3748"
-                                                                                            strokeWidth="6"
-                                                                                        />
+                                                                                    {(() => {
+                                                                                        const blueTeamGold = match.info.participants
+                                                                                            .slice(0, 5)
+                                                                                            .reduce((sum, player) => sum + player.goldEarned, 0);
+                                                                                        const redTeamGold = match.info.participants
+                                                                                            .slice(5, 10)
+                                                                                            .reduce((sum, player) => sum + player.goldEarned, 0);
+                                                                                        const totalGold = blueTeamGold + redTeamGold;
 
-                                                                                        {/* Blue Team segment */}
-                                                                                        <path
-                                                                                            d={getPath(0, blueAngle, 45, 33, 45, 45)}
-                                                                                            fill="rgb(83, 131, 232)"
-                                                                                            stroke="none"
-                                                                                        />
-
-                                                                                        {/* Red Team segment */}
-                                                                                        <path
-                                                                                            d={getPath(blueAngle, blueAngle + redAngle, 45, 33, 45, 45)}
-                                                                                            fill="rgb(232, 83, 83)"
-                                                                                            stroke="none"
-                                                                                        />
-                                                                                    </svg>
-                                                                                    <div className="displayTeamStatsContainer">
-                                                                                        <div className="blueTeamStats">{blueTeamKills}</div>
-                                                                                        <span className="separatorBar"></span>
-                                                                                        <div className="redTeamStats">{redTeamKills}</div>
-                                                                                    </div>
+                                                                                        return (
+                                                                                            <>
+                                                                                                {(() => {
+                                                                                                    const chart = this.generateDonutChart(blueTeamGold, redTeamGold);
+                                                                                                    return (
+                                                                                                        <>
+                                                                                                            <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
+                                                                                                                <circle cx="45" cy="45" r="45" fill="none" stroke="#2d3748" strokeWidth="6" />
+                                                                                                                <path d={chart.bluePath} fill="rgb(83, 131, 232)" stroke="none" />
+                                                                                                                <path d={chart.redPath} fill="rgb(232, 83, 83)" stroke="none" />
+                                                                                                            </svg>
+                                                                                                            <div className="displayTeamStatsContainer">
+                                                                                                                <div className="blueTeamStats">
+                                                                                                                    {blueTeamGold.toLocaleString()}
+                                                                                                                </div>
+                                                                                                                <span className="separatorBar"></span>
+                                                                                                                <div className="redTeamStats">
+                                                                                                                    {redTeamGold.toLocaleString()}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </>
+                                                                                                    );
+                                                                                                })()}
+                                                                                            </>
+                                                                                        );
+                                                                                    })()}
                                                                                 </div>
                                                                             );
                                                                         })()}
@@ -1885,68 +1893,29 @@ export default class SummonerSearch extends React.Component {
                                                                                     .reduce((sum, player) => sum + player.goldEarned, 0);
                                                                                 const totalGold = blueTeamGold + redTeamGold;
 
-
-                                                                                // Calculate angles in degrees
-                                                                                const blueAngle = totalGold > 0 ? (blueTeamGold / totalGold) * 360 : 0;
-                                                                                const redAngle = totalGold > 0 ? (redTeamGold / totalGold) * 360 : 0;
-
-                                                                                const angleToRadians = (angle: number) => (angle * Math.PI) / 180;
-                                                                                const getPath = (startAngle: number, endAngle: number, outerRadius: number, innerRadius: number, cx: number, cy: number) => {
-                                                                                    const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
-                                                                                    const startX = cx + outerRadius * Math.cos(angleToRadians(startAngle - 90));
-                                                                                    const startY = cy + outerRadius * Math.sin(angleToRadians(startAngle - 90));
-                                                                                    const endX = cx + outerRadius * Math.cos(angleToRadians(endAngle - 90));
-                                                                                    const endY = cy + outerRadius * Math.sin(angleToRadians(endAngle - 90));
-                                                                                    const innerStartX = cx + innerRadius * Math.cos(angleToRadians(endAngle - 90));
-                                                                                    const innerStartY = cy + innerRadius * Math.sin(angleToRadians(endAngle - 90));
-                                                                                    const innerEndX = cx + innerRadius * Math.cos(angleToRadians(startAngle - 90));
-                                                                                    const innerEndY = cy + innerRadius * Math.sin(angleToRadians(startAngle - 90));
-
-                                                                                    return `
-                                                                                    M ${startX},${startY}
-                                                                                    A ${outerRadius},${outerRadius},0,${largeArcFlag},1,${endX},${endY}
-                                                                                    L ${innerStartX},${innerStartY}
-                                                                                    A ${innerRadius},${innerRadius},0,${largeArcFlag},0,${innerEndX},${innerEndY}
-                                                                                    Z
-                                                                                `;
-                                                                                };
-
                                                                                 return (
                                                                                     <>
-                                                                                        <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
-                                                                                            {/* Background circle */}
-                                                                                            <circle
-                                                                                                cx="45"
-                                                                                                cy="45"
-                                                                                                r="45"
-                                                                                                fill="none"
-                                                                                                stroke="#2d3748"
-                                                                                                strokeWidth="6"
-                                                                                            />
-
-                                                                                            {/* Blue Team segment */}
-                                                                                            <path
-                                                                                                d={getPath(0, blueAngle, 45, 33, 45, 45)}
-                                                                                                fill="rgb(83, 131, 232)"
-                                                                                                stroke="none"
-                                                                                            />
-
-                                                                                            {/* Red Team segment */}
-                                                                                            <path
-                                                                                                d={getPath(blueAngle, blueAngle + redAngle, 45, 33, 45, 45)}
-                                                                                                fill="rgb(232, 83, 83)"
-                                                                                                stroke="none"
-                                                                                            />
-                                                                                        </svg>
-                                                                                        <div className="displayTeamStatsContainer">
-                                                                                            <div className="blueTeamStats">
-                                                                                                {blueTeamGold.toLocaleString()}
-                                                                                            </div>
-                                                                                            <span className="separatorBar"></span>
-                                                                                            <div className="redTeamStats">
-                                                                                                {redTeamGold.toLocaleString()}
-                                                                                            </div>
-                                                                                        </div>
+                                                                                        {(() => {
+                                                                                            const chart = this.generateDonutChart(blueTeamGold, redTeamGold);
+                                                                                            return (
+                                                                                                <>
+                                                                                                    <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
+                                                                                                        <circle cx="45" cy="45" r="45" fill="none" stroke="#2d3748" strokeWidth="6" />
+                                                                                                        <path d={chart.bluePath} fill="rgb(83, 131, 232)" stroke="none" />
+                                                                                                        <path d={chart.redPath} fill="rgb(232, 83, 83)" stroke="none" />
+                                                                                                    </svg>
+                                                                                                    <div className="displayTeamStatsContainer">
+                                                                                                        <div className="blueTeamStats">
+                                                                                                            {blueTeamGold.toLocaleString()}
+                                                                                                        </div>
+                                                                                                        <span className="separatorBar"></span>
+                                                                                                        <div className="redTeamStats">
+                                                                                                            {redTeamGold.toLocaleString()}
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </>
+                                                                                            );
+                                                                                        })()}
                                                                                     </>
                                                                                 );
                                                                             })()}
