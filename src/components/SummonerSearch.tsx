@@ -692,6 +692,16 @@ export default class SummonerSearch extends React.Component {
         this.selectedSection = section;
     }
 
+    // Convert angle to radians for path calculations
+    //  This code converts angles to coordinates to draw a donut chart segment:
+    // - angleToRadians turns degrees into radians for math calculations.
+    // - getPath calculates the points for a segment's outer and inner arcs:
+    //   - Uses startAngle and endAngle to determine the segment's size.
+    //   - outerRadius and innerRadius set the donut's thickness.
+    //   - cx and cy are the center point of the chart.
+    //   - largeArcFlag decides if the arc is more or less than half a circle.
+    //   - Returns an SVG path string connecting these points to form a filled shape.
+
     @action
     generateDonutChart(blueValue: number, redValue: number) {
         const total = blueValue + redValue;
@@ -786,9 +796,6 @@ export default class SummonerSearch extends React.Component {
                                 )}
                             </div>
                             {this.matchHistory.map((match, index) => {
-                                // Split participants into two groups
-                                const firstFiveParticipants = match.info.participants.slice(0, 5)
-                                const secondFiveParticipants = match.info.participants.slice(5, 10)
 
                                 const searchedParticipant = match.info.participants.find(
                                     (player: any) => player.puuid === this.summonerData?.puuid,
