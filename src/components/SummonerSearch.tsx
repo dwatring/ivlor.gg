@@ -1766,7 +1766,7 @@ export default class SummonerSearch extends React.Component {
                                                                     <div className="sectionHeader">Kills</div>
                                                                     <div className="TeamAnalysisSection">
                                                                         {/* Blue Team (Participants 0-4) */}
-                                                                        <div className="blueTeamStatistics">
+                                                                        <div className="blueTeamDisplayStatistics">
                                                                             {match.info.participants.slice(0, 5).map((player, idx) => (
                                                                                 <div key={`blue-${idx}`} className="participantItem">
                                                                                     <img
@@ -1776,64 +1776,62 @@ export default class SummonerSearch extends React.Component {
                                                                                         width="16"
                                                                                         height="16"
                                                                                     />
-                                                                                    <span className="participantStat">{player.kills}</span>
+                                                                                    <div className="participantStatContainer">
+                                                                                        <div className="participantStat">
+                                                                                            <div
+                                                                                                className="teamStatsBar"
+                                                                                                style={{
+                                                                                                    width: `${Math.min(100, (player.kills / Math.max(...match.info.participants.map(p => p.kills))) * 100)}%`,
+                                                                                                    background: 'rgb(83, 131, 232)'
+                                                                                                }}
+                                                                                            >
+                                                                                            </div>
+                                                                                            <div className='participantStatDisplay'>{player.kills.toLocaleString()}</div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             ))}
                                                                         </div>
 
-                                                                        {/* Donut Chart Comparison */}
-                                                                        {(() => {
-                                                                            const blueTeamKills = match.info.participants
-                                                                                .slice(0, 5)
-                                                                                .reduce((sum, player) => sum + player.kills, 0);
-                                                                            const redTeamKills = match.info.participants
-                                                                                .slice(5, 10)
-                                                                                .reduce((sum, player) => sum + player.kills, 0);
-                                                                            const totalKills = blueTeamKills + redTeamKills;
+                                                                        <div className="graphComparisonStatistics">
+                                                                            {(() => {
+                                                                                const blueTeamKills = match.info.participants
+                                                                                    .slice(0, 5)
+                                                                                    .reduce((sum, player) => sum + player.kills, 0);
+                                                                                const redTeamKills = match.info.participants
+                                                                                    .slice(5, 10)
+                                                                                    .reduce((sum, player) => sum + player.kills, 0);
 
-                                                                            return (
-                                                                                <div className="graphComparisonStatistics">
-                                                                                    {(() => {
-                                                                                        const blueTeamGold = match.info.participants
-                                                                                            .slice(0, 5)
-                                                                                            .reduce((sum, player) => sum + player.goldEarned, 0);
-                                                                                        const redTeamGold = match.info.participants
-                                                                                            .slice(5, 10)
-                                                                                            .reduce((sum, player) => sum + player.goldEarned, 0);
-                                                                                        const totalGold = blueTeamGold + redTeamGold;
-
-                                                                                        return (
-                                                                                            <>
-                                                                                                {(() => {
-                                                                                                    const chart = this.generateDonutChart(blueTeamGold, redTeamGold);
-                                                                                                    return (
-                                                                                                        <>
-                                                                                                            <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
-                                                                                                                <circle cx="45" cy="45" r="45" fill="none" stroke="#2d3748" strokeWidth="6" />
-                                                                                                                <path d={chart.bluePath} fill="rgb(83, 131, 232)" stroke="none" />
-                                                                                                                <path d={chart.redPath} fill="rgb(232, 83, 83)" stroke="none" />
-                                                                                                            </svg>
-                                                                                                            <div className="displayTeamStatsContainer">
-                                                                                                                <div className="blueTeamStats">
-                                                                                                                    {blueTeamGold.toLocaleString()}
-                                                                                                                </div>
-                                                                                                                <span className="separatorBar"></span>
-                                                                                                                <div className="redTeamStats">
-                                                                                                                    {redTeamGold.toLocaleString()}
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </>
-                                                                                                    );
-                                                                                                })()}
-                                                                                            </>
-                                                                                        );
-                                                                                    })()}
-                                                                                </div>
-                                                                            );
-                                                                        })()}
+                                                                                return (
+                                                                                    <>
+                                                                                        {(() => {
+                                                                                            const chart = this.generateDonutChart(blueTeamKills, redTeamKills);
+                                                                                            return (
+                                                                                                <>
+                                                                                                    <svg width="90" height="90" viewBox="0 0 90 90" className="donut-chart">
+                                                                                                        <circle cx="45" cy="45" r="45" fill="none" stroke="#2d3748" strokeWidth="6" />
+                                                                                                        <path d={chart.bluePath} fill="rgb(83, 131, 232)" stroke="none" />
+                                                                                                        <path d={chart.redPath} fill="rgb(232, 83, 83)" stroke="none" />
+                                                                                                    </svg>
+                                                                                                    <div className="displayTeamStatsContainer">
+                                                                                                        <div className="blueTeamStats">
+                                                                                                            {blueTeamKills.toLocaleString()}
+                                                                                                        </div>
+                                                                                                        <span className="separatorBar"></span>
+                                                                                                        <div className="redTeamStats">
+                                                                                                            {redTeamKills.toLocaleString()}
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </>
+                                                                                            );
+                                                                                        })()}
+                                                                                    </>
+                                                                                );
+                                                                            })()}
+                                                                        </div>
 
                                                                         {/* Red Team (Participants 5-9) */}
-                                                                        <div className="redTeamStatistics">
+                                                                        <div className="redTeamDisplayStatistics">
                                                                             {match.info.participants.slice(5, 10).map((player, idx) => (
                                                                                 <div key={`red-${idx}`} className="participantItem">
                                                                                     <img
@@ -1843,7 +1841,19 @@ export default class SummonerSearch extends React.Component {
                                                                                         width="16"
                                                                                         height="16"
                                                                                     />
-                                                                                    <span className="participantStat">{player.kills}</span>
+                                                                                    <div className="participantStatContainer">
+                                                                                        <div className="participantStat">
+                                                                                            <div
+                                                                                                className="teamStatsBar"
+                                                                                                style={{
+                                                                                                    width: `${Math.min(100, (player.kills / Math.max(...match.info.participants.map(p => p.kills))) * 100)}%`,
+                                                                                                    background: 'rgb(232, 64, 87)'
+                                                                                                }}
+                                                                                            >
+                                                                                            </div>
+                                                                                            <div className='participantStatDisplay'>{player.kills.toLocaleString()}</div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             ))}
                                                                         </div>
@@ -1891,7 +1901,6 @@ export default class SummonerSearch extends React.Component {
                                                                                 const redTeamGold = match.info.participants
                                                                                     .slice(5, 10)
                                                                                     .reduce((sum, player) => sum + player.goldEarned, 0);
-                                                                                const totalGold = blueTeamGold + redTeamGold;
 
                                                                                 return (
                                                                                     <>
