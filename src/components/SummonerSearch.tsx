@@ -5,6 +5,9 @@ import { makeObservable, observable, action, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
 import { Link } from 'react-router-dom'
 import Bottleneck from 'bottleneck'
+import SummonerMatchDetailCard from './SummonerMatchDetailCard'
+import { Participant } from '../lib/interfaces'
+import { getItemImageUrl, summonerSpellIdMap } from '../lib/constants'
 
 const limiter = new Bottleneck({
     reservoir: 90, // Allow 100 requests per cycle
@@ -45,11 +48,6 @@ const fetchWithRetry = async (url: string, options: RequestInit, retries = 3, de
 }
 
 const playerCache: Record<string, any> = {} // Store fetched Riot ID data
-
-const getItemImageUrl = (itemId: number) => {
-    // Use the item ID to generate the URL for the item's image
-    return `https://ddragon.leagueoflegends.com/cdn/15.6.1/img/item/${itemId}.png`
-}
 
 const timeAgo = (timestamp: number) => {
     const now = Date.now() // Current time in milliseconds
@@ -93,26 +91,6 @@ const getQueueName = (queueId: number): string => {
         default:
             return 'Other'
     }
-}
-
-const summonerSpellIdMap: { [id: number]: string } = {
-    1: 'SummonerBoost', // Ghost
-    3: 'SummonerExhaust', // Exhaust
-    4: 'SummonerFlash', // Flash
-    6: 'SummonerHaste', // Haste
-    7: 'SummonerHeal', // Heal
-    11: 'SummonerSmite', // Smite
-    12: 'SummonerTeleport', // Teleport
-    13: 'SummonerMana', // Clarity
-    14: 'SummonerDot', // Ignite
-    21: 'SummonerBarrier', // Barrier
-    32: 'SummonerSnowball', // Snowball
-    39: 'SummonerChillingSmite', // Chilling Smite
-    55: 'SummonerPoroRecall', // Poro Recall
-    56: 'SummonerMark', // Mark (used by Kindred)
-    57: 'SummonerPoroThrow', // Poro Throw
-    59: 'SummonerPoroCoin', // Poro Coin
-    61: 'SummonerShurimaRecall', // Shurima Recall
 }
 
 const rankToScore: { [key: string]: number } = {
@@ -274,57 +252,7 @@ interface MatchData {
         gameDuration: number
         gameStartTimestamp: number
         queueId: number
-        participants: {
-            riotIdGameName: string
-            puuid: string
-            doublekill: number
-            triplekill: number
-            quadrakill: number
-            pentakill: number
-            kills: number
-            assists: number
-            deaths: number
-            item0: number
-            item1: number
-            item2: number
-            item3: number
-            item4: number
-            item5: number
-            item6: number
-            championName: string
-            champLevel: number
-            totalMinionsKilled: number
-            win: boolean
-            summonerLevel: number
-            totalDamageDealtToChampions: number
-            totalDamageTaken: number
-            visionScore: number
-            neutralMinionsKilled: number
-            wardsKilled: number
-            wardsPlaced: number
-            detectorWardsPlaced: number //Pink Wards
-            goldEarned: number
-            summoner1Id: number
-            summoner2Id: number
-
-            perks: {
-                statPerks: {
-                    defense: number
-                    flex: number
-                    offense: number
-                }
-                styles: {
-                    description: string
-                    style: number
-                    selections: {
-                        perk: number
-                        var1: number
-                        var2: number
-                        var3: number
-                    }[]
-                }[]
-            }
-        }[]
+        participants: Participant[]
         teams: {
 
             // bans: {
@@ -1099,190 +1027,25 @@ export default class SummonerSearch extends React.Component {
                                                                 </thead>
 
                                                                 <tbody>
-                                                                    {match.info.participants.slice(0, 5).map((participant, index) => {
-                                                                        const spell1Name = summonerSpellIdMap[participant.summoner1Id];
-                                                                        const spell2Name = summonerSpellIdMap[participant.summoner2Id];
+                                                                    {match.info.participants.slice(0, 5).map(participant => {
+                                                                        const teamKills = match.info.participants
+                                                                            .slice(0, 5)
+                                                                            .reduce((sum, p) => sum + p.kills, 0);
+                                                                        const playerKP = teamKills > 0 ? ((participant.kills + participant.assists) / teamKills) * 100 : 0
+                                                                        const playerKPFormatted = ` (${playerKP.toFixed(0)}%)`
 
-                                                                        const spell1Url = spell1Name
-                                                                            ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell1Name}.png`
-                                                                            : '/fallback-icon.png';
+                                                                        const mostDamageOnTeam = Math.max(...match.info.participants.slice(0, 5).map(p => p.totalDamageDealtToChampions))
+                                                                        const mostDamageTakenOnTeam = Math.max(...match.info.participants.slice(0, 5).map(p => p.totalDamageTaken))
 
-                                                                        const spell2Url = spell2Name
-                                                                            ? `https://ddragon.leagueoflegends.com/cdn/13.6.1/img/spell/${spell2Name}.png`
-                                                                            : '/fallback-icon.png';
-
-                                                                        return (
-                                                                            <tr
-                                                                                key={index}
-                                                                                className={`championMatchDetailsCard ${participant.win ? 'win' : 'loss'}`}
-                                                                            >
-                                                                                <td key={participant.puuid}>
-                                                                                    <div className="championMatchDetailsInfoContainer">
-                                                                                        <div className="spriteMatchDetailsContainer">
-                                                                                            <img
-                                                                                                className="championMatchDetailsSprite"
-                                                                                                src={`https://ddragon.leagueoflegends.com/cdn/15.6.1/img/champion/${participant.championName}.png`}
-                                                                                                alt={`${participant.championName} Sprite`}
-                                                                                                width="32"
-                                                                                                height="32"
-                                                                                            />
-                                                                                            <div className="championMatchDetailsSpriteLevel">{participant.champLevel}</div>
-                                                                                        </div>
-
-                                                                                        <div className="SummonerMatchDetailsSpellAndRunesContainer">
-                                                                                            <div className="SummonerSpellContainer">
-                                                                                                <img
-                                                                                                    src={spell1Url}
-                                                                                                    alt={`Summoner Spell 1 - ${spell1Name}`}
-                                                                                                    width="16"
-                                                                                                    height="16"
-                                                                                                />
-                                                                                                <img
-                                                                                                    src={spell2Url}
-                                                                                                    alt={`Summoner Spell 2 - ${spell2Name}`}
-                                                                                                    width="16"
-                                                                                                    height="16"
-                                                                                                />
-                                                                                            </div>
-                                                                                            <div className="RunesContainer">
-                                                                                                <img
-                                                                                                    src={this.getRunePerkIconURL(
-                                                                                                        participant.perks.styles[0].style,
-                                                                                                        participant.perks.styles[0].selections[0].perk
-                                                                                                    )}
-                                                                                                    alt="Keystone Rune"
-                                                                                                    width="16"
-                                                                                                    height="16"
-                                                                                                />
-                                                                                                <img
-                                                                                                    src={this.getRuneStyleIconURL(
-                                                                                                        participant.perks.styles[1].style
-                                                                                                    )}
-                                                                                                    alt="Secondary Rune Style"
-                                                                                                    width="16"
-                                                                                                    height="16"
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div className="summonerMatchDetailsWrapper">
-                                                                                            <div className="summonerMatchDetailsName">
-                                                                                                {participant.riotIdGameName ?? 'Unknown'}
-                                                                                            </div>
-                                                                                            <div className="summonerMatchDetailsLevel">
-                                                                                                Level {participant.summonerLevel ?? '-'}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td> <div className="ivScoreMatchDetailsContainer"></div></td>
-                                                                                <td>
-                                                                                    <div className="KDAMatchDetailsContainer">
-                                                                                        <div className="KDAScoreMatchDetails">
-                                                                                            {participant.kills} /{" "}
-                                                                                            <span className="deathCount">{participant.deaths}</span> /{" "}
-                                                                                            {participant.assists}
-                                                                                            <span className="KPScoreMatchDetails">
-                                                                                                {(() => {
-                                                                                                    const teamKills = match.info.participants
-                                                                                                        .slice(0, 5)
-                                                                                                        .reduce((sum, p) => sum + p.kills, 0);
-                                                                                                    const playerKP =
-                                                                                                        teamKills > 0
-                                                                                                            ? ((participant.kills + participant.assists) / teamKills) * 100
-                                                                                                            : 0;
-                                                                                                    return ` (${playerKP.toFixed(0)}%)`;
-                                                                                                })()}
-                                                                                            </span>
-                                                                                        </div>
-
-                                                                                        <div className="KDAComparisonMatchDetails">
-                                                                                            {(() => {
-                                                                                                const { kills, assists, deaths } = participant;
-                                                                                                const kdaValue = deaths === 0 ? kills + assists : (kills + assists) / deaths;
-                                                                                                return `${kdaValue.toFixed(2)} : 1 KDA`;
-                                                                                            })()}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage dealt to champions ${participant.totalDamageDealtToChampions.toLocaleString()}`}>
-                                                                                        <div className='damageDealtMatchDetails'>
-                                                                                            {participant.totalDamageDealtToChampions.toLocaleString()}
-                                                                                        </div>
-                                                                                        <div className='damageDealtMatchDetailsBar' style={{
-                                                                                            width: `${(participant.totalDamageDealtToChampions / Math.max(...match.info.participants.slice(0, 5).map(p => p.totalDamageDealtToChampions))) * 100}%`
-                                                                                        }}></div>
-                                                                                    </div>
-
-                                                                                    <div className='damageDealtMatchDetailsWrapper' title={`Damage taken ${participant.totalDamageTaken.toLocaleString()}`}>
-                                                                                        <div className='damageTakenMatchDetails'>
-                                                                                            {participant.totalDamageTaken.toLocaleString()}
-                                                                                        </div>
-                                                                                        <div className='damageTakenMatchDetailsBar' style={{
-                                                                                            width: `${(participant.totalDamageTaken / Math.max(...match.info.participants.slice(0, 5).map(p => p.totalDamageTaken))) * 100}%`
-                                                                                        }}></div>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <div className='wardsMatchDetailsContainer'>
-                                                                                        <div className='pinkWardsMatchDetails'>
-                                                                                            {participant.detectorWardsPlaced}
-                                                                                        </div>
-                                                                                        <div className='wardsMatchDetails'>
-                                                                                            {participant.wardsPlaced} / {participant.wardsKilled}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <div className='CSMatchDetailsContainer'>
-                                                                                        <div className='CSTotalMatchDetails'>
-                                                                                            {participant.totalMinionsKilled + participant.neutralMinionsKilled}
-
-                                                                                        </div>
-                                                                                        <div className='CSCalculationMatchDetails'>
-                                                                                            &nbsp;
-                                                                                            {(
-                                                                                                (participant.totalMinionsKilled + participant.neutralMinionsKilled) /
-                                                                                                (match.info.gameDuration / 60)
-                                                                                            ).toFixed(1)}
-                                                                                            /m
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <div className='itemsMatchDetailsContainer'>
-                                                                                        <div className="itemsMatchDetailsContainer">
-                                                                                            <div className="items">
-                                                                                                {[
-                                                                                                    participant.item0,
-                                                                                                    participant.item1,
-                                                                                                    participant.item2,
-                                                                                                    participant.item3,
-                                                                                                    participant.item4,
-                                                                                                    participant.item5,
-                                                                                                    participant.item6,
-                                                                                                ].map((itemId, index) => (
-                                                                                                    itemId !== 0 ? (
-                                                                                                        <img
-                                                                                                            key={index}
-                                                                                                            src={getItemImageUrl(itemId)}
-                                                                                                            alt={`Item ${itemId}`}
-                                                                                                            width="22"
-                                                                                                            height="22"
-                                                                                                        />
-                                                                                                    ) : (
-                                                                                                        <div
-                                                                                                            key={index}
-                                                                                                            className={`itemPlaceholder ${participant.win ? 'win' : 'loss'}`}
-                                                                                                        />
-                                                                                                    )
-                                                                                                ))}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
-                                                                            </tr>
-                                                                        );
+                                                                        return <SummonerMatchDetailCard
+                                                                            participant={participant}
+                                                                            getRunePerkIconURL={this.getRunePerkIconURL}
+                                                                            getRuneStyleIconURL={this.getRuneStyleIconURL}
+                                                                            playerKP={playerKPFormatted}
+                                                                            mostDamageOnTeam={mostDamageOnTeam}
+                                                                            mostDamageTakenOnTeam={mostDamageTakenOnTeam}
+                                                                            gameMinutes={match.info.gameDuration / 60}
+                                                                        />
                                                                     })}
                                                                 </tbody>
                                                             </table>
